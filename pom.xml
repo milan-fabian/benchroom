@@ -13,6 +13,6 @@
     <modules>
         <module>benchroom-backend</module>
         <module>benchroom-api</module>
-    <module>benchroom-web</module>
-  </modules>
+        <module>benchroom-web</module>
+    </modules>
 </project>

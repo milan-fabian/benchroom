@@ -1,0 +1,7 @@
+/target/
+/benchroom-api/target/
+/benchroom-web/target/
+/benchroom-backend/target/
+/benchroom-backend/derby.log
+/benchroom-web/nb-configuration.html
+/benchroom-web/nb-configuration.xml
