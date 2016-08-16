@@ -11,6 +11,7 @@
                 {title: "Name", data: "name"},
                 {sortable: false, render: function (data, type, row) {
                         return "<a href='<%=request.getContextPath()%><%=URL_SOFTWARE_VERSION%>?software=" + row.id + "'>Versions</a> "
+                                + "<a href='<%=request.getContextPath()%><%=URL_BENCHMARK_SUITE%>?software=" + row.id + "'>Benchmark suites</a> "
                                 + "<a href='<%=request.getContextPath()%><%=URL_SOFTWARE_EDIT%>?software=" + row.id + "'>Edit</a>";
                     }
                 }

@@ -52,7 +52,7 @@ public class ConvertUtils {
 
     public static BenchmarkParameter convert(BenchmarkParameterDto dto) {
         BenchmarkParameter entity = new BenchmarkParameter(dto.getId());
-        entity.setNote(dto.getNote());
+        entity.setName(dto.getName());
         entity.setCommandLineArguments(dto.getCommandLineArguments());
         entity.setCommandLineInput(dto.getCommandLineInput());
         entity.setBenchmarkSuite(new BenchmarkSuite(dto.getBenchmarkSuiteId()));
@@ -61,7 +61,7 @@ public class ConvertUtils {
 
     public static BenchmarkParameterDto convert(BenchmarkParameter entity) {
         BenchmarkParameterDto dto = new BenchmarkParameterDto(entity.getId());
-        dto.setNote(entity.getNote());
+        dto.setName(entity.getName());
         dto.setCommandLineArguments(entity.getCommandLineArguments());
         dto.setCommandLineInput(entity.getCommandLineInput());
         dto.setBenchmarkSuiteId(entity.getBenchmarkSuite().getId());

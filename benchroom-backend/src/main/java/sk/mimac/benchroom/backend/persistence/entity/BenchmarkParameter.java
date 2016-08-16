@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -17,7 +18,9 @@ import javax.persistence.Table;
  * @author Milan Fabian
  */
 @Entity
-@Table(name = "benchmark_parameter")
+@Table(name = "benchmark_parameter", indexes = {
+    @Index(name = "benchmark_parameter_suite_name", columnList = "benchmark_suite_id, name")
+})
 public class BenchmarkParameter implements EntityInterface, Serializable {
 
     @Id
@@ -29,8 +32,8 @@ public class BenchmarkParameter implements EntityInterface, Serializable {
     private BenchmarkSuite benchmarkSuite;
 
     @Basic(optional = true)
-    @Column(name = "note", unique = false, nullable = true)
-    private String note;
+    @Column(name = "name", unique = false, nullable = true)
+    private String name;
 
     @Basic(optional = true)
     @Column(name = "command_line_arguments", unique = false, nullable = true)
@@ -79,12 +82,12 @@ public class BenchmarkParameter implements EntityInterface, Serializable {
         this.commandLineInput = commandLineInput;
     }
 
-    public String getNote() {
-        return note;
+    public String getName() {
+        return name;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

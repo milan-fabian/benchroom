@@ -31,11 +31,13 @@ public class BenchmarkParameterServiceImpl implements BenchmarkParameterService 
     }
 
     @Override
+    @Transactional(readOnly = false)
     public long insertParameter(BenchmarkParameterDto parameter) {
         return benchmarkParameterDao.insert(ConvertUtils.convert(parameter));
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void updateParameter(BenchmarkParameterDto parameter) {
         benchmarkParameterDao.update(ConvertUtils.convert(parameter));
     }

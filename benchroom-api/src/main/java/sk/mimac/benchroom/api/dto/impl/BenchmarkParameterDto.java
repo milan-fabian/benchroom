@@ -1,6 +1,7 @@
 package sk.mimac.benchroom.api.dto.impl;
 
 import java.util.Objects;
+import org.hibernate.validator.constraints.NotBlank;
 import sk.mimac.benchroom.api.dto.Dto;
 
 /**
@@ -11,7 +12,8 @@ public class BenchmarkParameterDto implements Dto {
 
     private Long id;
 
-    private String note;
+    @NotBlank
+    private String name;
 
     private String commandLineArguments;
 
@@ -36,12 +38,12 @@ public class BenchmarkParameterDto implements Dto {
         this.id = id;
     }
 
-    public String getNote() {
-        return note;
+    public String getName() {
+        return name;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCommandLineArguments() {
@@ -87,7 +89,7 @@ public class BenchmarkParameterDto implements Dto {
 
     @Override
     public String toString() {
-        return "BenchmarkParameterDto{" + "id=" + id + ", note=" + note + ", benchmarkSuiteId=" + benchmarkSuiteId + '}';
+        return "BenchmarkParameterDto{" + "id=" + id + ", name=" + name + ", benchmarkSuiteId=" + benchmarkSuiteId + '}';
     }
 
 }
