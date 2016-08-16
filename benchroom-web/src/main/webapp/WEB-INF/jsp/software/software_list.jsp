@@ -24,8 +24,9 @@
     });
 </script>
 
-<h1>Software</h1>
+<h2>Software</h2>
 
+<a href="<%=request.getContextPath()%><%=URL_SOFTWARE_EDIT%>">Add new software</a>
 <table id="software" cellspacing="0" width="100%">
 </table>
 <%@ include file="/WEB-INF/jspf/footer.jspf"%>

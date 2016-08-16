@@ -3,10 +3,10 @@
 
 <c:choose>
     <c:when test="${not empty version.id}">
-        <h1>Edit version <c:out value="${version.name}"/> for software <c:out value="${software.name}"/></h1>
+        <h2>Edit version <c:out value="${version.name}"/> for software <c:out value="${software.name}"/></h2>
     </c:when>
     <c:otherwise>
-        <h1>Add new version for software <c:out value="${software.name}"/></h1>
+        <h2>Add new version for software <c:out value="${software.name}"/></h2>
     </c:otherwise>
 </c:choose>
 

@@ -3,10 +3,10 @@
 
 <c:choose>
     <c:when test="${not empty software.id}">
-        <h1>Edit software <c:out value="${software.name}"/></h1>
+        <h2>Edit software <c:out value="${software.name}"/></h2>
     </c:when>
     <c:otherwise>
-        <h1>Add new software</h1>
+        <h2>Add new software</h2>
     </c:otherwise>
 </c:choose>
 

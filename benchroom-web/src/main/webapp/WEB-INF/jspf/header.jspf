@@ -6,3 +6,8 @@
 <html>
     <%@ include file="/WEB-INF/jspf/head.jspf"%>
     <body>
+        <h1>Benchroom</h1>
+        <div class="menu">
+            Menu: <a href="<%=request.getContextPath()%><%=URL_SOFTWARE%>">Software list</a>
+        </div>
+        <div class="main">

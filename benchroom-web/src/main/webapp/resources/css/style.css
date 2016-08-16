@@ -1,1 +1,27 @@
 @CHARSET "UTF-8";
+body {
+    margin: 0;
+}
+h1 {
+    text-align: center;
+    margin: 0.3em;
+}
+/* MENU */
+.menu {
+    background-color: black;
+    color: white;
+    padding: 0.15em;
+}
+.menu a:link {
+    color: #ddf;
+}
+.menu a:visited {
+    color: #ddf;
+}
+.menu a:hover {
+    color: #eef;
+}
+/* MAIN */
+.main {
+    margin: 0 1em 0 1em;
+}

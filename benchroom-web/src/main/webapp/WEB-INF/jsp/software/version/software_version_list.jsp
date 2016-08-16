@@ -20,8 +20,9 @@
     });
 </script>
 
-<h1>Software versions for <c:out value="${software.name}"/></h1>
+<h2>Software versions for <c:out value="${software.name}"/></h2>
 
+<a href="<%=request.getContextPath()%><%=URL_SOFTWARE_VERSION_EDIT%>?software=${software.id}">Add new version</a>
 <table id="software" cellspacing="0" width="100%">
 </table>
 <%@ include file="/WEB-INF/jspf/footer.jspf"%>
