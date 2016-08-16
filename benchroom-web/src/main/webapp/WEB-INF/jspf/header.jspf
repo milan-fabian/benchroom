@@ -1,0 +1,8 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="static sk.mimac.benchroom.web.WebConstants.*"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<!DOCTYPE html>
+<html>
+    <%@ include file="/WEB-INF/jspf/head.jspf"%>
+    <body>

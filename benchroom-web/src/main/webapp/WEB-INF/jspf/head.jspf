@@ -1,0 +1,11 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/style.css" type="text/css"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <script src="<%=request.getContextPath()%>/resources/js/script.js"></script>
+    <title>Benchroom</title>
+</head>

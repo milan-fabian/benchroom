@@ -1,6 +1,7 @@
 package sk.mimac.benchroom.api.dto.impl;
 
 import java.util.Objects;
+import org.hibernate.validator.constraints.NotBlank;
 import sk.mimac.benchroom.api.dto.Dto;
 
 /**
@@ -11,6 +12,7 @@ public class BenchmarkSuiteDto implements Dto {
 
     private Long id;
 
+    @NotBlank
     private String name;
 
     private Long softwareId;

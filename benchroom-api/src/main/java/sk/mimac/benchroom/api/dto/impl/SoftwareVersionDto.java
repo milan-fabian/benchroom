@@ -2,6 +2,7 @@ package sk.mimac.benchroom.api.dto.impl;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import org.hibernate.validator.constraints.NotBlank;
 import sk.mimac.benchroom.api.dto.Dto;
 
 /**
@@ -12,6 +13,7 @@ public class SoftwareVersionDto implements Dto {
 
     private Long id;
 
+    @NotBlank
     private String name;
 
     private LocalDate releaseDate;

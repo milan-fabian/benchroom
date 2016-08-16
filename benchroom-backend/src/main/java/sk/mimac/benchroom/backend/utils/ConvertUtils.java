@@ -24,12 +24,14 @@ public class ConvertUtils {
     public static SoftwareVersionDto convert(SoftwareVersion entity) {
         SoftwareVersionDto dto = new SoftwareVersionDto(entity.getId());
         dto.setName(entity.getName());
+        dto.setReleaseDate(entity.getReleaseDate());
         return dto;
     }
 
     public static SoftwareVersion convert(SoftwareVersionDto dto) {
         SoftwareVersion entity = new SoftwareVersion(dto.getId());
         entity.setName(dto.getName());
+        entity.setReleaseDate(dto.getReleaseDate());
         return entity;
     }
 

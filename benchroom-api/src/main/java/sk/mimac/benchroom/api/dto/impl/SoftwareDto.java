@@ -2,6 +2,7 @@ package sk.mimac.benchroom.api.dto.impl;
 
 import java.io.Serializable;
 import java.util.Objects;
+import org.hibernate.validator.constraints.NotBlank;
 import sk.mimac.benchroom.api.dto.Dto;
 
 /**
@@ -12,6 +13,7 @@ public class SoftwareDto implements Dto, Serializable {
 
     private Long id;
 
+    @NotBlank
     private String name;
 
     public SoftwareDto() {

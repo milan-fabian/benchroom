@@ -79,6 +79,7 @@ public class SoftwareServiceImpl implements SoftwareService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void updateVersion(SoftwareVersionDto version) {
         softwareVersionDao.update(ConvertUtils.convert(version));
     }
