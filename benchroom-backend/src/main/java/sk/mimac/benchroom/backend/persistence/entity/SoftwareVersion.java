@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -39,6 +40,16 @@ public class SoftwareVersion implements EntityInterface, Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "software_id", nullable = false, updatable = false)
     private Software software;
+
+    @Lob
+    @Basic(optional = true)
+    @Column(name = "setup_script", unique = false, nullable = true)
+    private String setupScript;
+
+    @Lob
+    @Basic(optional = true)
+    @Column(name = "cleanup_script", unique = false, nullable = true)
+    private String cleanupScript;
 
     public SoftwareVersion() {
     }
@@ -79,6 +90,22 @@ public class SoftwareVersion implements EntityInterface, Serializable {
         this.software = software;
     }
 
+    public String getSetupScript() {
+        return setupScript;
+    }
+
+    public void setSetupScript(String setupScript) {
+        this.setupScript = setupScript;
+    }
+
+    public String getCleanupScript() {
+        return cleanupScript;
+    }
+
+    public void setCleanupScript(String cleanupScript) {
+        this.cleanupScript = cleanupScript;
+    }
+
     @Override
     public int hashCode() {
         return 31 + Objects.hashCode(this.id);
@@ -94,6 +121,11 @@ public class SoftwareVersion implements EntityInterface, Serializable {
         }
         final SoftwareVersion other = (SoftwareVersion) obj;
         return Objects.equals(this.id, other.id);
+    }
+
+    @Override
+    public String toString() {
+        return "SoftwareVersion{" + "id=" + id + ", name=" + name + '}';
     }
 
 }

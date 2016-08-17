@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -35,10 +36,12 @@ public class BenchmarkParameter implements EntityInterface, Serializable {
     @Column(name = "name", unique = false, nullable = true)
     private String name;
 
+    @Lob
     @Basic(optional = true)
     @Column(name = "command_line_arguments", unique = false, nullable = true)
     private String commandLineArguments;
 
+    @Lob
     @Basic(optional = true)
     @Column(name = "command_line_input", unique = false, nullable = true)
     private String commandLineInput;

@@ -18,6 +18,16 @@
             <td><form:input path="name"/></td>
             <td><form:errors path="name"/></td>
         </tr>
+        <tr>
+            <td>Setup data:</td>
+            <td><form:textarea path="setupScript"/></td>
+            <td><form:errors path="setupScript"/></td>
+        </tr>
+        <tr>
+            <td>Cleanup data:</td>
+            <td><form:textarea path="cleanupScript"/></td>
+            <td><form:errors path="cleanupScript"/></td>
+        </tr>
     </table>
     <input type="submit" value="Save"/>
 </form:form>

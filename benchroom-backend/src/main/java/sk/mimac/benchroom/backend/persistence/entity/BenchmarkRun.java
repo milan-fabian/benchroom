@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
@@ -50,6 +51,7 @@ public class BenchmarkRun implements EntityInterface, Serializable {
     @Column(name = "number_of_runs", unique = false, nullable = false)
     private int numberOfRuns;
 
+    @Lob
     @Basic(optional = true)
     @Column(name = "command_line_output", unique = false, nullable = true)
     private String commandLineOutput;

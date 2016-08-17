@@ -18,6 +18,10 @@ public class SoftwareVersionDto implements Dto {
 
     private LocalDate releaseDate;
 
+    private String setupScript;
+
+    private String cleanupScript;
+
     public SoftwareVersionDto() {
     }
 
@@ -49,6 +53,22 @@ public class SoftwareVersionDto implements Dto {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public String getSetupScript() {
+        return setupScript;
+    }
+
+    public void setSetupScript(String setupScript) {
+        this.setupScript = setupScript;
+    }
+
+    public String getCleanupScript() {
+        return cleanupScript;
+    }
+
+    public void setCleanupScript(String cleanupScript) {
+        this.cleanupScript = cleanupScript;
     }
 
     @Override

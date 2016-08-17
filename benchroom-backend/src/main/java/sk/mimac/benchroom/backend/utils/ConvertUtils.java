@@ -25,6 +25,8 @@ public class ConvertUtils {
         SoftwareVersionDto dto = new SoftwareVersionDto(entity.getId());
         dto.setName(entity.getName());
         dto.setReleaseDate(entity.getReleaseDate());
+        dto.setSetupScript(entity.getSetupScript());
+        dto.setCleanupScript(entity.getCleanupScript());
         return dto;
     }
 
@@ -32,6 +34,8 @@ public class ConvertUtils {
         SoftwareVersion entity = new SoftwareVersion(dto.getId());
         entity.setName(dto.getName());
         entity.setReleaseDate(dto.getReleaseDate());
+        entity.setSetupScript(dto.getSetupScript());
+        entity.setCleanupScript(dto.getCleanupScript());
         return entity;
     }
 
@@ -40,6 +44,8 @@ public class ConvertUtils {
         dto.setName(entity.getName());
         dto.setSoftwareId(entity.getSoftware().getId());
         dto.setSoftwareName(entity.getSoftware().getName());
+        dto.setSetupScript(entity.getSetupScript());
+        dto.setCleanupScript(entity.getCleanupScript());
         return dto;
     }
 
@@ -47,6 +53,8 @@ public class ConvertUtils {
         BenchmarkSuite entity = new BenchmarkSuite(dto.getId());
         entity.setName(dto.getName());
         entity.setSoftware(new Software(dto.getSoftwareId()));
+        entity.setSetupScript(dto.getSetupScript());
+        entity.setCleanupScript(dto.getCleanupScript());
         return entity;
     }
 

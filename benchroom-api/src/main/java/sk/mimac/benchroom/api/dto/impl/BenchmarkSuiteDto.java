@@ -19,6 +19,10 @@ public class BenchmarkSuiteDto implements Dto {
 
     private String softwareName;
 
+    private String setupScript;
+
+    private String cleanupScript;
+
     public BenchmarkSuiteDto() {
     }
 
@@ -56,6 +60,22 @@ public class BenchmarkSuiteDto implements Dto {
 
     public void setSoftwareName(String softwareName) {
         this.softwareName = softwareName;
+    }
+
+    public String getSetupScript() {
+        return setupScript;
+    }
+
+    public void setSetupScript(String setupScript) {
+        this.setupScript = setupScript;
+    }
+
+    public String getCleanupScript() {
+        return cleanupScript;
+    }
+
+    public void setCleanupScript(String cleanupScript) {
+        this.cleanupScript = cleanupScript;
     }
 
     @Override
