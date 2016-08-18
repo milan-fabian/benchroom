@@ -53,4 +53,12 @@ public class BenchmarkParameterServiceImpl implements BenchmarkParameterService 
         return new Page(list, filter.getPageNumber(), filter.getPageSize(), count);
     }
 
+    @Override
+    public List<BenchmarkParameterDto> getParametersForSuite(long suiteId) {
+        List<BenchmarkParameterDto> result = new ArrayList();
+        for (BenchmarkParameter entity : benchmarkParameterDao.getBySuite(suiteId)) {
+            result.add(ConvertUtils.convert(entity));
+        }
+        return result;
+    }
 }

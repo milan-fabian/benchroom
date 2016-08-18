@@ -12,6 +12,8 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -19,10 +21,15 @@ import javax.persistence.Table;
  * @author Milan Fabian
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = BenchmarkParameter.GET_BY_SUITE, query = "SELECT p FROM BenchmarkParameter p WHERE p.benchmarkSuite.id = :suiteId")
+})
 @Table(name = "benchmark_parameter", indexes = {
     @Index(name = "benchmark_parameter_suite_name", columnList = "benchmark_suite_id, name")
 })
 public class BenchmarkParameter implements EntityInterface, Serializable {
+
+    public static final String GET_BY_SUITE = "BenchmarkParameter.get_by_suite";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

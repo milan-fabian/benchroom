@@ -14,5 +14,6 @@
         <module>benchroom-backend</module>
         <module>benchroom-api</module>
         <module>benchroom-web</module>
+        <module>benchroom-connector</module>
     </modules>
 </project>

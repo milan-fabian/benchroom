@@ -1,5 +1,6 @@
 package sk.mimac.benchroom.api.service;
 
+import java.util.List;
 import sk.mimac.benchroom.api.dto.Page;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkParameterDto;
 import sk.mimac.benchroom.api.filter.BenchmarkParameterFilter;
@@ -17,4 +18,6 @@ public interface BenchmarkParameterService {
     void updateParameter(BenchmarkParameterDto parameter);
 
     Page<BenchmarkParameterDto> getParameterPage(BenchmarkParameterFilter filter);
+    
+    List<BenchmarkParameterDto> getParametersForSuite(long suiteId);
 }

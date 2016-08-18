@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -19,7 +18,7 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = {"sk.mimac.benchroom.web"})
-@Import(sk.mimac.benchroom.backend.config.SpringConfig.class)
+@Import({sk.mimac.benchroom.backend.config.SpringConfig.class, sk.mimac.benchroom.connector.config.SpringConfig.class})
 public class SpringConfig extends WebMvcConfigurerAdapter {
 
     @Override

@@ -33,6 +33,11 @@
             <artifactId>benchroom-backend</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>sk.mimac.benchroom</groupId>
+            <artifactId>benchroom-connector</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- JAVE EE -->
         <dependency>
             <groupId>javax</groupId>
