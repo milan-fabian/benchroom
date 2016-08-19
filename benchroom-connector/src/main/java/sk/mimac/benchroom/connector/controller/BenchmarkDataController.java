@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkParameterDto;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkSuiteDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareVersionDto;
+import sk.mimac.benchroom.api.enums.Platform;
+import sk.mimac.benchroom.api.enums.ScriptType;
 import sk.mimac.benchroom.api.service.BenchmarkParameterService;
 import sk.mimac.benchroom.api.service.BenchmarkSuiteService;
+import sk.mimac.benchroom.api.service.ScriptService;
 import sk.mimac.benchroom.api.service.SoftwareService;
 import sk.mimac.benchroom.connector.ConnectorConstants;
 import sk.mimac.benchroom.connector.controller.model.RunData;
@@ -33,17 +36,22 @@ public class BenchmarkDataController {
     @Autowired
     private BenchmarkParameterService benchmarkParameterService;
 
+    @Autowired
+    private ScriptService scriptService;
+
     @RequestMapping(value = ConnectorConstants.URL_BENCHMARK_DATA, method = RequestMethod.GET)
-    public RunData getBenchmarkData(@RequestParam("id") String dataId) {
+    public RunData getBenchmarkData(@RequestParam("id") String dataId, @RequestParam("platform") Platform platform) {
         String[] parts = dataId.split("-");
         SoftwareVersionDto version = softwareService.getVersionById(Long.parseLong(parts[0]));
         BenchmarkSuiteDto suite = benchmarkSuiteService.getSuiteById(Long.parseLong(parts[1]));
         List<BenchmarkParameterDto> parameters = benchmarkParameterService.getParametersForSuite(suite.getId());
+        String setupScript = scriptService.getScriptForPlatformVersion(platform, version.getId(), ScriptType.SETUP);
+        String cleanupScript = scriptService.getScriptForPlatformVersion(platform, version.getId(), ScriptType.CLEANUP);
         RunData runData = new RunData();
-        runData.setRunName(suite.getName());
+        runData.setRunName(version.getSoftwareName() + " " + version.getName() + " - " + suite.getName());
         runData.setRunId(dataId);
-        runData.setSofwareSetup(version.getSetupScript());
-        runData.setSofwareCleanup(version.getCleanupScript());
+        runData.setSofwareSetup(setupScript);
+        runData.setSofwareCleanup(cleanupScript);
         runData.setBenchmarkSetup(suite.getSetupScript());
         runData.setBenchmarkCleanup(suite.getCleanupScript());
         runData.setParameters(prepareRunParameters(parameters, dataId));

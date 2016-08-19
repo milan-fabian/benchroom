@@ -1,5 +1,7 @@
 package sk.mimac.benchroom.backend.utils;
 
+import java.util.HashSet;
+import org.slf4j.LoggerFactory;
 import sk.mimac.benchroom.api.dto.impl.*;
 import sk.mimac.benchroom.backend.persistence.entity.*;
 
@@ -25,8 +27,8 @@ public class ConvertUtils {
         SoftwareVersionDto dto = new SoftwareVersionDto(entity.getId());
         dto.setName(entity.getName());
         dto.setReleaseDate(entity.getReleaseDate());
-        dto.setSetupScript(entity.getSetupScript());
-        dto.setCleanupScript(entity.getCleanupScript());
+        dto.setSoftwareId(entity.getSoftware().getId());
+        dto.setSoftwareName(entity.getSoftware().getName());
         return dto;
     }
 
@@ -34,8 +36,7 @@ public class ConvertUtils {
         SoftwareVersion entity = new SoftwareVersion(dto.getId());
         entity.setName(dto.getName());
         entity.setReleaseDate(dto.getReleaseDate());
-        entity.setSetupScript(dto.getSetupScript());
-        entity.setCleanupScript(dto.getCleanupScript());
+        entity.setSoftware(new Software(dto.getSoftwareId()));
         return entity;
     }
 
@@ -75,7 +76,7 @@ public class ConvertUtils {
         dto.setBenchmarkSuiteId(entity.getBenchmarkSuite().getId());
         return dto;
     }
-    
+
     public static BenchmarkRunDto convert(BenchmarkRun entity) {
         BenchmarkRunDto dto = new BenchmarkRunDto(entity.getId());
         dto.setAverageRunTime(entity.getAverageRunTime());
@@ -89,4 +90,21 @@ public class ConvertUtils {
         return dto;
     }
 
+    public static ScriptDto convert(Script entity) {
+        ScriptDto dto = new ScriptDto(entity.getId());
+        dto.setType(entity.getType());
+        dto.setScriptData(entity.getScript());
+        dto.setSoftwareVersionId(entity.getSoftwareVersion().getId());
+        dto.setSupportedPlatforms(new HashSet<>(entity.getSupportedPlatforms()));
+        return dto;
+    }
+
+    public static Script convert(ScriptDto dto) {
+        Script entity = new Script(dto.getId());
+        entity.setType(dto.getType());
+        entity.setScript(dto.getScriptData());
+        entity.setSoftwareVersion(new SoftwareVersion(dto.getSoftwareVersionId()));
+        entity.setSupportedPlatforms(new HashSet<>(dto.getSupportedPlatforms()));
+        return entity;
+    }
 }

@@ -23,4 +23,8 @@ public class WebConstants {
     public static final String URL_BENCHMARK_PARAMETER = "/benchmark_parameter";
     public static final String URL_BENCHMARK_PARAMETER_LIST = "/benchmark_parameter/list";
     public static final String URL_BENCHMARK_PARAMETER_EDIT = "/benchmark_parameter/edit";
+    /* SCRIPT */
+    public static final String URL_SCRIPT = "/script";
+    public static final String URL_SCRIPT_LIST = "/script/list";
+    public static final String URL_SCRIPT_EDIT = "/script/edit";
 }
