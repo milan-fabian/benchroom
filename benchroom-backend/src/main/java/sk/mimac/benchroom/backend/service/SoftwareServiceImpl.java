@@ -72,10 +72,8 @@ public class SoftwareServiceImpl implements SoftwareService {
 
     @Override
     @Transactional(readOnly = false)
-    public long insertVersion(SoftwareVersionDto version, long softwareId) {
-        SoftwareVersion versionEntity = ConvertUtils.convert(version);
-        versionEntity.setSoftware(new Software(softwareId));
-        return softwareVersionDao.insert(versionEntity);
+    public long insertVersion(SoftwareVersionDto version) {
+        return softwareVersionDao.insert(ConvertUtils.convert(version));
     }
 
     @Override

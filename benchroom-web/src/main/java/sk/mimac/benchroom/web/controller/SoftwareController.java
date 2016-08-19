@@ -86,8 +86,9 @@ public class SoftwareController {
             model.put("software", softwareService.getSoftwareById(softwareId));
             return new ModelAndView("software/version/software_version_edit", model);
         }
+        version.setSoftwareId(softwareId);
         if (version.getId() == null) {
-            softwareService.insertVersion(version, softwareId);
+            softwareService.insertVersion(version);
         } else {
             softwareService.updateVersion(version);
         }

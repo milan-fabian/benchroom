@@ -35,8 +35,8 @@ public class BenchmarkRunServiceImpl implements BenchmarkRunService {
         BenchmarkRunQueryBuilder queryBuilder = new BenchmarkRunQueryBuilder(filter);
         long count = benchmarkRunDao.countForFilter(queryBuilder);
         List<BenchmarkRunDto> list = new ArrayList<>(filter.getPageSize());
-        for (BenchmarkRun suite : benchmarkRunDao.getForFilter(queryBuilder)) {
-            list.add(ConvertUtils.convert(suite));
+        for (BenchmarkRun run : benchmarkRunDao.getForFilter(queryBuilder)) {
+            list.add(ConvertUtils.convert(run));
         }
         return new Page(list, filter.getPageNumber(), filter.getPageSize(), count);
     }

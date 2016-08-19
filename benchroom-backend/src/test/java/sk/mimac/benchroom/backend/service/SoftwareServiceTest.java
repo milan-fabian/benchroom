@@ -41,7 +41,8 @@ public class SoftwareServiceTest {
 
         SoftwareVersionDto version = new SoftwareVersionDto();
         version.setName("ver 1.0");
-        softwareService.insertVersion(version, id);
+        version.setSoftwareId(id);
+        softwareService.insertVersion(version);
         SoftwareVersionFilter filter2 = new SoftwareVersionFilter();
         filter2.setSoftwareId(id);
         filter2.setPageNumber(1);

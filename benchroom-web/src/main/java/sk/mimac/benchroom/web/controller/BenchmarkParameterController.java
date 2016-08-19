@@ -59,8 +59,8 @@ public class BenchmarkParameterController {
             model.put("suite", benchmarkSuiteService.getSuiteById(suiteId));
             return new ModelAndView("benchmark_parameter/benchmark_parameter_edit", model);
         }
+        parameter.setBenchmarkSuiteId(suiteId);
         if (parameter.getId() == null) {
-            parameter.setBenchmarkSuiteId(suiteId);
             benchmarkParametersService.insertParameter(parameter);
         } else {
             benchmarkParametersService.updateParameter(parameter);

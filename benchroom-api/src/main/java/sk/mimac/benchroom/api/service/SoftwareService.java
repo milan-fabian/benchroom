@@ -22,7 +22,7 @@ public interface SoftwareService {
     
     SoftwareVersionDto getVersionById(long id);
     
-    long insertVersion(SoftwareVersionDto version, long softwareId);
+    long insertVersion(SoftwareVersionDto version);
     
     void updateVersion(SoftwareVersionDto version);
 

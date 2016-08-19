@@ -59,8 +59,8 @@ public class BenchmarkSuiteController {
             model.put("software", softwareService.getSoftwareById(softwareId));
             return new ModelAndView("benchmark_suite/benchmark_suite_edit", model);
         }
+        suite.setSoftwareId(softwareId);
         if (suite.getId() == null) {
-            suite.setSoftwareId(softwareId);
             benchmarkSuiteService.insertSuite(suite);
         } else {
             benchmarkSuiteService.updateSuite(suite);
