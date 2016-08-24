@@ -6,3 +6,6 @@
 /benchroom-web/nb-configuration.html
 /benchroom-web/nb-configuration.xml
 /benchroom-connector/target/
+/benchroom-executor-csharp/bin
+/benchroom-executor-csharp/obj
+/benchroom-executor-csharp/packages

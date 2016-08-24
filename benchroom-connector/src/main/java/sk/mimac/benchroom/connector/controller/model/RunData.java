@@ -1,6 +1,7 @@
 package sk.mimac.benchroom.connector.controller.model;
 
 import java.util.List;
+import sk.mimac.benchroom.api.enums.MonitorType;
 
 /**
  *
@@ -9,18 +10,13 @@ import java.util.List;
 public class RunData {
 
     private String runId;
-
     private String runName;
-
     private String sofwareSetup;
-
     private String sofwareCleanup;
-
     private String benchmarkSetup;
-
     private String benchmarkCleanup;
-
     private List<RunParameter> parameters;
+    private List<RunMonitor> monitors;
 
     public String getRunId() {
         return runId;
@@ -78,12 +74,18 @@ public class RunData {
         this.parameters = parameters;
     }
 
+    public List<RunMonitor> getMonitors() {
+        return monitors;
+    }
+
+    public void setMonitors(List<RunMonitor> monitors) {
+        this.monitors = monitors;
+    }
+
     public static class RunParameter {
 
         private String parameterId;
-
         private String commandLineArguments;
-
         private String commandLineInput;
 
         public String getParameterId() {
@@ -109,5 +111,37 @@ public class RunData {
         public void setCommandLineInput(String commandLineInput) {
             this.commandLineInput = commandLineInput;
         }
+    }
+
+    public static class RunMonitor {
+
+        private String monitorId;
+        private MonitorType type;
+        private String action;
+
+        public String getMonitorId() {
+            return monitorId;
+        }
+
+        public void setMonitorId(String monitorId) {
+            this.monitorId = monitorId;
+        }
+
+        public MonitorType getType() {
+            return type;
+        }
+
+        public void setType(MonitorType type) {
+            this.type = type;
+        }
+
+        public String getAction() {
+            return action;
+        }
+
+        public void setAction(String action) {
+            this.action = action;
+        }
+
     }
 }

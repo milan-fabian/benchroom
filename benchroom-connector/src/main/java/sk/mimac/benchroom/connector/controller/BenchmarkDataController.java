@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import sk.mimac.benchroom.api.dto.impl.BenchmarkMonitorDto;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkParameterDto;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkSuiteDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareVersionDto;
 import sk.mimac.benchroom.api.enums.Platform;
 import sk.mimac.benchroom.api.enums.ScriptType;
+import sk.mimac.benchroom.api.service.BenchmarkMonitorService;
 import sk.mimac.benchroom.api.service.BenchmarkParameterService;
 import sk.mimac.benchroom.api.service.BenchmarkSuiteService;
 import sk.mimac.benchroom.api.service.ScriptService;
@@ -36,6 +38,9 @@ public class BenchmarkDataController {
     private BenchmarkParameterService benchmarkParameterService;
 
     @Autowired
+    private BenchmarkMonitorService benchmarkMonitorService;
+
+    @Autowired
     private ScriptService scriptService;
 
     @RequestMapping(value = ConnectorConstants.URL_BENCHMARK_DATA, method = RequestMethod.GET)
@@ -44,6 +49,7 @@ public class BenchmarkDataController {
         SoftwareVersionDto version = softwareService.getVersionById(Long.parseLong(parts[0]));
         BenchmarkSuiteDto suite = benchmarkSuiteService.getSuiteById(Long.parseLong(parts[1]));
         List<BenchmarkParameterDto> parameters = benchmarkParameterService.getParametersForSuite(suite.getId());
+        List<BenchmarkMonitorDto> monitors = benchmarkMonitorService.getMonitorsForSuite(suite.getId());
         String setupScript = scriptService.getScriptForPlatformVersion(platform, version.getId(), ScriptType.SETUP);
         String cleanupScript = scriptService.getScriptForPlatformVersion(platform, version.getId(), ScriptType.CLEANUP);
         RunData runData = new RunData();
@@ -54,6 +60,7 @@ public class BenchmarkDataController {
         runData.setBenchmarkSetup(suite.getSetupScript());
         runData.setBenchmarkCleanup(suite.getCleanupScript());
         runData.setParameters(prepareRunParameters(parameters, dataId));
+        runData.setMonitors(prepareRunMonitors(monitors, dataId));
         return runData;
     }
 
@@ -64,6 +71,18 @@ public class BenchmarkDataController {
             runParam.setParameterId(dataId + "-" + parameter.getId());
             runParam.setCommandLineArguments(parameter.getCommandLineArguments());
             runParam.setCommandLineInput(parameter.getCommandLineInput());
+            result.add(runParam);
+        }
+        return result;
+    }
+
+    private List<RunData.RunMonitor> prepareRunMonitors(List<BenchmarkMonitorDto> monitors, String dataId) {
+        List<RunData.RunMonitor> result = new ArrayList<>();
+        for (BenchmarkMonitorDto monitor : monitors) {
+            RunData.RunMonitor runParam = new RunData.RunMonitor();
+            runParam.setMonitorId(dataId + "-" + monitor.getId());
+            runParam.setType(monitor.getType());
+            runParam.setAction(monitor.getAction());
             result.add(runParam);
         }
         return result;

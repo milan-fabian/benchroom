@@ -19,6 +19,10 @@ public class WebConstants {
     public static final String URL_BENCHMARK_SUITE = "/benchmark_suite";
     public static final String URL_BENCHMARK_SUITE_LIST = "/benchmark_suite/list";
     public static final String URL_BENCHMARK_SUITE_EDIT = "/benchmark_suite/edit";
+    /* BENCHMARK MONITOR */
+    public static final String URL_BENCHMARK_MONITOR = "/benchmark_monitor";
+    public static final String URL_BENCHMARK_MONITOR_LIST = "/benchmark_monitor/list";
+    public static final String URL_BENCHMARK_MONITOR_EDIT = "/benchmark_monitor/edit";
     /* BENCHMARK PARAMETER */
     public static final String URL_BENCHMARK_PARAMETER = "/benchmark_parameter";
     public static final String URL_BENCHMARK_PARAMETER_LIST = "/benchmark_parameter/list";

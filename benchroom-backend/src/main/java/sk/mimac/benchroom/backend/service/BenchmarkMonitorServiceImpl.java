@@ -53,4 +53,13 @@ public class BenchmarkMonitorServiceImpl implements BenchmarkMonitorService {
         return new Page(list, filter.getPageNumber(), filter.getPageSize(), count);
     }
 
+    @Override
+    public List<BenchmarkMonitorDto> getMonitorsForSuite(long suiteId) {
+        List<BenchmarkMonitorDto> result = new ArrayList();
+        for (BenchmarkMonitor entity : benchmarkMonitorDao.getBySuite(suiteId)) {
+            result.add(ConvertUtils.convert(entity));
+        }
+        return result;
+    }
+
 }

@@ -10,8 +10,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import sk.mimac.benchroom.api.enums.MonitorType;
 
@@ -20,8 +23,15 @@ import sk.mimac.benchroom.api.enums.MonitorType;
  * @author Milan Fabian
  */
 @Entity
-@Table(name = "benchmark_monitor")
+@NamedQueries({
+    @NamedQuery(name = BenchmarkMonitor.GET_BY_SUITE, query = "SELECT m FROM BenchmarkMonitor m WHERE m.benchmarkSuite.id = :suiteId")
+})
+@Table(name = "benchmark_monitor", indexes = {
+    @Index(name = "benchmark_monitor_suite_name", columnList = "benchmark_suite_id, name")
+})
 public class BenchmarkMonitor implements EntityInterface, Serializable {
+
+    public static final String GET_BY_SUITE = "BenchmarkMonitor.get_by_suite";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +50,7 @@ public class BenchmarkMonitor implements EntityInterface, Serializable {
     private BenchmarkSuite benchmarkSuite;
 
     @Basic(optional = true)
-    @Column(name = "name", unique = false, nullable = true)
+    @Column(name = "action_data", unique = false, nullable = true)
     private String action;
 
     public BenchmarkMonitor(Long id) {

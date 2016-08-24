@@ -12,6 +12,7 @@
                             {title: "Name", data: "name"},
                             {sortable: false, render: function (data, type, row) {
                                     return "<a href='<%=request.getContextPath()%><%=URL_BENCHMARK_PARAMETER%>?suite=" + row.id + "'>Parameters</a> "
+                                            + "<a href='<%=request.getContextPath()%><%=URL_BENCHMARK_MONITOR%>?suite=" + row.id + "'>Monitors</a> "
                                             + "<a href='<%=request.getContextPath()%><%=URL_BENCHMARK_SUITE_EDIT%>?suite=" + row.id + "&software=${software.id}'>Edit</a>";
                                 }
                             }

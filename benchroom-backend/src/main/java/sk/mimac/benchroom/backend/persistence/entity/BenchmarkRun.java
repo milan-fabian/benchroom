@@ -50,7 +50,7 @@ public class BenchmarkRun implements EntityInterface, Serializable {
     @Column(name = "system_value")
     private Map<SystemParameter, String> hardwareParameters;
 
-    @OneToMany(mappedBy = "result")
+    @OneToMany(mappedBy = "run")
     private Set<BenchmarkRunResult> results;
 
     public BenchmarkRun() {
