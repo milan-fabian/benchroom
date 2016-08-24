@@ -1,6 +1,6 @@
 package sk.mimac.benchroom.connector.controller.model;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  *
@@ -20,7 +20,7 @@ public class RunData {
 
     private String benchmarkCleanup;
 
-    private Map<String, RunParameter> parameters;
+    private List<RunParameter> parameters;
 
     public String getRunId() {
         return runId;
@@ -70,19 +70,29 @@ public class RunData {
         this.benchmarkCleanup = benchmarkCleanup;
     }
 
-    public Map<String, RunParameter> getParameters() {
+    public List<RunParameter> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map<String, RunParameter> parameters) {
+    public void setParameters(List<RunParameter> parameters) {
         this.parameters = parameters;
     }
 
     public static class RunParameter {
 
+        private String parameterId;
+
         private String commandLineArguments;
 
         private String commandLineInput;
+
+        public String getParameterId() {
+            return parameterId;
+        }
+
+        public void setParameterId(String parameterId) {
+            this.parameterId = parameterId;
+        }
 
         public String getCommandLineArguments() {
             return commandLineArguments;

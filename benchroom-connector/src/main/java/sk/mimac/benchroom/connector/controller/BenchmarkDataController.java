@@ -1,8 +1,7 @@
 package sk.mimac.benchroom.connector.controller;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,13 +57,14 @@ public class BenchmarkDataController {
         return runData;
     }
 
-    private Map<String, RunData.RunParameter> prepareRunParameters(List<BenchmarkParameterDto> parameters, String dataId) {
-        Map<String, RunData.RunParameter> result = new HashMap<>();
+    private List<RunData.RunParameter> prepareRunParameters(List<BenchmarkParameterDto> parameters, String dataId) {
+        List<RunData.RunParameter> result = new ArrayList<>();
         for (BenchmarkParameterDto parameter : parameters) {
             RunData.RunParameter runParam = new RunData.RunParameter();
+            runParam.setParameterId(dataId + "-" + parameter.getId());
             runParam.setCommandLineArguments(parameter.getCommandLineArguments());
             runParam.setCommandLineInput(parameter.getCommandLineInput());
-            result.put(dataId + "-" + parameter.getId(), runParam);
+            result.add(runParam);
         }
         return result;
     }
