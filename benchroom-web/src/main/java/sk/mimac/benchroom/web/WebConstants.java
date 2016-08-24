@@ -27,4 +27,9 @@ public class WebConstants {
     public static final String URL_SCRIPT = "/script";
     public static final String URL_SCRIPT_LIST = "/script/list";
     public static final String URL_SCRIPT_EDIT = "/script/edit";
+    /* BENCHMARK */
+    public static final String URL_BENCHMARK = "/benchmark";
+    public static final String URL_BENCHMARK_SEARCH_SOFTWARE = "/benchmark/search/software";
+    public static final String URL_BENCHMARK_SEARCH_SUITE = "/benchmark/search/suite";
+    public static final String URL_BENCHMARK_SEARCH_VERSION = "/benchmark/search/version";
 }
