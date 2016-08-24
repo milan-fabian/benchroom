@@ -12,6 +12,8 @@ public abstract class AbstractFilter<T extends Dto> {
 
     private int pageNumber;
 
+    private String fulltext;
+
     public int getPageSize() {
         return pageSize;
     }
@@ -26,6 +28,14 @@ public abstract class AbstractFilter<T extends Dto> {
 
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
+    }
+
+    public String getFulltext() {
+        return fulltext;
+    }
+
+    public void setFulltext(String fulltext) {
+        this.fulltext = fulltext;
     }
 
 }

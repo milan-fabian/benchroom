@@ -27,6 +27,9 @@ public class BenchmarkSuiteQueryBuilder extends QueryBuilder<BenchmarkSuite> {
         if (filter.getSoftwareId() != null) {
             list.add(cb.equal(root.get("software").get("id"), filter.getSoftwareId()));
         }
+        if (filter.getFulltext() != null) {
+            list.add(cb.like(root.get("name"), "%" + filter.getFulltext() + "%"));
+        }
         return list;
     }
 }

@@ -27,6 +27,9 @@ public class SoftwareVersionQueryBuilder extends QueryBuilder<SoftwareVersion> {
         if (filter.getSoftwareId() != null) {
             list.add(cb.equal(root.get("software"), filter.getSoftwareId()));
         }
+        if (filter.getFulltext() != null) {
+            list.add(cb.like(root.get("name"), "%" + filter.getFulltext() + "%"));
+        }
         return list;
     }
 
