@@ -1,7 +1,8 @@
 package sk.mimac.benchroom.backend.utils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 import sk.mimac.benchroom.api.dto.impl.*;
 import sk.mimac.benchroom.backend.persistence.entity.*;
 
@@ -79,14 +80,15 @@ public class ConvertUtils {
 
     public static BenchmarkRunDto convert(BenchmarkRun entity) {
         BenchmarkRunDto dto = new BenchmarkRunDto(entity.getId());
-        dto.setAverageRunTime(entity.getAverageRunTime());
         dto.setBenchmarkParameter(convert(entity.getBenchmarkParameter()));
-        dto.setCommandLineOutput(entity.getCommandLineOutput());
         dto.setHardwareParameters(entity.getHardwareParameters());
-        dto.setNumberOfRuns(entity.getNumberOfRuns());
-        dto.setResultCode(entity.getResultCode());
         dto.setSoftwareVersion(convert(entity.getSoftwareVersion()));
         dto.setWhenStarted(entity.getWhenStarted());
+        List<BenchmarkRunResultDto> results = new ArrayList<>();
+        for (BenchmarkRunResult result : entity.getResults()) {
+            results.add(convert(result));
+        }
+        dto.setResults(results);
         return dto;
     }
 
@@ -106,5 +108,31 @@ public class ConvertUtils {
         entity.setSoftwareVersion(new SoftwareVersion(dto.getSoftwareVersionId()));
         entity.setSupportedPlatforms(new HashSet<>(dto.getSupportedPlatforms()));
         return entity;
+    }
+
+    public static BenchmarkMonitorDto convert(BenchmarkMonitor entity) {
+        BenchmarkMonitorDto dto = new BenchmarkMonitorDto(entity.getId());
+        dto.setName(entity.getName());
+        dto.setAction(entity.getAction());
+        dto.setBenchmarkSuiteId(entity.getBenchmarkSuite().getId());
+        dto.setType(entity.getType());
+        return dto;
+    }
+
+    public static BenchmarkMonitor convert(BenchmarkMonitorDto dto) {
+        BenchmarkMonitor entity = new BenchmarkMonitor(dto.getId());
+        entity.setName(dto.getName());
+        entity.setAction(dto.getAction());
+        entity.setBenchmarkSuite(new BenchmarkSuite(dto.getBenchmarkSuiteId()));
+        entity.setType(dto.getType());
+        return entity;
+    }
+    
+    public static BenchmarkRunResultDto convert(BenchmarkRunResult entity) {
+        BenchmarkRunResultDto dto = new BenchmarkRunResultDto(entity.getId());
+        dto.setResult(entity.getResult());
+        dto.setMonitorName(entity.getMonitor().getName());
+        dto.setMonitorType(entity.getMonitor().getType());
+        return dto;
     }
 }

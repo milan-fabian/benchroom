@@ -1,6 +1,7 @@
 package sk.mimac.benchroom.api.dto.impl;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import sk.mimac.benchroom.api.dto.Dto;
@@ -20,15 +21,9 @@ public class BenchmarkRunDto implements Dto {
 
     private ZonedDateTime whenStarted;
 
-    private int averageRunTime;
-
-    private int numberOfRuns;
-
-    private String commandLineOutput;
-
-    private int resultCode;
-
     private Map<SystemParameter, String> hardwareParameters;
+
+    private List<BenchmarkRunResultDto> results;
 
     public BenchmarkRunDto(Long id) {
         this.id = id;
@@ -69,44 +64,20 @@ public class BenchmarkRunDto implements Dto {
         this.whenStarted = whenStarted;
     }
 
-    public int getAverageRunTime() {
-        return averageRunTime;
-    }
-
-    public void setAverageRunTime(int averageRunTime) {
-        this.averageRunTime = averageRunTime;
-    }
-
-    public int getNumberOfRuns() {
-        return numberOfRuns;
-    }
-
-    public void setNumberOfRuns(int numberOfRuns) {
-        this.numberOfRuns = numberOfRuns;
-    }
-
-    public String getCommandLineOutput() {
-        return commandLineOutput;
-    }
-
-    public void setCommandLineOutput(String commandLineOutput) {
-        this.commandLineOutput = commandLineOutput;
-    }
-
-    public int getResultCode() {
-        return resultCode;
-    }
-
-    public void setResultCode(int resultCode) {
-        this.resultCode = resultCode;
-    }
-
     public Map<SystemParameter, String> getHardwareParameters() {
         return hardwareParameters;
     }
 
     public void setHardwareParameters(Map<SystemParameter, String> hardwareParameters) {
         this.hardwareParameters = hardwareParameters;
+    }
+
+    public List<BenchmarkRunResultDto> getResults() {
+        return results;
+    }
+
+    public void setResults(List<BenchmarkRunResultDto> results) {
+        this.results = results;
     }
 
     @Override
@@ -128,7 +99,7 @@ public class BenchmarkRunDto implements Dto {
 
     @Override
     public String toString() {
-        return "BenchmarkRunDto{" + "id=" + id + ", softwareVersion=" + softwareVersion + ", benchmarkParameter=" + benchmarkParameter + ", averageRunTime=" + averageRunTime + ", resultCode=" + resultCode + '}';
+        return "BenchmarkRunDto{" + "id=" + id + ", whenStarted=" + whenStarted + '}';
     }
 
 }
