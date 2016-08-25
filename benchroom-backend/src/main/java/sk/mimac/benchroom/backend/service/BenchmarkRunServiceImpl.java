@@ -1,7 +1,10 @@
 package sk.mimac.benchroom.backend.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +13,9 @@ import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
 import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 import sk.mimac.benchroom.api.service.BenchmarkRunService;
 import sk.mimac.benchroom.backend.persistence.dao.BenchmarkRunDao;
+import sk.mimac.benchroom.backend.persistence.entity.BenchmarkMonitor;
 import sk.mimac.benchroom.backend.persistence.entity.BenchmarkRun;
+import sk.mimac.benchroom.backend.persistence.entity.BenchmarkRunResult;
 import sk.mimac.benchroom.backend.persistence.query.BenchmarkRunQueryBuilder;
 import sk.mimac.benchroom.backend.utils.ConvertUtils;
 
@@ -21,15 +26,31 @@ import sk.mimac.benchroom.backend.utils.ConvertUtils;
 @Service
 @Transactional(readOnly = true)
 public class BenchmarkRunServiceImpl implements BenchmarkRunService {
-
+    
     @Autowired
     private BenchmarkRunDao benchmarkRunDao;
-
+    
     @Override
     public BenchmarkRunDto getRunById(long id) {
         return ConvertUtils.convert(benchmarkRunDao.find(id));
     }
-
+    
+    @Override
+    @Transactional(readOnly = false)
+    public void insertRun(BenchmarkRunDto dto, Map<Long, Double> monitorResults) {
+        BenchmarkRun entity = ConvertUtils.convert(dto);
+        Set<BenchmarkRunResult> results = new HashSet<>();
+        for (Map.Entry<Long, Double> monitorResult : monitorResults.entrySet()) {
+            BenchmarkRunResult result = new BenchmarkRunResult();
+            result.setMonitor(new BenchmarkMonitor(monitorResult.getKey()));
+            result.setResult(monitorResult.getValue());
+            result.setRun(entity);
+            results.add(result);
+        }
+        entity.setResults(results);
+        benchmarkRunDao.insert(entity);
+    }
+    
     @Override
     public Page<BenchmarkRunDto> getRunPage(BenchmarkRunFilter filter) {
         BenchmarkRunQueryBuilder queryBuilder = new BenchmarkRunQueryBuilder(filter);
@@ -40,5 +61,5 @@ public class BenchmarkRunServiceImpl implements BenchmarkRunService {
         }
         return new Page(list, filter.getPageNumber(), filter.getPageSize(), count);
     }
-
+    
 }

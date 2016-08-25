@@ -84,15 +84,15 @@ public class RunData {
 
     public static class RunParameter {
 
-        private String parameterId;
+        private long parameterId;
         private String commandLineArguments;
         private String commandLineInput;
 
-        public String getParameterId() {
+        public long getParameterId() {
             return parameterId;
         }
 
-        public void setParameterId(String parameterId) {
+        public void setParameterId(long parameterId) {
             this.parameterId = parameterId;
         }
 
@@ -115,15 +115,15 @@ public class RunData {
 
     public static class RunMonitor {
 
-        private String monitorId;
+        private long monitorId;
         private MonitorType type;
         private String action;
 
-        public String getMonitorId() {
+        public long getMonitorId() {
             return monitorId;
         }
 
-        public void setMonitorId(String monitorId) {
+        public void setMonitorId(long monitorId) {
             this.monitorId = monitorId;
         }
 

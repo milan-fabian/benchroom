@@ -92,6 +92,15 @@ public class ConvertUtils {
         return dto;
     }
 
+    public static BenchmarkRun convert(BenchmarkRunDto dto) {
+        BenchmarkRun entity = new BenchmarkRun(dto.getId());
+        entity.setBenchmarkParameter(new BenchmarkParameter(dto.getBenchmarkParameter().getId()));
+        entity.setHardwareParameters(dto.getHardwareParameters());
+        entity.setSoftwareVersion(new SoftwareVersion(dto.getSoftwareVersion().getId()));
+        entity.setWhenStarted(dto.getWhenStarted());
+        return entity;
+    }
+
     public static ScriptDto convert(Script entity) {
         ScriptDto dto = new ScriptDto(entity.getId());
         dto.setType(entity.getType());
@@ -127,7 +136,7 @@ public class ConvertUtils {
         entity.setType(dto.getType());
         return entity;
     }
-    
+
     public static BenchmarkRunResultDto convert(BenchmarkRunResult entity) {
         BenchmarkRunResultDto dto = new BenchmarkRunResultDto(entity.getId());
         dto.setResult(entity.getResult());

@@ -1,0 +1,82 @@
+package sk.mimac.benchroom.connector.controller.model;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
+import sk.mimac.benchroom.api.system.SystemParameter;
+
+/**
+ *
+ * @author Milan Fabian
+ */
+public class Run {
+
+    private String runId;
+    private long parameterId;
+    private ZonedDateTime whenStarted;
+    private List<RunResult> results;
+    private Map<SystemParameter, String> hardwareParameters;
+
+    public String getRunId() {
+        return runId;
+    }
+
+    public void setRunId(String runId) {
+        this.runId = runId;
+    }
+
+    public long getParameterId() {
+        return parameterId;
+    }
+
+    public void setParameterId(long parameterId) {
+        this.parameterId = parameterId;
+    }
+
+    public ZonedDateTime getWhenStarted() {
+        return whenStarted;
+    }
+
+    public void setWhenStarted(ZonedDateTime whenStarted) {
+        this.whenStarted = whenStarted;
+    }
+
+    public List<RunResult> getResults() {
+        return results;
+    }
+
+    public void setResults(List<RunResult> results) {
+        this.results = results;
+    }
+
+    public Map<SystemParameter, String> getHardwareParameters() {
+        return hardwareParameters;
+    }
+
+    public void setHardwareParameters(Map<SystemParameter, String> hardwareParameters) {
+        this.hardwareParameters = hardwareParameters;
+    }
+
+    public static class RunResult {
+
+        private long monitorId;
+        private double result;
+
+        public long getMonitorId() {
+            return monitorId;
+        }
+
+        public void setMonitorId(long monitorId) {
+            this.monitorId = monitorId;
+        }
+
+        public double getResult() {
+            return result;
+        }
+
+        public void setResult(double result) {
+            this.result = result;
+        }
+
+    }
+}

@@ -6,9 +6,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyEnumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import sk.mimac.benchroom.api.system.SystemParameter;
@@ -47,10 +50,11 @@ public class BenchmarkRun implements EntityInterface, Serializable {
     @ElementCollection
     @JoinTable(name = "system_parameters", joinColumns = @JoinColumn(name = "benchmark_run"))
     @MapKeyColumn(name = "system_key")
+    @MapKeyEnumerated(EnumType.STRING)
     @Column(name = "system_value")
     private Map<SystemParameter, String> hardwareParameters;
 
-    @OneToMany(mappedBy = "run")
+    @OneToMany(mappedBy = "run", cascade = {CascadeType.ALL})
     private Set<BenchmarkRunResult> results;
 
     public BenchmarkRun() {
