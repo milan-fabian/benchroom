@@ -1,12 +1,12 @@
 package sk.mimac.benchroom.api.filter;
 
-import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
+import sk.mimac.benchroom.api.dto.impl.BenchmarkRunSimpleDto;
 
 /**
  *
  * @author Milan Fabian
  */
-public class BenchmarkRunFilter extends AbstractFilter<BenchmarkRunDto> {
+public class BenchmarkRunFilter extends AbstractFilter<BenchmarkRunSimpleDto> {
 
     private Long softwareVersionId;
     private Long softwareId;

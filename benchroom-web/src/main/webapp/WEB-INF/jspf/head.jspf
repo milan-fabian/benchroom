@@ -6,7 +6,9 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/style.css"/>
     <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css"/>
     <script type="text/javascript" src="//code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.12/dataRender/datetime.js"></script>
     <script type="text/javascript" src="//code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
     <script src="<%=request.getContextPath()%>/resources/js/script.js"></script>
     <title>Benchroom</title>

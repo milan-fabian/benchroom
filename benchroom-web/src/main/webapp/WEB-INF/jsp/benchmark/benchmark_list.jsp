@@ -34,7 +34,7 @@
                     }
                 });
             },
-            minLength: 1,
+            minLength: 0,
             select: function (event, ui) {
                 $("#versionSelect").val(ui.item.label);
                 $("#versionId").val(ui.item.value);
@@ -58,7 +58,7 @@
                     }
                 });
             },
-            minLength: 1,
+            minLength: 0,
             select: function (event, ui) {
                 $("#suiteSelect").val(ui.item.label);
                 $("#suiteId").val(ui.item.value);
@@ -70,6 +70,23 @@
                 return false;
             }
         });
+
+        $('#run').DataTable({
+            ajax: function (data, callback, settings) {
+                $.post('<%=request.getContextPath()%><%=URL_BENCHMARK_LIST%>?suite=' + $("#suiteId").val() + "&version=" + $("#versionId").val(), data, function (data) {
+                    callback(data);
+                });
+            },
+            dataSrc: "tableData",
+            serverSide: true,
+            columns: [
+                {title: "When run", data: "whenStarted", render: $.fn.dataTable.render.moment('X', 'DD MMM YYYY')},
+                {title: "Parameter", data: "benchmarkParameter.name"},
+                {title: "Hardware", data: "hardwareParameters"},
+                {title: "Result", data: "results"}
+            ]
+        });
+        $("#run_wrapper").hide();
     });
 
     function checkFilled() {
@@ -77,6 +94,10 @@
         $("#runButton").prop('disabled', !allFilled);
         if (!allFilled) {
             $("#runLink").html("");
+            $("#run_wrapper").hide();
+        } else {
+            $("#run_wrapper").show();
+            $("#run").DataTable().ajax.reload();
         }
     }
 
@@ -108,5 +129,7 @@
 
 <button id="runButton" onclick="generateRunLink();" disabled>I wanna run it, show me parameters!</button>
 <div id="runLink"></div>
+<br><br>
+<table id="run"></table>
 
 <%@ include file="/WEB-INF/jspf/footer.jspf"%>

@@ -1,6 +1,7 @@
 package sk.mimac.benchroom.backend.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import sk.mimac.benchroom.api.dto.impl.*;
@@ -81,7 +82,7 @@ public class ConvertUtils {
     public static BenchmarkRunDto convert(BenchmarkRun entity) {
         BenchmarkRunDto dto = new BenchmarkRunDto(entity.getId());
         dto.setBenchmarkParameter(convert(entity.getBenchmarkParameter()));
-        dto.setHardwareParameters(entity.getHardwareParameters());
+        dto.setHardwareParameters(new HashMap<>(entity.getHardwareParameters()));
         dto.setSoftwareVersion(convert(entity.getSoftwareVersion()));
         dto.setWhenStarted(entity.getWhenStarted());
         List<BenchmarkRunResultDto> results = new ArrayList<>();
@@ -89,6 +90,20 @@ public class ConvertUtils {
             results.add(convert(result));
         }
         dto.setResults(results);
+        return dto;
+    }
+
+    public static BenchmarkRunSimpleDto convertToSimple(BenchmarkRun entity) {
+        BenchmarkRunSimpleDto dto = new BenchmarkRunSimpleDto(entity.getId());
+        dto.setBenchmarkParameter(convert(entity.getBenchmarkParameter()));
+        dto.setHardwareParameters(entity.getHardwareParameters().toString());
+        dto.setWhenStarted(entity.getWhenStarted());
+        StringBuilder builder = new StringBuilder();
+        List<BenchmarkRunResultDto> results = new ArrayList<>();
+        for (BenchmarkRunResult result : entity.getResults()) {
+            builder.append(result.getMonitor().getName()).append(": ").append(result.getResult()).append(", ");
+        }
+        dto.setResults(builder.toString());
         return dto;
     }
 

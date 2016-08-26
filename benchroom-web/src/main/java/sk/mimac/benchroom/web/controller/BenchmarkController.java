@@ -12,11 +12,14 @@ import org.springframework.web.servlet.ModelAndView;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkSuiteDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareVersionDto;
+import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 import sk.mimac.benchroom.api.filter.BenchmarkSuiteFilter;
 import sk.mimac.benchroom.api.filter.SoftwareFilter;
 import sk.mimac.benchroom.api.filter.SoftwareVersionFilter;
+import sk.mimac.benchroom.api.service.BenchmarkRunService;
 import sk.mimac.benchroom.api.service.BenchmarkSuiteService;
 import sk.mimac.benchroom.api.service.SoftwareService;
+import sk.mimac.benchroom.web.PageWrapper;
 import sk.mimac.benchroom.web.ValueLabelWrapper;
 import sk.mimac.benchroom.web.WebConstants;
 
@@ -28,12 +31,15 @@ import sk.mimac.benchroom.web.WebConstants;
 public class BenchmarkController {
 
     public static final int SEARCH_MAX_RESULTS = 10;
-    
+
     @Autowired
     private SoftwareService softwareService;
 
     @Autowired
     private BenchmarkSuiteService benchmarkSuiteService;
+
+    @Autowired
+    private BenchmarkRunService benchmarkRunService;
 
     @RequestMapping(value = WebConstants.URL_BENCHMARK, method = RequestMethod.GET)
     public ModelAndView getBenchmark() {
@@ -80,5 +86,17 @@ public class BenchmarkController {
             result.add(new ValueLabelWrapper(suite.getId(), suite.getName()));
         }
         return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = WebConstants.URL_BENCHMARK_LIST, method = RequestMethod.POST)
+    public PageWrapper getBenchmarkList(@RequestParam("suite") long suiteId, @RequestParam("version") long versionId,
+            @RequestParam("length") int pageSize, @RequestParam("start") int start) {
+        BenchmarkRunFilter filter = new BenchmarkRunFilter();
+        filter.setBenchmarkSuiteId(suiteId);
+        filter.setSoftwareVersionId(versionId);
+        filter.setPageNumber((start / pageSize) + 1);
+        filter.setPageSize(pageSize);
+        return new PageWrapper(benchmarkRunService.getRunPage(filter));
     }
 }

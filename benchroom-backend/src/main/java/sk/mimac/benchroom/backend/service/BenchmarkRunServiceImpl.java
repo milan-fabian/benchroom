@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sk.mimac.benchroom.api.dto.Page;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
+import sk.mimac.benchroom.api.dto.impl.BenchmarkRunSimpleDto;
 import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 import sk.mimac.benchroom.api.service.BenchmarkRunService;
 import sk.mimac.benchroom.backend.persistence.dao.BenchmarkRunDao;
@@ -52,12 +53,12 @@ public class BenchmarkRunServiceImpl implements BenchmarkRunService {
     }
     
     @Override
-    public Page<BenchmarkRunDto> getRunPage(BenchmarkRunFilter filter) {
+    public Page<BenchmarkRunSimpleDto> getRunPage(BenchmarkRunFilter filter) {
         BenchmarkRunQueryBuilder queryBuilder = new BenchmarkRunQueryBuilder(filter);
         long count = benchmarkRunDao.countForFilter(queryBuilder);
-        List<BenchmarkRunDto> list = new ArrayList<>(filter.getPageSize());
+        List<BenchmarkRunSimpleDto> list = new ArrayList<>(filter.getPageSize());
         for (BenchmarkRun run : benchmarkRunDao.getForFilter(queryBuilder)) {
-            list.add(ConvertUtils.convert(run));
+            list.add(ConvertUtils.convertToSimple(run));
         }
         return new Page(list, filter.getPageNumber(), filter.getPageSize(), count);
     }

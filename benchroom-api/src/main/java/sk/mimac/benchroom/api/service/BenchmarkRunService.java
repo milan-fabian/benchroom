@@ -3,6 +3,7 @@ package sk.mimac.benchroom.api.service;
 import java.util.Map;
 import sk.mimac.benchroom.api.dto.Page;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
+import sk.mimac.benchroom.api.dto.impl.BenchmarkRunSimpleDto;
 import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 
 /**
@@ -15,6 +16,6 @@ public interface BenchmarkRunService {
 
     void insertRun(BenchmarkRunDto dto, Map<Long, Double> monitorResults);
 
-    Page<BenchmarkRunDto> getRunPage(BenchmarkRunFilter filter);
+    Page<BenchmarkRunSimpleDto> getRunPage(BenchmarkRunFilter filter);
 
 }
