@@ -20,7 +20,8 @@ namespace Benchroom.Executor
         private const string OS_NAME = "OS_NAME";
         private const string OS_VERSION = "OS_VERSION";
         private const string OS_KERNEL_VERSION = "OS_KERNEL_VERSION";
-
+        /* SYSTEM */
+        private const string SYSTEM_NAME = "SYSTEM_NAME";
 
         public static Dictionary<string, string> getParameters()
         {
@@ -45,6 +46,8 @@ namespace Benchroom.Executor
             result.Add(OS_NAME, "Windows");
             result.Add(OS_VERSION, getOSVersion());
             result.Add(OS_KERNEL_VERSION, Environment.OSVersion.Version.Build.ToString());
+
+            result.Add(SYSTEM_NAME, System.Environment.MachineName);
             return result;
         }
 

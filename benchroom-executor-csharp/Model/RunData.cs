@@ -10,6 +10,7 @@ namespace Benchroom.Executor.Model
         public string sofwareCleanup { get; set; }
         public string benchmarkSetup { get; set; }
         public string benchmarkCleanup { get; set; }
+        public string commandLineArguments { get; set; }
         public List<RunParameter> parameters { get; set; }
         public List<RunMonitor> monitors { get; set; }
 

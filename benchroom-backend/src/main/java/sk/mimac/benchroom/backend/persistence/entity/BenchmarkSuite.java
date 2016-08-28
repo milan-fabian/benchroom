@@ -46,6 +46,11 @@ public class BenchmarkSuite implements EntityInterface, Serializable {
     @Column(name = "cleanup_script", unique = false, nullable = true)
     private String cleanupScript;
 
+    @Lob
+    @Basic(optional = true)
+    @Column(name = "command_line_arguments", unique = false, nullable = true)
+    private String commandLineArguments;
+
     public BenchmarkSuite() {
     }
 
@@ -91,6 +96,14 @@ public class BenchmarkSuite implements EntityInterface, Serializable {
 
     public void setCleanupScript(String cleanupScript) {
         this.cleanupScript = cleanupScript;
+    }
+
+    public String getCommandLineArguments() {
+        return commandLineArguments;
+    }
+
+    public void setCommandLineArguments(String commandLineArguments) {
+        this.commandLineArguments = commandLineArguments;
     }
 
     @Override

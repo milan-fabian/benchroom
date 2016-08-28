@@ -49,6 +49,7 @@ public class ConvertUtils {
         dto.setSoftwareName(entity.getSoftware().getName());
         dto.setSetupScript(entity.getSetupScript());
         dto.setCleanupScript(entity.getCleanupScript());
+        dto.setCommandLineArguments(entity.getCommandLineArguments());
         return dto;
     }
 
@@ -58,6 +59,7 @@ public class ConvertUtils {
         entity.setSoftware(new Software(dto.getSoftwareId()));
         entity.setSetupScript(dto.getSetupScript());
         entity.setCleanupScript(dto.getCleanupScript());
+        entity.setCommandLineArguments(dto.getCommandLineArguments());
         return entity;
     }
 

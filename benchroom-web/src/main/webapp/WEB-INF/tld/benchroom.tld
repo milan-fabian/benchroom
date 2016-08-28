@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+    <tlib-version>1.0</tlib-version>
+    <short-name>benchroom</short-name>
+    <uri>/tlds/taglib</uri>
+    <tag>
+        <name>printRunResult</name>
+        <tag-class>sk.mimac.benchroom.web.tag.RunResultPrinter</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>runResult</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>sk.mimac.benchroom.api.dto.impl.BenchmarkRunResultDto</type>
+        </attribute>
+    </tag>
+</taglib>

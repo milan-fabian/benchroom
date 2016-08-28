@@ -15,6 +15,7 @@ public class RunData {
     private String sofwareCleanup;
     private String benchmarkSetup;
     private String benchmarkCleanup;
+    private String commandLineArguments;
     private List<RunParameter> parameters;
     private List<RunMonitor> monitors;
 
@@ -80,6 +81,14 @@ public class RunData {
 
     public void setMonitors(List<RunMonitor> monitors) {
         this.monitors = monitors;
+    }
+
+    public String getCommandLineArguments() {
+        return commandLineArguments;
+    }
+
+    public void setCommandLineArguments(String commandLineArguments) {
+        this.commandLineArguments = commandLineArguments;
     }
 
     public static class RunParameter {

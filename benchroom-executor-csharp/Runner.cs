@@ -91,7 +91,7 @@ namespace Benchroom.Executor
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = directory + "\\software.exe";
-            startInfo.Arguments = parameter.commandLineArguments;
+            startInfo.Arguments = runData.commandLineArguments.Replace("{}", parameter.commandLineArguments);
             startInfo.WorkingDirectory = directory;
             startInfo.UseShellExecute = false;
             process.StartInfo = startInfo;

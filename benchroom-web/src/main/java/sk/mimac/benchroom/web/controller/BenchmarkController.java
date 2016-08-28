@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkSuiteDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareVersionDto;
@@ -105,7 +106,9 @@ public class BenchmarkController {
     @RequestMapping(value = WebConstants.URL_BENCHMARK_DETAIL, method = RequestMethod.GET)
     public ModelAndView getBenchmarkDetail(@RequestParam("run") long runId) {
         Map<String, Object> model = new HashMap<>();
-        model.put("run", benchmarkRunService.getRunById(runId));
+        BenchmarkRunDto run = benchmarkRunService.getRunById(runId);
+        model.put("run", run);
+        model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkParameter().getBenchmarkSuiteId()));
         return new ModelAndView("benchmark/benchmark_detail", model);
     }
 }

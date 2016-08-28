@@ -23,6 +23,8 @@ public class BenchmarkSuiteDto implements Dto {
 
     private String cleanupScript;
 
+    private String commandLineArguments;
+
     public BenchmarkSuiteDto() {
     }
 
@@ -76,6 +78,14 @@ public class BenchmarkSuiteDto implements Dto {
 
     public void setCleanupScript(String cleanupScript) {
         this.cleanupScript = cleanupScript;
+    }
+
+    public String getCommandLineArguments() {
+        return commandLineArguments;
+    }
+
+    public void setCommandLineArguments(String commandLineArguments) {
+        this.commandLineArguments = commandLineArguments;
     }
 
     @Override

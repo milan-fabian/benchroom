@@ -28,6 +28,11 @@
             <td><form:textarea path="cleanupScript" cols="60"/></td>
             <td><form:errors path="cleanupScript"/></td>
         </tr>
+        <tr>
+            <td>Command line arguments:</td>
+            <td><form:textarea path="commandLineArguments" cols="60"/></td>
+            <td><form:errors path="commandLineArguments"/></td>
+        </tr>
     </table>
     <input type="submit" value="Save"/>
 </form:form>

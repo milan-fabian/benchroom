@@ -19,7 +19,9 @@ public enum SystemParameter {
     /* OS */
     OS_NAME(SystemParameter.Type.STRING),
     OS_VERSION(SystemParameter.Type.STRING),
-    OS_KERNEL_VERSION(SystemParameter.Type.STRING);
+    OS_KERNEL_VERSION(SystemParameter.Type.STRING),
+    /* SYSTEM */
+    SYSTEM_NAME(SystemParameter.Type.STRING);
 
     private final Type type;
 

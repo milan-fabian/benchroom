@@ -92,6 +92,7 @@ public class Controller {
         runData.setBenchmarkCleanup(suite.getCleanupScript());
         runData.setParameters(parameters);
         runData.setMonitors(monitors);
+        runData.setCommandLineArguments(suite.getCommandLineArguments());
         return runData;
     }
 
