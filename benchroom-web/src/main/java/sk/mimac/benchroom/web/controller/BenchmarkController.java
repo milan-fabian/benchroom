@@ -1,7 +1,9 @@
 package sk.mimac.benchroom.web.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -98,5 +100,12 @@ public class BenchmarkController {
         filter.setPageNumber((start / pageSize) + 1);
         filter.setPageSize(pageSize);
         return new PageWrapper(benchmarkRunService.getRunPage(filter));
+    }
+
+    @RequestMapping(value = WebConstants.URL_BENCHMARK_DETAIL, method = RequestMethod.GET)
+    public ModelAndView getBenchmarkDetail(@RequestParam("run") long runId) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("run", benchmarkRunService.getRunById(runId));
+        return new ModelAndView("benchmark/benchmark_detail", model);
     }
 }

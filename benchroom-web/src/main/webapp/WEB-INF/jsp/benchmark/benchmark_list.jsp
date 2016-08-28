@@ -83,7 +83,12 @@
                 {title: "When run", data: "whenStarted", render: $.fn.dataTable.render.moment('X', 'DD MMM YYYY')},
                 {title: "Parameter", data: "benchmarkParameter.name"},
                 {title: "System", data: "systemParameters"},
-                {title: "Result", data: "results"}
+                {title: "Result", data: "results"},
+                {sortable: false, render: function (data, type, row) {
+                        return "<a href='javascript:void(0);' onclick='showDialog(\"Benchmark run\", \"<%=request.getContextPath()%><%=URL_BENCHMARK_DETAIL%>?run="
+                                + row.id + "\");'>Details</a>";
+                    }
+                }
             ]
         });
         $("#run_wrapper").hide();
