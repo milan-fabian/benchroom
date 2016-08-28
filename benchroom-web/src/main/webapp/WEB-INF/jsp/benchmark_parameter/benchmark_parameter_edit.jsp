@@ -20,12 +20,12 @@
         </tr>
         <tr>
             <td>Command line arguments:</td>
-            <td><form:textarea path="commandLineArguments"/></td>
+            <td><form:textarea path="commandLineArguments" cols="60"/></td>
             <td><form:errors path="commandLineArguments"/></td>
         </tr>
         <tr>
             <td>Command line input:</td>
-            <td><form:textarea path="commandLineInput"/></td>
+            <td><form:textarea path="commandLineInput" cols="60"/></td>
             <td><form:errors path="commandLineInput"/></td>
         </tr>
     </table>

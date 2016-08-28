@@ -70,7 +70,7 @@ public class BenchmarkRunResult implements EntityInterface, Serializable {
 
     @Override
     public int hashCode() {
-        return 79 + Objects.hashCode(this.id);
+        return 97 + Objects.hashCode(this.id);
     }
 
     @Override
@@ -82,8 +82,12 @@ public class BenchmarkRunResult implements EntityInterface, Serializable {
             return false;
         }
         final BenchmarkRunResult other = (BenchmarkRunResult) obj;
-        return Objects.equals(this.id, other.id);
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return Objects.equals(this.monitor, other.monitor);
     }
+
 
     @Override
     public String toString() {

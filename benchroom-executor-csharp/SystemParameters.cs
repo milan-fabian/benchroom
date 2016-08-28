@@ -39,6 +39,8 @@ namespace Benchroom.Executor
                     break;
                 }
             }
+            Microsoft.VisualBasic.Devices.ComputerInfo info = new Microsoft.VisualBasic.Devices.ComputerInfo();
+            result.Add(RAM_SIZE, new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory.ToString());
 
             result.Add(OS_NAME, "Windows");
             result.Add(OS_VERSION, getOSVersion());

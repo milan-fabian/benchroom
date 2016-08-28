@@ -20,12 +20,12 @@
         </tr>
         <tr>
             <td>Setup data:</td>
-            <td><form:textarea path="setupScript"/></td>
+            <td><form:textarea path="setupScript" cols="60"/></td>
             <td><form:errors path="setupScript"/></td>
         </tr>
         <tr>
             <td>Cleanup data:</td>
-            <td><form:textarea path="cleanupScript"/></td>
+            <td><form:textarea path="cleanupScript" cols="60"/></td>
             <td><form:errors path="cleanupScript"/></td>
         </tr>
     </table>
