@@ -21,7 +21,7 @@ public class BenchmarkRunDto implements Dto {
 
     private ZonedDateTime whenStarted;
 
-    private Map<SystemParameter, String> hardwareParameters;
+    private Map<SystemParameter, String> systemParameters;
 
     private List<BenchmarkRunResultDto> results;
 
@@ -64,12 +64,12 @@ public class BenchmarkRunDto implements Dto {
         this.whenStarted = whenStarted;
     }
 
-    public Map<SystemParameter, String> getHardwareParameters() {
-        return hardwareParameters;
+    public Map<SystemParameter, String> getSystemParameters() {
+        return systemParameters;
     }
 
-    public void setHardwareParameters(Map<SystemParameter, String> hardwareParameters) {
-        this.hardwareParameters = hardwareParameters;
+    public void setSystemParameters(Map<SystemParameter, String> systemParameters) {
+        this.systemParameters = systemParameters;
     }
 
     public List<BenchmarkRunResultDto> getResults() {

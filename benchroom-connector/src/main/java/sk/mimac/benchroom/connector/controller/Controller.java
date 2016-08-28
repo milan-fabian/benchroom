@@ -71,7 +71,7 @@ public class Controller {
         BenchmarkRunDto dto = new BenchmarkRunDto();
         dto.setSoftwareVersion(new SoftwareVersionDto(Long.parseLong(run.getRunId().split("-")[0])));
         dto.setBenchmarkParameter(new BenchmarkParameterDto(run.getParameterId()));
-        dto.setHardwareParameters(run.getHardwareParameters());
+        dto.setSystemParameters(run.getSystemParameters());
         dto.setWhenStarted(run.getWhenStarted());
 
         Map<Long, Double> results = new HashMap<>();

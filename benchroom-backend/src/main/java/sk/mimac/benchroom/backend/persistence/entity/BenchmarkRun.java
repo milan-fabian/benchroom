@@ -52,7 +52,7 @@ public class BenchmarkRun implements EntityInterface, Serializable {
     @MapKeyColumn(name = "system_key")
     @MapKeyEnumerated(EnumType.STRING)
     @Column(name = "system_value")
-    private Map<SystemParameter, String> hardwareParameters;
+    private Map<SystemParameter, String> systemParameters;
 
     @OneToMany(mappedBy = "run", cascade = {CascadeType.ALL})
     private Set<BenchmarkRunResult> results;
@@ -97,12 +97,12 @@ public class BenchmarkRun implements EntityInterface, Serializable {
         this.benchmarkParameter = benchmarkParameter;
     }
 
-    public Map<SystemParameter, String> getHardwareParameters() {
-        return hardwareParameters;
+    public Map<SystemParameter, String> getSystemParameters() {
+        return systemParameters;
     }
 
-    public void setHardwareParameters(Map<SystemParameter, String> hardwareParameters) {
-        this.hardwareParameters = hardwareParameters;
+    public void setSystemParameters(Map<SystemParameter, String> systemParameters) {
+        this.systemParameters = systemParameters;
     }
 
     public Set<BenchmarkRunResult> getResults() {

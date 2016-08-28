@@ -82,7 +82,7 @@ public class ConvertUtils {
     public static BenchmarkRunDto convert(BenchmarkRun entity) {
         BenchmarkRunDto dto = new BenchmarkRunDto(entity.getId());
         dto.setBenchmarkParameter(convert(entity.getBenchmarkParameter()));
-        dto.setHardwareParameters(new HashMap<>(entity.getHardwareParameters()));
+        dto.setSystemParameters(new HashMap<>(entity.getSystemParameters()));
         dto.setSoftwareVersion(convert(entity.getSoftwareVersion()));
         dto.setWhenStarted(entity.getWhenStarted());
         List<BenchmarkRunResultDto> results = new ArrayList<>();
@@ -96,7 +96,7 @@ public class ConvertUtils {
     public static BenchmarkRunSimpleDto convertToSimple(BenchmarkRun entity) {
         BenchmarkRunSimpleDto dto = new BenchmarkRunSimpleDto(entity.getId());
         dto.setBenchmarkParameter(convert(entity.getBenchmarkParameter()));
-        dto.setHardwareParameters(entity.getHardwareParameters().toString());
+        dto.setSystemParameters(entity.getSystemParameters().toString());
         dto.setWhenStarted(entity.getWhenStarted());
         StringBuilder builder = new StringBuilder();
         List<BenchmarkRunResultDto> results = new ArrayList<>();
@@ -110,7 +110,7 @@ public class ConvertUtils {
     public static BenchmarkRun convert(BenchmarkRunDto dto) {
         BenchmarkRun entity = new BenchmarkRun(dto.getId());
         entity.setBenchmarkParameter(new BenchmarkParameter(dto.getBenchmarkParameter().getId()));
-        entity.setHardwareParameters(dto.getHardwareParameters());
+        entity.setSystemParameters(dto.getSystemParameters());
         entity.setSoftwareVersion(new SoftwareVersion(dto.getSoftwareVersion().getId()));
         entity.setWhenStarted(dto.getWhenStarted());
         return entity;

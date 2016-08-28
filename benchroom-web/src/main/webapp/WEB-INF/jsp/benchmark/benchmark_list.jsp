@@ -82,7 +82,7 @@
             columns: [
                 {title: "When run", data: "whenStarted", render: $.fn.dataTable.render.moment('X', 'DD MMM YYYY')},
                 {title: "Parameter", data: "benchmarkParameter.name"},
-                {title: "Hardware", data: "hardwareParameters"},
+                {title: "System", data: "systemParameters"},
                 {title: "Result", data: "results"}
             ]
         });

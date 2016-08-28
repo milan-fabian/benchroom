@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 
 namespace Benchroom.Executor
 {
@@ -9,13 +10,16 @@ namespace Benchroom.Executor
     {
         private RunData runData;
         private string server;
+        private string directory;
         private long? timeMonitor = null;
-        private Dictionary<string, string> hardwareParameters = Hardware.getParameters();
+        private Dictionary<string, string> systemParameters = SystemParameters.getParameters();
 
-        public Runner(RunData runData, string server)
+        public Runner(RunData runData, String directory, string server)
         {
             this.runData = runData;
             this.server = server;
+            this.directory = directory;
+            Directory.CreateDirectory(directory);
             foreach (RunData.RunMonitor monitor in runData.monitors)
             {
                 if (monitor.type.Equals(RunData.RunMonitor.RUN_TIME))
@@ -45,8 +49,9 @@ namespace Benchroom.Executor
             Stopwatch stopwatch = new Stopwatch();
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = runData.runName + ".exe";
+            startInfo.FileName = directory + "\\" + runData.runName + ".exe";
             startInfo.Arguments = parameter.commandLineArguments;
+            startInfo.WorkingDirectory = directory;
             startInfo.UseShellExecute = false;
             process.StartInfo = startInfo;
             run.whenStarted = DateTime.Now;
@@ -68,7 +73,7 @@ namespace Benchroom.Executor
             }
             run.parameterId = parameter.parameterId;
             run.runId = runData.runId;
-            run.hardwareParameters = hardwareParameters;
+            run.systemParameters = systemParameters;
             run.results = new List<Run.RunResult> {
                 new Run.RunResult() { monitorId = timeMonitor.Value, result = stopwatch.Elapsed.TotalMilliseconds }
             };

@@ -4,7 +4,7 @@ using System.Management;
 
 namespace Benchroom.Executor
 {
-    class Hardware
+    class SystemParameters
     {
         /* CPU */
         private const string CPU_MANUFACTURER = "CPU_MANUFACTURER";
@@ -40,6 +40,8 @@ namespace Benchroom.Executor
                 }
             }
 
+            result.Add(OS_NAME, "Windows");
+            result.Add(OS_VERSION, getOSVersion());
             result.Add(OS_KERNEL_VERSION, Environment.OSVersion.Version.Build.ToString());
             return result;
         }
@@ -55,5 +57,62 @@ namespace Benchroom.Executor
             return "";
         }
 
+        private static string getOSVersion()
+        {
+            OperatingSystem os = Environment.OSVersion;
+            Version vs = os.Version;
+
+            if (os.Platform == PlatformID.Win32Windows)
+            {
+                switch (vs.Minor)
+                {
+                    case 0:
+                        return "Windows 95";
+                    case 10:
+                        return "Windows 98";
+                    case 90:
+                        return "Windows Me";
+                    default:
+                        return "Unknown";
+                }
+            }
+            switch (vs.Major)
+            {
+                case 3:
+                    return "Windows NT 3.51";
+                case 4:
+                    return "Windows NT 4.0";
+                case 5:
+                    switch (vs.Minor)
+                    {
+                        case 0:
+                            return "Windows 2000";
+                        case 1:
+                            return "Windows XP";
+                        case 2:
+                            return "Windows Server 2003";
+                        default:
+                            return "Unknown";
+                    }
+                case 6:
+                    switch(vs.Minor)
+                    {
+                        case 0:
+                            return "Windows Vista";
+                        case 1:
+                            return "Windows 7";
+                        case 2:
+                            return "Windows 8";
+                        case 3:
+                            return "Windows 8.1";
+                        default:
+                            return "Unknown";
+                    }
+                case 10:
+                    return "Windows 10";
+                default:
+                    return "Unknown";
+            }
+        }
     }
 }

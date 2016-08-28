@@ -11,11 +11,11 @@ namespace Benchroom.Executor
             Options options = new Options();
             if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
-                RunData runData = Connector.getRunData(options.serverUrl, options.benchmarkId);
-                Runner runner = new Runner(runData, options.serverUrl);
+                RunData runData = Connector.getRunData(options.ServerUrl, options.BenchmarkId);
+                Runner runner = new Runner(runData, options.Directory, options.ServerUrl);
                 runner.runBenchmarks();
+                Console.ReadKey();
             }
-            Console.ReadKey();
         }
     }
 }

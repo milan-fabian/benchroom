@@ -9,7 +9,7 @@ namespace Benchroom.Executor.Model
         public long parameterId { get; set; }
         public DateTime whenStarted { get; set; }
         public List<RunResult> results { get; set; }
-        public Dictionary<String, String> hardwareParameters { get; set; }
+        public Dictionary<String, String> systemParameters { get; set; }
 
         public class RunResult
         {

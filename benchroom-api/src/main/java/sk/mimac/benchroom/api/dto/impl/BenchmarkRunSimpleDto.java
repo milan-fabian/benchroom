@@ -16,7 +16,7 @@ public class BenchmarkRunSimpleDto implements Dto {
 
     private ZonedDateTime whenStarted;
 
-    private String hardwareParameters;
+    private String systemParameters;
 
     private String results;
 
@@ -51,12 +51,12 @@ public class BenchmarkRunSimpleDto implements Dto {
         this.whenStarted = whenStarted;
     }
 
-    public String getHardwareParameters() {
-        return hardwareParameters;
+    public String getSystemParameters() {
+        return systemParameters;
     }
 
-    public void setHardwareParameters(String hardwareParameters) {
-        this.hardwareParameters = hardwareParameters;
+    public void setSystemParameters(String systemParameters) {
+        this.systemParameters = systemParameters;
     }
 
     public String getResults() {

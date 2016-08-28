@@ -15,7 +15,7 @@ public class Run {
     private long parameterId;
     private ZonedDateTime whenStarted;
     private List<RunResult> results;
-    private Map<SystemParameter, String> hardwareParameters;
+    private Map<SystemParameter, String> systemParameters;
 
     public String getRunId() {
         return runId;
@@ -49,12 +49,12 @@ public class Run {
         this.results = results;
     }
 
-    public Map<SystemParameter, String> getHardwareParameters() {
-        return hardwareParameters;
+    public Map<SystemParameter, String> getSystemParameters() {
+        return systemParameters;
     }
 
-    public void setHardwareParameters(Map<SystemParameter, String> hardwareParameters) {
-        this.hardwareParameters = hardwareParameters;
+    public void setSystemParameters(Map<SystemParameter, String> systemParameters) {
+        this.systemParameters = systemParameters;
     }
 
     public static class RunResult {
