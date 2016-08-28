@@ -13,14 +13,16 @@ namespace Benchroom.Executor
         private RunData runData;
         private string server;
         private string directory;
+        private int numberOfRuns;
         private long? timeMonitor = null;
         private List<RunData.RunMonitor> fileMonitors = new List<RunData.RunMonitor>();
         private Dictionary<string, string> systemParameters = SystemParameters.getParameters();
 
-        public Runner(RunData runData, String directory, string server)
+        public Runner(RunData runData, String directory, string server, int numberOfRuns)
         {
             this.runData = runData;
             this.server = server;
+            this.numberOfRuns = numberOfRuns;
             this.directory = directory;
             Directory.CreateDirectory(directory);
             foreach (RunData.RunMonitor monitor in runData.monitors)
@@ -52,38 +54,65 @@ namespace Benchroom.Executor
         private void executeRun(RunData.RunParameter parameter)
         {
             Run run = new Run();
+            run.whenStarted = DateTime.Now;
+            List<Dictionary<long, double>> results = new List<Dictionary<long, double>>();
+            for (int i = 0; i < numberOfRuns; i++)
+            {
+                Dictionary<long, double> result = executeSingleRun(parameter);
+                if (result != null)
+                {
+                    results.Add(result);
+                }
+            }
+            if (results.Count > 0)
+            {
+                run.parameterId = parameter.parameterId;
+                run.runId = runData.runId;
+                run.systemParameters = systemParameters;
+                run.results = new List<Run.RunResult>();
+                foreach (long monitorId in results[0].Keys)
+                {
+                    double sum = 0;
+                    results.ForEach(x => sum += x[monitorId]);
+                    run.results.Add(new Run.RunResult() { monitorId = monitorId, result = sum / results.Count });
+                }
+                Connector.sendRun(server, run);
+            }
+        }
+
+        private Dictionary<long, double> executeSingleRun(RunData.RunParameter parameter)
+        {
             Process process = prepareProcess(parameter);
             Stopwatch stopwatch = new Stopwatch();
             Thread.Sleep(500);
-            run.whenStarted = DateTime.Now;
             stopwatch.Start();
-            try {
+            try
+            {
                 runProcess(process);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("-- Can't run benchmark: " + ex);
-                return;
+                return null;
             }
             stopwatch.Stop();
             Console.WriteLine("-- Running with parameter \"" + parameter.parameterId + "\" took " + stopwatch.Elapsed.TotalSeconds + " seconds");
             if (process.ExitCode != 0)
             {
                 Console.WriteLine("-- Exit code is " + process.ExitCode + ", result won't be saved");
-                return;
+                return null;
             }
-            run.parameterId = parameter.parameterId;
-            run.runId = runData.runId;
-            run.systemParameters = systemParameters;
-            run.results = new List<Run.RunResult> {
-                new Run.RunResult() { monitorId = timeMonitor.Value, result = stopwatch.Elapsed.TotalMilliseconds }
-            };
+            Dictionary<long, double> results = new Dictionary<long, double>();
+            if (timeMonitor.HasValue)
+            {
+                results.Add(timeMonitor.Value, stopwatch.ElapsedMilliseconds);
+            }
             foreach (RunData.RunMonitor monitor in fileMonitors)
             {
                 long size = new FileInfo(directory + "\\" + monitor.action).Length;
-                run.results.Add(new Run.RunResult() { monitorId = monitor.monitorId, result = size });
+                results.Add(monitor.monitorId, size);
             }
-            Connector.sendRun(server, run);
+            return results;
         }
 
         private Process prepareProcess(RunData.RunParameter parameter)

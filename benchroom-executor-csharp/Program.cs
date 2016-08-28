@@ -12,7 +12,7 @@ namespace Benchroom.Executor
             if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
                 RunData runData = Connector.getRunData(options.ServerUrl, options.BenchmarkId);
-                Runner runner = new Runner(runData, options.Directory, options.ServerUrl);
+                Runner runner = new Runner(runData, options.Directory, options.ServerUrl, options.NumberOfRuns);
                 runner.runBenchmarks();
                 Console.ReadKey();
             }

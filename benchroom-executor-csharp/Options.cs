@@ -14,6 +14,9 @@ namespace Benchroom.Executor
         [Option('d', "dir", Required = false, DefaultValue = "run", HelpText = "Directory where to run")]
         public string Directory { get; set; }
 
+        [Option('n', "runs", Required = false, DefaultValue = 1, HelpText = "How many times to run each combination")]
+        public int NumberOfRuns { get; set; }
+
         [HelpOption]
         public string GetUsage()
         {
