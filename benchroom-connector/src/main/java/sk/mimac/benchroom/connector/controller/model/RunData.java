@@ -94,6 +94,7 @@ public class RunData {
     public static class RunParameter {
 
         private long parameterId;
+        private String parameterName;
         private String commandLineArguments;
         private String commandLineInput;
 
@@ -103,6 +104,14 @@ public class RunData {
 
         public void setParameterId(long parameterId) {
             this.parameterId = parameterId;
+        }
+
+        public String getParameterName() {
+            return parameterName;
+        }
+
+        public void setParameterName(String parameterName) {
+            this.parameterName = parameterName;
         }
 
         public String getCommandLineArguments() {

@@ -86,7 +86,8 @@
                 {title: "Result", data: "results"},
                 {sortable: false, render: function (data, type, row) {
                         return "<a href='javascript:void(0);' onclick='showDialog(\"Benchmark run\", \"<%=request.getContextPath()%><%=URL_BENCHMARK_DETAIL%>?run="
-                                + row.id + "\");'>Details</a>";
+                                + row.id + "\");'>Details</a> "
+                                + "<a href='<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE%>?run=" + row.id + "'>Compare</a>";
                     }
                 }
             ]

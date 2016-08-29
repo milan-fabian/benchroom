@@ -1,17 +1,19 @@
 package sk.mimac.benchroom.api.filter;
 
-import sk.mimac.benchroom.api.dto.impl.BenchmarkRunSimpleDto;
+import java.util.Map;
+import sk.mimac.benchroom.api.system.SystemParameter;
 
 /**
  *
  * @author Milan Fabian
  */
-public class BenchmarkRunFilter extends AbstractFilter<BenchmarkRunSimpleDto> {
+public class BenchmarkRunFilter extends AbstractFilter {
 
     private Long softwareVersionId;
     private Long softwareId;
     private Long benchmarkSuiteId;
     private Long benchmarkParameterId;
+    private Map<SystemParameter, String> parameters;
 
     public Long getSoftwareVersionId() {
         return softwareVersionId;
@@ -43,6 +45,14 @@ public class BenchmarkRunFilter extends AbstractFilter<BenchmarkRunSimpleDto> {
 
     public void setBenchmarkParameterId(Long benchmarkParameterId) {
         this.benchmarkParameterId = benchmarkParameterId;
+    }
+
+    public Map<SystemParameter, String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<SystemParameter, String> parameters) {
+        this.parameters = parameters;
     }
 
 }

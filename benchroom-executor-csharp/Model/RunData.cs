@@ -18,6 +18,7 @@ namespace Benchroom.Executor.Model
         {
 
             public long parameterId { get; set; }
+            public string parameterName { get; set; }
             public string commandLineArguments { get; set; }
             public string commandLineInput { get; set; }
         }

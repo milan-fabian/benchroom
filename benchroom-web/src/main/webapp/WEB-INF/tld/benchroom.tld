@@ -14,4 +14,15 @@
             <type>sk.mimac.benchroom.api.dto.impl.BenchmarkRunResultDto</type>
         </attribute>
     </tag>
+    <tag>
+        <name>formatPercent</name>
+        <tag-class>sk.mimac.benchroom.web.tag.PercentageFormatter</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>percentage</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>double</type>
+        </attribute>
+    </tag>
 </taglib>

@@ -1,6 +1,7 @@
 package sk.mimac.benchroom.web.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,7 @@ public class BenchmarkController {
         filter.setSoftwareVersionId(versionId);
         filter.setPageNumber((start / pageSize) + 1);
         filter.setPageSize(pageSize);
-        return new PageWrapper(benchmarkRunService.getRunPage(filter));
+        return new PageWrapper(benchmarkRunService.getRunPageSimple(filter));
     }
 
     @RequestMapping(value = WebConstants.URL_BENCHMARK_DETAIL, method = RequestMethod.GET)
@@ -111,4 +112,23 @@ public class BenchmarkController {
         model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkParameter().getBenchmarkSuiteId()));
         return new ModelAndView("benchmark/benchmark_detail", model);
     }
+
+    @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE, method = RequestMethod.GET)
+    public ModelAndView getBenchmarkCompare(@RequestParam("run") long runId) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("run", benchmarkRunService.getRunById(runId));
+        BenchmarkRunDto run = benchmarkRunService.getRunById(runId);
+        Collections.sort(run.getResults());
+        model.put("run", run);
+        model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkParameter().getBenchmarkSuiteId()));
+        BenchmarkRunFilter sameSystemFilter = new BenchmarkRunFilter();
+        sameSystemFilter.setBenchmarkSuiteId(run.getBenchmarkParameter().getBenchmarkSuiteId());
+        sameSystemFilter.setSoftwareVersionId(run.getSoftwareVersion().getId());
+        sameSystemFilter.setParameters(run.getSystemParameters());
+        List<BenchmarkRunDto> sameSystemRuns = benchmarkRunService.getRunPage(sameSystemFilter).getElements();
+        sameSystemRuns.forEach(x -> Collections.sort(x.getResults()));
+        model.put("sameSystem", sameSystemRuns);
+        return new ModelAndView("benchmark/benchmark_compare", model);
+    }
+
 }

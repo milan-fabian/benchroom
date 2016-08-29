@@ -16,6 +16,7 @@ public interface BenchmarkRunService {
 
     void insertRun(BenchmarkRunDto dto, Map<Long, Double> monitorResults);
 
-    Page<BenchmarkRunSimpleDto> getRunPage(BenchmarkRunFilter filter);
+    Page<BenchmarkRunSimpleDto> getRunPageSimple(BenchmarkRunFilter filter);
 
+    Page<BenchmarkRunDto> getRunPage(BenchmarkRunFilter filter);
 }

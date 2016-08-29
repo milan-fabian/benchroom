@@ -27,15 +27,15 @@ import sk.mimac.benchroom.backend.utils.ConvertUtils;
 @Service
 @Transactional(readOnly = true)
 public class BenchmarkRunServiceImpl implements BenchmarkRunService {
-    
+
     @Autowired
     private BenchmarkRunDao benchmarkRunDao;
-    
+
     @Override
     public BenchmarkRunDto getRunById(long id) {
         return ConvertUtils.convert(benchmarkRunDao.find(id));
     }
-    
+
     @Override
     @Transactional(readOnly = false)
     public void insertRun(BenchmarkRunDto dto, Map<Long, Double> monitorResults) {
@@ -51,9 +51,9 @@ public class BenchmarkRunServiceImpl implements BenchmarkRunService {
         entity.setResults(results);
         benchmarkRunDao.insert(entity);
     }
-    
+
     @Override
-    public Page<BenchmarkRunSimpleDto> getRunPage(BenchmarkRunFilter filter) {
+    public Page<BenchmarkRunSimpleDto> getRunPageSimple(BenchmarkRunFilter filter) {
         BenchmarkRunQueryBuilder queryBuilder = new BenchmarkRunQueryBuilder(filter);
         long count = benchmarkRunDao.countForFilter(queryBuilder);
         List<BenchmarkRunSimpleDto> list = new ArrayList<>(filter.getPageSize());
@@ -62,5 +62,16 @@ public class BenchmarkRunServiceImpl implements BenchmarkRunService {
         }
         return new Page(list, filter.getPageNumber(), filter.getPageSize(), count);
     }
-    
+
+    @Override
+    public Page<BenchmarkRunDto> getRunPage(BenchmarkRunFilter filter) {
+        BenchmarkRunQueryBuilder queryBuilder = new BenchmarkRunQueryBuilder(filter);
+        long count = benchmarkRunDao.countForFilter(queryBuilder);
+        List<BenchmarkRunDto> list = new ArrayList<>(filter.getPageSize());
+        for (BenchmarkRun run : benchmarkRunDao.getForFilter(queryBuilder)) {
+            list.add(ConvertUtils.convert(run));
+        }
+        return new Page(list, filter.getPageNumber(), filter.getPageSize(), count);
+    }
+
 }

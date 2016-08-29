@@ -37,5 +37,6 @@ public class WebConstants {
     public static final String URL_BENCHMARK_SEARCH_SOFTWARE = "/benchmark/search/software";
     public static final String URL_BENCHMARK_SEARCH_SUITE = "/benchmark/search/suite";
     public static final String URL_BENCHMARK_SEARCH_VERSION = "/benchmark/search/version";
-    public static final String URL_BENCHMARK_DETAIL = "/benchmark_detail";
+    public static final String URL_BENCHMARK_DETAIL = "/benchmark/detail";
+    public static final String URL_BENCHMARK_COMPARE = "/benchmark/compare";
 }

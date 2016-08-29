@@ -30,15 +30,15 @@ public class RunResultPrinter extends SimpleTagSupport {
                 if (value < 2 * 1000) {
                     return String.format("%d ms", (long) value);
                 } else {
-                    return String.format("%f s", (value / 1000));
+                    return String.format("%.2f s", (value / 1000));
                 }
             case FILE_SIZE:
                 if (value < 2l * 1024) {
                     return String.format("%d B", (long) value);
                 } else if (value < 2l * 1024 * 1024) {
-                    return String.format("%f KB", ((long) value) / 1024d);
+                    return String.format("%.2f KB", ((long) value) / 1024d);
                 } else if (value < 2l * 1024 * 1024 * 1024) {
-                    return String.format("%f MB", ((long) value) / 1024d / 1024);
+                    return String.format("%.2f MB", ((long) value) / 1024d / 1024);
                 }
             case CPU_UTILIZATION:
                 return String.format("%.1f %%", value * 100);

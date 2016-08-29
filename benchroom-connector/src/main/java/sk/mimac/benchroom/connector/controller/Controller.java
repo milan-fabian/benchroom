@@ -61,8 +61,8 @@ public class Controller {
         List<BenchmarkMonitorDto> monitors = benchmarkMonitorService.getMonitorsForSuite(suite.getId());
         String setupScript = scriptService.getScriptForPlatformVersion(platform, version.getId(), ScriptType.SETUP);
         String cleanupScript = scriptService.getScriptForPlatformVersion(platform, version.getId(), ScriptType.CLEANUP);
-        List<RunData.RunParameter> runParameters = prepareRunParameters(parameters, dataId);
-        List<RunData.RunMonitor> runMonitors = prepareRunMonitors(monitors, dataId);
+        List<RunData.RunParameter> runParameters = prepareRunParameters(parameters);
+        List<RunData.RunMonitor> runMonitors = prepareRunMonitors(monitors);
         return getRunData(version, suite, dataId, setupScript, cleanupScript, runParameters, runMonitors);
     }
 
@@ -96,11 +96,12 @@ public class Controller {
         return runData;
     }
 
-    private List<RunData.RunParameter> prepareRunParameters(List<BenchmarkParameterDto> parameters, String dataId) {
+    private List<RunData.RunParameter> prepareRunParameters(List<BenchmarkParameterDto> parameters) {
         List<RunData.RunParameter> result = new ArrayList<>();
         for (BenchmarkParameterDto parameter : parameters) {
             RunData.RunParameter runParam = new RunData.RunParameter();
             runParam.setParameterId(parameter.getId());
+            runParam.setParameterName(parameter.getName());
             runParam.setCommandLineArguments(parameter.getCommandLineArguments());
             runParam.setCommandLineInput(parameter.getCommandLineInput());
             result.add(runParam);
@@ -108,7 +109,7 @@ public class Controller {
         return result;
     }
 
-    private List<RunData.RunMonitor> prepareRunMonitors(List<BenchmarkMonitorDto> monitors, String dataId) {
+    private List<RunData.RunMonitor> prepareRunMonitors(List<BenchmarkMonitorDto> monitors) {
         List<RunData.RunMonitor> result = new ArrayList<>();
         for (BenchmarkMonitorDto monitor : monitors) {
             RunData.RunMonitor runParam = new RunData.RunMonitor();

@@ -1,12 +1,10 @@
 package sk.mimac.benchroom.api.filter;
 
-import sk.mimac.benchroom.api.dto.impl.SoftwareVersionDto;
-
 /**
  *
  * @author Milan Fabian
  */
-public class SoftwareVersionFilter extends AbstractFilter<SoftwareVersionDto> {
+public class SoftwareVersionFilter extends AbstractFilter {
 
     private Long softwareId;
 

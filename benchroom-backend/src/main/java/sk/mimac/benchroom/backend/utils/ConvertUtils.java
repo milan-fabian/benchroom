@@ -101,7 +101,6 @@ public class ConvertUtils {
         dto.setSystemParameters(entity.getSystemParameters().toString());
         dto.setWhenStarted(entity.getWhenStarted());
         StringBuilder builder = new StringBuilder();
-        List<BenchmarkRunResultDto> results = new ArrayList<>();
         for (BenchmarkRunResult result : entity.getResults()) {
             builder.append(result.getMonitor().getName()).append(": ").append(result.getResult()).append(", ");
         }

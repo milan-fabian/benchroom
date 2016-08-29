@@ -1,12 +1,10 @@
 package sk.mimac.benchroom.api.filter;
 
-import sk.mimac.benchroom.api.dto.impl.BenchmarkSuiteDto;
-
 /**
  *
  * @author Milan Fabian
  */
-public class BenchmarkSuiteFilter extends AbstractFilter<BenchmarkSuiteDto> {
+public class BenchmarkSuiteFilter extends AbstractFilter {
 
     private Long softwareId;
 

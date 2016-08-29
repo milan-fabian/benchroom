@@ -48,8 +48,10 @@ namespace Benchroom.Executor
             logger.Info("Starting benchmarks for \"" + runData.runName + "\"");
             setupSoftware();
             setupBenchmark();
+            int i = 1;
             foreach (RunData.RunParameter parameter in runData.parameters)
             {
+                logger.Info("Running with parameter " + i++ + " out of " + runData.parameters.Count);
                 executeRun(parameter);
             }
             cleanupBenchmark();
@@ -106,7 +108,7 @@ namespace Benchroom.Executor
                 return null;
             }
             TimeSpan elapsed = process.ExitTime - process.StartTime;
-            logger.Info("Running with parameter \"" + parameter.parameterId + "\" took " + elapsed.TotalSeconds + " seconds");
+            logger.Info("Running with parameter \"" + parameter.parameterName + "\" took " + elapsed.TotalSeconds + " seconds");
             if (process.ExitCode != 0)
             {
                 logger.Warn("Exit code is " + process.ExitCode + ", result won't be saved");

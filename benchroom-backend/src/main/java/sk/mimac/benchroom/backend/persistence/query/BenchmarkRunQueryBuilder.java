@@ -3,9 +3,11 @@ package sk.mimac.benchroom.backend.persistence.query;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.MapJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
+import sk.mimac.benchroom.api.system.SystemParameter;
 import sk.mimac.benchroom.backend.persistence.entity.BenchmarkRun;
 
 /**
@@ -35,6 +37,10 @@ public class BenchmarkRunQueryBuilder extends QueryBuilder<BenchmarkRun> {
         }
         if (filter.getBenchmarkSuiteId() != null) {
             list.add(cb.equal(root.get("benchmarkParameter").get("benchmarkSuite").get("id"), filter.getBenchmarkSuiteId()));
+        }
+        if (filter.getParameters() != null) {
+            MapJoin<BenchmarkRun, SystemParameter, String> systemParamsRoot = root.joinMap("systemParameters");
+            list.add(cb.equal(systemParamsRoot.value(), filter.getParameters().get(SystemParameter.SYSTEM_NAME)));
         }
         return list;
     }

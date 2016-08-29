@@ -8,7 +8,7 @@ import sk.mimac.benchroom.api.enums.MonitorType;
  *
  * @author Milan Fabian
  */
-public class BenchmarkRunResultDto implements Dto {
+public class BenchmarkRunResultDto implements Dto, Comparable<BenchmarkRunResultDto> {
 
     private Long id;
 
@@ -77,6 +77,11 @@ public class BenchmarkRunResultDto implements Dto {
     @Override
     public String toString() {
         return "BenchmarkRunResultDto{" + "id=" + id + ", monitorName=" + monitorName + ", monitorType=" + monitorType + ", result=" + result + '}';
+    }
+
+    @Override
+    public int compareTo(BenchmarkRunResultDto o) {
+        return monitorName.compareTo(o.monitorName);
     }
 
 }

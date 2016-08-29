@@ -1,16 +1,14 @@
 package sk.mimac.benchroom.api.filter;
 
-import sk.mimac.benchroom.api.dto.Dto;
-
 /**
  *
  * @author Milan Fabian
  */
-public abstract class AbstractFilter<T extends Dto> {
+public abstract class AbstractFilter {
 
-    private int pageSize;
+    private int pageSize = 50;
 
-    private int pageNumber;
+    private int pageNumber = 1;
 
     private String fulltext;
 

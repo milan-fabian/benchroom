@@ -3,7 +3,6 @@ package sk.mimac.benchroom.web.controller;
 import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Valid;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
