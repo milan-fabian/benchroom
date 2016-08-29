@@ -40,6 +40,8 @@ public class RunResultPrinter extends SimpleTagSupport {
                 } else if (value < 2l * 1024 * 1024 * 1024) {
                     return String.format("%f MB", ((long) value) / 1024d / 1024);
                 }
+            case CPU_UTILIZATION:
+                return String.format("%.1f %%", value * 100);
         }
         return Double.toString(value);
     }

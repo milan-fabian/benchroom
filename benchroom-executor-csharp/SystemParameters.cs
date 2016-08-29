@@ -23,6 +23,8 @@ namespace Benchroom.Executor
         /* SYSTEM */
         private const string SYSTEM_NAME = "SYSTEM_NAME";
 
+        public static int NumThreads { get; private set; }
+
         public static Dictionary<string, string> getParameters()
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
@@ -36,6 +38,7 @@ namespace Benchroom.Executor
                     result.Add(CPU_NAME, mo["Name"].ToString());
                     result.Add(CPU_NUM_CORES, mo["NumberOfCores"].ToString());
                     result.Add(CPU_NUM_THREADS, mo["NumberOfLogicalProcessors"].ToString());
+                    NumThreads = (int) (uint) mo["NumberOfLogicalProcessors"];
                     result.Add(CPU_MAX_FREQUENCY, mo["MaxClockSpeed"].ToString());
                     break;
                 }

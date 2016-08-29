@@ -1,4 +1,5 @@
 ﻿using Benchroom.Executor.Model;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,19 +11,22 @@ namespace Benchroom.Executor
 {
     class Runner
     {
+        private static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private RunData runData;
-        private string server;
         private string directory;
-        private int numberOfRuns;
-        private long? timeMonitor = null;
+        public string Server { private get; set; }
+        public int NumberOfRuns { private get; set; }
+        public bool PrintOutput { private get; set; }
+        public bool TestRun { private get; set; }
+        private long? timeMonitor;
+        private long? utilizationMonitor;
         private List<RunData.RunMonitor> fileMonitors = new List<RunData.RunMonitor>();
         private Dictionary<string, string> systemParameters = SystemParameters.getParameters();
 
-        public Runner(RunData runData, String directory, string server, int numberOfRuns)
+        public Runner(RunData runData, String directory)
         {
             this.runData = runData;
-            this.server = server;
-            this.numberOfRuns = numberOfRuns;
             this.directory = directory;
             Directory.CreateDirectory(directory);
             foreach (RunData.RunMonitor monitor in runData.monitors)
@@ -33,13 +37,15 @@ namespace Benchroom.Executor
                 } else if (monitor.type.Equals(RunData.RunMonitor.FILE_SIZE))
                 {
                     fileMonitors.Add(monitor);
+                } else if(monitor.type.Equals(RunData.RunMonitor.CPU_UTILIZATION)) {
+                    utilizationMonitor = monitor.monitorId;
                 }
             }
         }
 
         public void runBenchmarks()
         {
-            Console.WriteLine("- Starting benchmarks for \"" + runData.runName + "\"");
+            logger.Info("Starting benchmarks for \"" + runData.runName + "\"");
             setupSoftware();
             setupBenchmark();
             foreach (RunData.RunParameter parameter in runData.parameters)
@@ -48,7 +54,7 @@ namespace Benchroom.Executor
             }
             cleanupBenchmark();
             cleanupSoftware();
-            Console.WriteLine("- Finished benchmarks for \"" + runData.runName + "\"");
+            logger.Info("Finished benchmarks for \"" + runData.runName + "\"");
         }
 
         private void executeRun(RunData.RunParameter parameter)
@@ -56,7 +62,7 @@ namespace Benchroom.Executor
             Run run = new Run();
             run.whenStarted = DateTime.Now;
             List<Dictionary<long, double>> results = new List<Dictionary<long, double>>();
-            for (int i = 0; i < numberOfRuns; i++)
+            for (int i = 0; i < NumberOfRuns; i++)
             {
                 Dictionary<long, double> result = executeSingleRun(parameter);
                 if (result != null)
@@ -76,36 +82,45 @@ namespace Benchroom.Executor
                     results.ForEach(x => sum += x[monitorId]);
                     run.results.Add(new Run.RunResult() { monitorId = monitorId, result = sum / results.Count });
                 }
-                Connector.sendRun(server, run);
+                if (!TestRun)
+                {
+                    Connector.sendRun(Server, run);
+                } else
+                {
+                    logger.Warn("Test run, not sending results to server");
+                }
             }
         }
 
         private Dictionary<long, double> executeSingleRun(RunData.RunParameter parameter)
         {
             Process process = prepareProcess(parameter);
-            Stopwatch stopwatch = new Stopwatch();
             Thread.Sleep(500);
-            stopwatch.Start();
             try
             {
                 runProcess(process);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("-- Can't run benchmark: " + ex);
+                logger.Info("Can't run benchmark: " + ex);
                 return null;
             }
-            stopwatch.Stop();
-            Console.WriteLine("-- Running with parameter \"" + parameter.parameterId + "\" took " + stopwatch.Elapsed.TotalSeconds + " seconds");
+            TimeSpan elapsed = process.ExitTime - process.StartTime;
+            logger.Info("Running with parameter \"" + parameter.parameterId + "\" took " + elapsed.TotalSeconds + " seconds");
             if (process.ExitCode != 0)
             {
-                Console.WriteLine("-- Exit code is " + process.ExitCode + ", result won't be saved");
+                logger.Warn("Exit code is " + process.ExitCode + ", result won't be saved");
                 return null;
             }
             Dictionary<long, double> results = new Dictionary<long, double>();
             if (timeMonitor.HasValue)
             {
-                results.Add(timeMonitor.Value, stopwatch.ElapsedMilliseconds);
+                results.Add(timeMonitor.Value, elapsed.TotalMilliseconds);
+            }
+            if (utilizationMonitor.HasValue)
+            {
+                results.Add(utilizationMonitor.Value, process.TotalProcessorTime.TotalMilliseconds / elapsed.TotalMilliseconds
+                    / SystemParameters.NumThreads);
             }
             foreach (RunData.RunMonitor monitor in fileMonitors)
             {
@@ -123,13 +138,28 @@ namespace Benchroom.Executor
             startInfo.Arguments = runData.commandLineArguments.Replace("{}", parameter.commandLineArguments);
             startInfo.WorkingDirectory = directory;
             startInfo.UseShellExecute = false;
+            if (!PrintOutput)
+            {
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
+                process.OutputDataReceived += ProcessOutputScrapper;
+            }
             process.StartInfo = startInfo;
             return process;
+        }
+
+        private void ProcessOutputScrapper(object sender, DataReceivedEventArgs e)
+        {
         }
 
         private void runProcess(Process process)
         {
             process.Start();
+            if (!PrintOutput)
+            {
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+            }
             process.WaitForExit();
         }
 
@@ -137,7 +167,7 @@ namespace Benchroom.Executor
         {
             if (runData.benchmarkSetup != "")
             {
-                Console.WriteLine("- Executing setup software script");
+                logger.Info("Executing setup software script");
                 runScript(runData.sofwareSetup);
             }
         }
@@ -145,7 +175,7 @@ namespace Benchroom.Executor
         private void setupBenchmark()
         {
             if (runData.benchmarkSetup != "") {
-                Console.WriteLine("- Executing setup benchmark script");
+                logger.Info("Executing setup benchmark script");
                 runScript(runData.benchmarkSetup);
             }
         }
@@ -154,7 +184,7 @@ namespace Benchroom.Executor
         {
             if (runData.benchmarkSetup != "")
             {
-                Console.WriteLine("- Executing cleanup software script");
+                logger.Info("Executing cleanup software script");
                 runScript(runData.sofwareCleanup);
             }
         }
@@ -163,7 +193,7 @@ namespace Benchroom.Executor
         {
             if (runData.benchmarkSetup != "")
             {
-                Console.WriteLine("- Executing cleanup benchmark script");
+                logger.Info("Executing cleanup benchmark script");
                 runScript(runData.benchmarkCleanup);
             }
         }
@@ -177,7 +207,7 @@ namespace Benchroom.Executor
                 powerShell.Invoke();
                 if (powerShell.Streams.Error.Count > 0)
                 {
-                    Console.WriteLine("- Error while executing script: " + script);
+                    logger.Warn("Error while executing script: " + powerShell.Streams.Error[0].ToString());
                 }
             }
         }

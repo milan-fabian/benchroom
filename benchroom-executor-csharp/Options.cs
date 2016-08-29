@@ -17,6 +17,12 @@ namespace Benchroom.Executor
         [Option('n', "runs", Required = false, DefaultValue = 1, HelpText = "How many times to run each combination")]
         public int NumberOfRuns { get; set; }
 
+        [Option('v', "verbose", Required = false, DefaultValue = false, HelpText = "Print output from the run program")]
+        public bool PrintOutput { get; set; }
+
+        [Option('t', "test", Required = false, DefaultValue = false, HelpText = "Don't send results to server")]
+        public bool TestRun { get; set; }
+
         [HelpOption]
         public string GetUsage()
         {
