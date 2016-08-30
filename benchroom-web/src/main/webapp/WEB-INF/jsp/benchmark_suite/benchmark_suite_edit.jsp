@@ -33,6 +33,11 @@
             <td><form:textarea path="commandLineArguments" cols="60"/></td>
             <td><form:errors path="commandLineArguments"/></td>
         </tr>
+        <tr>
+            <td>Number of parameter positions:</td>
+            <td><form:input path="parameterPositions" type="number"/></td>
+            <td><form:errors path="parameterPositions"/></td>
+        </tr>
     </table>
     <input type="submit" value="Save"/>
 </form:form>

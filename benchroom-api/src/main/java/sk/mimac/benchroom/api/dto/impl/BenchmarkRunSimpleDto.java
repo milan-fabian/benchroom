@@ -12,7 +12,7 @@ public class BenchmarkRunSimpleDto implements Dto {
 
     private Long id;
 
-    private BenchmarkParameterDto benchmarkParameter;
+    private String benchmarkParameters;
 
     private ZonedDateTime whenStarted;
 
@@ -35,12 +35,12 @@ public class BenchmarkRunSimpleDto implements Dto {
         this.id = id;
     }
 
-    public BenchmarkParameterDto getBenchmarkParameter() {
-        return benchmarkParameter;
+    public String getBenchmarkParameters() {
+        return benchmarkParameters;
     }
 
-    public void setBenchmarkParameter(BenchmarkParameterDto benchmarkParameter) {
-        this.benchmarkParameter = benchmarkParameter;
+    public void setBenchmarkParameters(String benchmarkParameters) {
+        this.benchmarkParameters = benchmarkParameters;
     }
 
     public ZonedDateTime getWhenStarted() {

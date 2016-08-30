@@ -22,14 +22,15 @@ import javax.persistence.Table;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = BenchmarkParameter.GET_BY_SUITE, query = "SELECT p FROM BenchmarkParameter p WHERE p.benchmarkSuite.id = :suiteId")
+    @NamedQuery(name = BenchmarkParameter.GET_BY_SUITE_POSITION_PRIORITY, query = "SELECT p FROM BenchmarkParameter p "
+            + "WHERE p.benchmarkSuite.id = :suiteId AND p.position = :position AND p.priority >= :minPriority")
 })
 @Table(name = "benchmark_parameter", indexes = {
     @Index(name = "benchmark_parameter_suite_name", columnList = "benchmark_suite_id, name")
 })
 public class BenchmarkParameter implements EntityInterface, Serializable {
 
-    public static final String GET_BY_SUITE = "BenchmarkParameter.get_by_suite";
+    public static final String GET_BY_SUITE_POSITION_PRIORITY = "BenchmarkParameter.get_by_suite_position_priority";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,15 +44,18 @@ public class BenchmarkParameter implements EntityInterface, Serializable {
     @Column(name = "name", unique = false, nullable = true)
     private String name;
 
+    @Basic(optional = false)
+    @Column(name = "position", unique = false, nullable = false)
+    private short position;
+
+    @Basic(optional = false)
+    @Column(name = "priority", unique = false, nullable = false)
+    private short priority;
+
     @Lob
     @Basic(optional = true)
     @Column(name = "command_line_arguments", unique = false, nullable = true)
     private String commandLineArguments;
-
-    @Lob
-    @Basic(optional = true)
-    @Column(name = "command_line_input", unique = false, nullable = true)
-    private String commandLineInput;
 
     public BenchmarkParameter() {
     }
@@ -84,20 +88,28 @@ public class BenchmarkParameter implements EntityInterface, Serializable {
         this.benchmarkSuite = benchmarkSuite;
     }
 
-    public String getCommandLineInput() {
-        return commandLineInput;
-    }
-
-    public void setCommandLineInput(String commandLineInput) {
-        this.commandLineInput = commandLineInput;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public short getPosition() {
+        return position;
+    }
+
+    public void setPosition(short position) {
+        this.position = position;
+    }
+
+    public short getPriority() {
+        return priority;
+    }
+
+    public void setPriority(short priority) {
+        this.priority = priority;
     }
 
     @Override
@@ -119,7 +131,7 @@ public class BenchmarkParameter implements EntityInterface, Serializable {
 
     @Override
     public String toString() {
-        return "BenchmarkParameter{" + "id=" + id + ", commandLineArguments=" + commandLineArguments + '}';
+        return "BenchmarkParameter{" + "id=" + id + ", name=" + name + ", position=" + position + '}';
     }
-
+    
 }

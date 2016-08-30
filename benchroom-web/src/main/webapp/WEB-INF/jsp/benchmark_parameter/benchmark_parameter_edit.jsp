@@ -19,14 +19,19 @@
             <td><form:errors path="name"/></td>
         </tr>
         <tr>
+            <td>Position:</td>
+            <td><form:input path="position" type="number"/></td>
+            <td><form:errors path="position"/></td>
+        </tr>
+        <tr>
+            <td>Priority:</td>
+            <td><form:input path="priority" type="number"/></td>
+            <td><form:errors path="priority"/></td>
+        </tr>
+        <tr>
             <td>Command line arguments:</td>
             <td><form:textarea path="commandLineArguments" cols="60"/></td>
             <td><form:errors path="commandLineArguments"/></td>
-        </tr>
-        <tr>
-            <td>Command line input:</td>
-            <td><form:textarea path="commandLineInput" cols="60"/></td>
-            <td><form:errors path="commandLineInput"/></td>
         </tr>
     </table>
     <input type="submit" value="Save"/>

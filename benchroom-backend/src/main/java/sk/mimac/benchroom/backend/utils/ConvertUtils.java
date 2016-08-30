@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import sk.mimac.benchroom.api.dto.impl.*;
 import sk.mimac.benchroom.backend.persistence.entity.*;
 
@@ -50,6 +51,7 @@ public class ConvertUtils {
         dto.setSetupScript(entity.getSetupScript());
         dto.setCleanupScript(entity.getCleanupScript());
         dto.setCommandLineArguments(entity.getCommandLineArguments());
+        dto.setParameterPositions(entity.getParameterPositions());
         return dto;
     }
 
@@ -60,6 +62,7 @@ public class ConvertUtils {
         entity.setSetupScript(dto.getSetupScript());
         entity.setCleanupScript(dto.getCleanupScript());
         entity.setCommandLineArguments(dto.getCommandLineArguments());
+        entity.setParameterPositions(dto.getParameterPositions());
         return entity;
     }
 
@@ -67,7 +70,8 @@ public class ConvertUtils {
         BenchmarkParameter entity = new BenchmarkParameter(dto.getId());
         entity.setName(dto.getName());
         entity.setCommandLineArguments(dto.getCommandLineArguments());
-        entity.setCommandLineInput(dto.getCommandLineInput());
+        entity.setPriority(dto.getPriority());
+        entity.setPosition(dto.getPosition());
         entity.setBenchmarkSuite(new BenchmarkSuite(dto.getBenchmarkSuiteId()));
         return entity;
     }
@@ -76,28 +80,34 @@ public class ConvertUtils {
         BenchmarkParameterDto dto = new BenchmarkParameterDto(entity.getId());
         dto.setName(entity.getName());
         dto.setCommandLineArguments(entity.getCommandLineArguments());
-        dto.setCommandLineInput(entity.getCommandLineInput());
+        dto.setPriority(entity.getPriority());
+        dto.setPosition(entity.getPosition());
         dto.setBenchmarkSuiteId(entity.getBenchmarkSuite().getId());
         return dto;
     }
 
     public static BenchmarkRunDto convert(BenchmarkRun entity) {
         BenchmarkRunDto dto = new BenchmarkRunDto(entity.getId());
-        dto.setBenchmarkParameter(convert(entity.getBenchmarkParameter()));
         dto.setSystemParameters(new HashMap<>(entity.getSystemParameters()));
         dto.setSoftwareVersion(convert(entity.getSoftwareVersion()));
         dto.setWhenStarted(entity.getWhenStarted());
+        dto.setBenchmarkSuiteId(entity.getBenchmarkSuite().getId());
         List<BenchmarkRunResultDto> results = new ArrayList<>();
         for (BenchmarkRunResult result : entity.getResults()) {
             results.add(convert(result));
         }
         dto.setResults(results);
+        List<BenchmarkParameterDto> parameters = new ArrayList<>();
+        for (BenchmarkParameter result : entity.getBenchmarkParameters()) {
+            parameters.add(convert(result));
+        }
+        dto.setBenchmarkParameters(parameters);
         return dto;
     }
 
     public static BenchmarkRunSimpleDto convertToSimple(BenchmarkRun entity) {
         BenchmarkRunSimpleDto dto = new BenchmarkRunSimpleDto(entity.getId());
-        dto.setBenchmarkParameter(convert(entity.getBenchmarkParameter()));
+        dto.setBenchmarkParameters(entity.getBenchmarkParameters().toString());
         dto.setSystemParameters(entity.getSystemParameters().toString());
         dto.setWhenStarted(entity.getWhenStarted());
         StringBuilder builder = new StringBuilder();
@@ -110,10 +120,15 @@ public class ConvertUtils {
 
     public static BenchmarkRun convert(BenchmarkRunDto dto) {
         BenchmarkRun entity = new BenchmarkRun(dto.getId());
-        entity.setBenchmarkParameter(new BenchmarkParameter(dto.getBenchmarkParameter().getId()));
+        Set<BenchmarkParameter> parameters = new HashSet<>();
+        for (BenchmarkParameterDto parameter : dto.getBenchmarkParameters()) {
+            parameters.add(new BenchmarkParameter(parameter.getId()));
+        }
+        entity.setBenchmarkParameters(parameters);
         entity.setSystemParameters(dto.getSystemParameters());
         entity.setSoftwareVersion(new SoftwareVersion(dto.getSoftwareVersion().getId()));
         entity.setWhenStarted(dto.getWhenStarted());
+        entity.setBenchmarkSuite(new BenchmarkSuite(dto.getBenchmarkSuiteId()));
         return entity;
     }
 

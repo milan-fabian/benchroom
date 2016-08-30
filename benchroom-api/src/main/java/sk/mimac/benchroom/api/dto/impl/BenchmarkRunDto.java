@@ -17,13 +17,15 @@ public class BenchmarkRunDto implements Dto {
 
     private SoftwareVersionDto softwareVersion;
 
-    private BenchmarkParameterDto benchmarkParameter;
+    private List<BenchmarkParameterDto> benchmarkParameters;
 
     private ZonedDateTime whenStarted;
 
     private Map<SystemParameter, String> systemParameters;
 
     private List<BenchmarkRunResultDto> results;
+
+    private Long benchmarkSuiteId;
 
     public BenchmarkRunDto(Long id) {
         this.id = id;
@@ -48,12 +50,20 @@ public class BenchmarkRunDto implements Dto {
         this.softwareVersion = softwareVersion;
     }
 
-    public BenchmarkParameterDto getBenchmarkParameter() {
-        return benchmarkParameter;
+    public List<BenchmarkParameterDto> getBenchmarkParameters() {
+        return benchmarkParameters;
     }
 
-    public void setBenchmarkParameter(BenchmarkParameterDto benchmarkParameter) {
-        this.benchmarkParameter = benchmarkParameter;
+    public void setBenchmarkParameters(List<BenchmarkParameterDto> benchmarkParameters) {
+        this.benchmarkParameters = benchmarkParameters;
+    }
+
+    public Long getBenchmarkSuiteId() {
+        return benchmarkSuiteId;
+    }
+
+    public void setBenchmarkSuiteId(Long benchmarkSuiteId) {
+        this.benchmarkSuiteId = benchmarkSuiteId;
     }
 
     public ZonedDateTime getWhenStarted() {

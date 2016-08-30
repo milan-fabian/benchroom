@@ -11,7 +11,7 @@ namespace Benchroom.Executor.Model
         public string benchmarkSetup { get; set; }
         public string benchmarkCleanup { get; set; }
         public string commandLineArguments { get; set; }
-        public List<RunParameter> parameters { get; set; }
+        public List<List<RunParameter>> parameters { get; set; }
         public List<RunMonitor> monitors { get; set; }
 
         public class RunParameter
@@ -20,7 +20,6 @@ namespace Benchroom.Executor.Model
             public long parameterId { get; set; }
             public string parameterName { get; set; }
             public string commandLineArguments { get; set; }
-            public string commandLineInput { get; set; }
         }
 
         public class RunMonitor

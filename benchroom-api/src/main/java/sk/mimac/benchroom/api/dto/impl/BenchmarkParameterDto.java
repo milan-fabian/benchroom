@@ -17,9 +17,11 @@ public class BenchmarkParameterDto implements Dto {
 
     private String commandLineArguments;
 
-    private String commandLineInput;
-
     private Long benchmarkSuiteId;
+
+    private short position;
+
+    private short priority;
 
     public BenchmarkParameterDto(Long id) {
         this.id = id;
@@ -54,12 +56,20 @@ public class BenchmarkParameterDto implements Dto {
         this.commandLineArguments = commandLineArguments;
     }
 
-    public String getCommandLineInput() {
-        return commandLineInput;
+    public short getPosition() {
+        return position;
     }
 
-    public void setCommandLineInput(String commandLineInput) {
-        this.commandLineInput = commandLineInput;
+    public void setPosition(short position) {
+        this.position = position;
+    }
+
+    public short getPriority() {
+        return priority;
+    }
+
+    public void setPriority(short priority) {
+        this.priority = priority;
     }
 
     public Long getBenchmarkSuiteId() {

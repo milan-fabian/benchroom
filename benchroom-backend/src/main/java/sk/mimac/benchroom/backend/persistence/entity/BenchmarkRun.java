@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyEnumerated;
@@ -40,8 +41,16 @@ public class BenchmarkRun implements EntityInterface, Serializable {
     private SoftwareVersion softwareVersion;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "benchmark_parameter_id", nullable = false)
-    private BenchmarkParameter benchmarkParameter;
+    @JoinColumn(name = "benchmark_suite_id", nullable = false)
+    private BenchmarkSuite benchmarkSuite;
+
+    @ManyToMany()
+    @JoinTable(name = "benchmark_run_parameter",
+            joinColumns = {
+                @JoinColumn(name = "benchmark_run_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                @JoinColumn(name = "benchmark_parameter_id", nullable = false, updatable = false)})
+    private Set<BenchmarkParameter> benchmarkParameters;
 
     @Basic(optional = false)
     @Column(name = "when_started", unique = false, nullable = false)
@@ -89,12 +98,12 @@ public class BenchmarkRun implements EntityInterface, Serializable {
         this.softwareVersion = softwareVersion;
     }
 
-    public BenchmarkParameter getBenchmarkParameter() {
-        return benchmarkParameter;
+    public Set<BenchmarkParameter> getBenchmarkParameters() {
+        return benchmarkParameters;
     }
 
-    public void setBenchmarkParameter(BenchmarkParameter benchmarkParameter) {
-        this.benchmarkParameter = benchmarkParameter;
+    public void setBenchmarkParameters(Set<BenchmarkParameter> benchmarkParameters) {
+        this.benchmarkParameters = benchmarkParameters;
     }
 
     public Map<SystemParameter, String> getSystemParameters() {
@@ -111,6 +120,14 @@ public class BenchmarkRun implements EntityInterface, Serializable {
 
     public void setResults(Set<BenchmarkRunResult> results) {
         this.results = results;
+    }
+
+    public BenchmarkSuite getBenchmarkSuite() {
+        return benchmarkSuite;
+    }
+
+    public void setBenchmarkSuite(BenchmarkSuite benchmarkSuite) {
+        this.benchmarkSuite = benchmarkSuite;
     }
 
     @Override

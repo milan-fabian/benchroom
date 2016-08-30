@@ -8,7 +8,7 @@ import sk.mimac.benchroom.backend.persistence.entity.BenchmarkParameter;
  * @author Milan Fabian
  */
 public interface BenchmarkParameterDao extends Dao<BenchmarkParameter> {
-    
-    List<BenchmarkParameter> getBySuite(long suiteId);
-    
+
+    List<BenchmarkParameter> getBySuitePositionPriority(long suiteId, short position, short minPriority);
+
 }

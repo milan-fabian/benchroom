@@ -13,11 +13,11 @@ namespace Benchroom.Executor
         private const string URL_BENCHMARK_DATA = "/connector/benchmark_data";
         private const string URL_BENCHMARK_RESULT = "/connector/benchmark_result";
 
-        public static RunData getRunData(String server, String id)
+        public static RunData getRunData(String server, String id, short minPriority)
         {
             using (WebClient webClient = new WebClient())
             {
-                String url = server + URL_BENCHMARK_DATA + "?id=" + id + "&platform=WINDOWS_X86_64";
+                String url = server + URL_BENCHMARK_DATA + "?id=" + id + "&platform=WINDOWS_X86_64&minPriority=" + minPriority;
                 logger.Info("Getting data to run from \"" + url + "\"");
                 String data = webClient.DownloadString(url);
                 return JsonConvert.DeserializeObject<RunData>(data);

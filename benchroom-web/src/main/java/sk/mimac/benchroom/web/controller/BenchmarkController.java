@@ -109,7 +109,7 @@ public class BenchmarkController {
         Map<String, Object> model = new HashMap<>();
         BenchmarkRunDto run = benchmarkRunService.getRunById(runId);
         model.put("run", run);
-        model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkParameter().getBenchmarkSuiteId()));
+        model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkSuiteId()));
         return new ModelAndView("benchmark/benchmark_detail", model);
     }
 
@@ -120,9 +120,9 @@ public class BenchmarkController {
         BenchmarkRunDto run = benchmarkRunService.getRunById(runId);
         Collections.sort(run.getResults());
         model.put("run", run);
-        model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkParameter().getBenchmarkSuiteId()));
+        model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkSuiteId()));
         BenchmarkRunFilter sameSystemFilter = new BenchmarkRunFilter();
-        sameSystemFilter.setBenchmarkSuiteId(run.getBenchmarkParameter().getBenchmarkSuiteId());
+        sameSystemFilter.setBenchmarkSuiteId(run.getBenchmarkSuiteId());
         sameSystemFilter.setSoftwareVersionId(run.getSoftwareVersion().getId());
         sameSystemFilter.setParameters(run.getSystemParameters());
         List<BenchmarkRunDto> sameSystemRuns = benchmarkRunService.getRunPage(sameSystemFilter).getElements();

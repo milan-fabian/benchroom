@@ -51,6 +51,10 @@ public class BenchmarkSuite implements EntityInterface, Serializable {
     @Column(name = "command_line_arguments", unique = false, nullable = true)
     private String commandLineArguments;
 
+    @Basic(optional = false)
+    @Column(name = "parameter_positions", unique = false, nullable = false)
+    private short parameterPositions;
+
     public BenchmarkSuite() {
     }
 
@@ -104,6 +108,14 @@ public class BenchmarkSuite implements EntityInterface, Serializable {
 
     public void setCommandLineArguments(String commandLineArguments) {
         this.commandLineArguments = commandLineArguments;
+    }
+
+    public short getParameterPositions() {
+        return parameterPositions;
+    }
+
+    public void setParameterPositions(short parameterPositions) {
+        this.parameterPositions = parameterPositions;
     }
 
     @Override

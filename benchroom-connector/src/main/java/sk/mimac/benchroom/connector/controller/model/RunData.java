@@ -16,7 +16,7 @@ public class RunData {
     private String benchmarkSetup;
     private String benchmarkCleanup;
     private String commandLineArguments;
-    private List<RunParameter> parameters;
+    private List<List<RunParameter>> parameters;
     private List<RunMonitor> monitors;
 
     public String getRunId() {
@@ -67,11 +67,11 @@ public class RunData {
         this.benchmarkCleanup = benchmarkCleanup;
     }
 
-    public List<RunParameter> getParameters() {
+    public List<List<RunParameter>> getParameters() {
         return parameters;
     }
 
-    public void setParameters(List<RunParameter> parameters) {
+    public void setParameters(List<List<RunParameter>> parameters) {
         this.parameters = parameters;
     }
 
@@ -96,7 +96,6 @@ public class RunData {
         private long parameterId;
         private String parameterName;
         private String commandLineArguments;
-        private String commandLineInput;
 
         public long getParameterId() {
             return parameterId;
@@ -120,14 +119,6 @@ public class RunData {
 
         public void setCommandLineArguments(String commandLineArguments) {
             this.commandLineArguments = commandLineArguments;
-        }
-
-        public String getCommandLineInput() {
-            return commandLineInput;
-        }
-
-        public void setCommandLineInput(String commandLineInput) {
-            this.commandLineInput = commandLineInput;
         }
     }
 

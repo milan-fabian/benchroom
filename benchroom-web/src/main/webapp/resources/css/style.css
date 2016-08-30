@@ -6,6 +6,9 @@ h1 {
     text-align: center;
     margin: 0.3em;
 }
+h4 {
+    margin-bottom: 0.5em;
+}
 /* MENU */
 .menu {
     background-color: black;

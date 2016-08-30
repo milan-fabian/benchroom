@@ -12,7 +12,7 @@ import sk.mimac.benchroom.api.system.SystemParameter;
 public class Run {
 
     private String runId;
-    private long parameterId;
+    private List<Long> parameterIds;
     private ZonedDateTime whenStarted;
     private List<RunResult> results;
     private Map<SystemParameter, String> systemParameters;
@@ -25,12 +25,12 @@ public class Run {
         this.runId = runId;
     }
 
-    public long getParameterId() {
-        return parameterId;
+    public List<Long> getParameterIds() {
+        return parameterIds;
     }
 
-    public void setParameterId(long parameterId) {
-        this.parameterId = parameterId;
+    public void setParameterIds(List<Long> parameterIds) {
+        this.parameterIds = parameterIds;
     }
 
     public ZonedDateTime getWhenStarted() {

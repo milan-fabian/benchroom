@@ -4,15 +4,23 @@
 
 <p>
     Benchmark run of software <b><c:out value="${run.softwareVersion.softwareName}" /></b> (version <c:out value="${run.softwareVersion.name}"/>)
-    <br>for suite <b><c:out value="${suite.name}"/></b> with parameter <b><c:out value="${run.benchmarkParameter.name}"/></b>,
-    <br>which was run on ${run.whenStarted}.
+    <br>for suite <b><c:out value="${suite.name}"/></b>, which was run on ${run.whenStarted}.
 </p>
+
+<h4>Parameters:</h4>
+<table>
+    <c:forEach items="${run.benchmarkParameters}" var="parameter">
+        <tr>
+            <td><c:out value="${parameter.name}"/></td>
+</tr>
+</c:forEach>
+</table>
 
 <h4>Results:</h4>
 <table>
     <c:forEach items="${run.results}" var="result">
         <tr>
-            <td>${result.monitorName}:</td>
+            <td><c:out value="${result.monitorName}"/>:</td>
             <td><b:printRunResult runResult="${result}"/></td>
 </tr>
 </c:forEach>

@@ -36,7 +36,7 @@ public class BenchmarkRunQueryBuilder extends QueryBuilder<BenchmarkRun> {
             list.add(cb.equal(root.get("benchmarkParameter").get("id"), filter.getBenchmarkParameterId()));
         }
         if (filter.getBenchmarkSuiteId() != null) {
-            list.add(cb.equal(root.get("benchmarkParameter").get("benchmarkSuite").get("id"), filter.getBenchmarkSuiteId()));
+            list.add(cb.equal(root.get("benchmarkSuite").get("id"), filter.getBenchmarkSuiteId()));
         }
         if (filter.getParameters() != null) {
             MapJoin<BenchmarkRun, SystemParameter, String> systemParamsRoot = root.joinMap("systemParameters");

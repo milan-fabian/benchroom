@@ -25,6 +25,8 @@ public class BenchmarkSuiteDto implements Dto {
 
     private String commandLineArguments;
 
+    private short parameterPositions;
+
     public BenchmarkSuiteDto() {
     }
 
@@ -86,6 +88,14 @@ public class BenchmarkSuiteDto implements Dto {
 
     public void setCommandLineArguments(String commandLineArguments) {
         this.commandLineArguments = commandLineArguments;
+    }
+
+    public short getParameterPositions() {
+        return parameterPositions;
+    }
+
+    public void setParameterPositions(short parameterPositions) {
+        this.parameterPositions = parameterPositions;
     }
 
     @Override

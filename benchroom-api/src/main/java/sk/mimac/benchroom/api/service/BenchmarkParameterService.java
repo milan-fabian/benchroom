@@ -19,5 +19,5 @@ public interface BenchmarkParameterService {
 
     Page<BenchmarkParameterDto> getParameterPage(BenchmarkParameterFilter filter);
     
-    List<BenchmarkParameterDto> getParametersForSuite(long suiteId);
+    List<BenchmarkParameterDto> getParametersForSuitePositionPriority(long suiteId, short position, short minPriority);
 }

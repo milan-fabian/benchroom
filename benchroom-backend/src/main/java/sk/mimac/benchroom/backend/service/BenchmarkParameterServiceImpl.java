@@ -54,9 +54,9 @@ public class BenchmarkParameterServiceImpl implements BenchmarkParameterService 
     }
 
     @Override
-    public List<BenchmarkParameterDto> getParametersForSuite(long suiteId) {
+    public List<BenchmarkParameterDto> getParametersForSuitePositionPriority(long suiteId, short position, short minPriority) {
         List<BenchmarkParameterDto> result = new ArrayList();
-        for (BenchmarkParameter entity : benchmarkParameterDao.getBySuite(suiteId)) {
+        for (BenchmarkParameter entity : benchmarkParameterDao.getBySuitePositionPriority(suiteId, position, minPriority)) {
             result.add(ConvertUtils.convert(entity));
         }
         return result;

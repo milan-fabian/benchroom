@@ -18,9 +18,11 @@ public class BenchmarkParameterDaoImpl extends AbstractDao<BenchmarkParameter> i
     }
 
     @Override
-    public List<BenchmarkParameter> getBySuite(long suiteId) {
-        TypedQuery<BenchmarkParameter> query = em.createNamedQuery(BenchmarkParameter.GET_BY_SUITE, BenchmarkParameter.class);
+    public List<BenchmarkParameter> getBySuitePositionPriority(long suiteId, short position, short minPriority) {
+        TypedQuery<BenchmarkParameter> query = em.createNamedQuery(BenchmarkParameter.GET_BY_SUITE_POSITION_PRIORITY, BenchmarkParameter.class);
         query.setParameter("suiteId", suiteId);
+        query.setParameter("position", position);
+        query.setParameter("minPriority", minPriority);
         return query.getResultList();
     }
     

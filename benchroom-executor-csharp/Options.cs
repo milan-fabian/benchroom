@@ -23,6 +23,9 @@ namespace Benchroom.Executor
         [Option('t', "test", Required = false, DefaultValue = false, HelpText = "Don't send results to server")]
         public bool TestRun { get; set; }
 
+        [Option('p', "priority", Required = true, HelpText = "Minimal priority for parameters")]
+        public short minPriority { get; set; }
+
         [HelpOption]
         public string GetUsage()
         {

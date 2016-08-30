@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Management.Automation;
+using System.Reflection;
+using System.Text;
 using System.Threading;
 
 namespace Benchroom.Executor
@@ -19,6 +22,7 @@ namespace Benchroom.Executor
         public int NumberOfRuns { private get; set; }
         public bool PrintOutput { private get; set; }
         public bool TestRun { private get; set; }
+        private string protocolFile;
         private long? timeMonitor;
         private long? utilizationMonitor;
         private List<RunData.RunMonitor> fileMonitors = new List<RunData.RunMonitor>();
@@ -27,6 +31,7 @@ namespace Benchroom.Executor
         public Runner(RunData runData, String directory)
         {
             this.runData = runData;
+            this.protocolFile = "benchroom_protocol-" + DateTime.Now.ToString().Replace(':', '.') + "-id" + runData.runId + ".txt";
             this.directory = directory;
             Directory.CreateDirectory(directory);
             foreach (RunData.RunMonitor monitor in runData.monitors)
@@ -46,27 +51,40 @@ namespace Benchroom.Executor
         public void runBenchmarks()
         {
             logger.Info("Starting benchmarks for \"" + runData.runName + "\"");
+            writeProtocolHeader();
             setupSoftware();
             setupBenchmark();
             int i = 1;
-            foreach (RunData.RunParameter parameter in runData.parameters)
+            List<List<RunData.RunParameter>> combinations = ParameterCombinations.getCombinations(runData.parameters);
+            foreach (List<RunData.RunParameter> parameters in combinations)
             {
-                logger.Info("Running with parameter " + i++ + " out of " + runData.parameters.Count);
-                executeRun(parameter);
+                logger.Info("Running with parameters " + i++ + " out of " + combinations.Count);
+                executeRun(parameters);
             }
             cleanupBenchmark();
             cleanupSoftware();
             logger.Info("Finished benchmarks for \"" + runData.runName + "\"");
         }
 
-        private void executeRun(RunData.RunParameter parameter)
+        private void executeRun(List<RunData.RunParameter> parameters)
         {
             Run run = new Run();
             run.whenStarted = DateTime.Now;
             List<Dictionary<long, double>> results = new List<Dictionary<long, double>>();
+            List<long> parameterIds = new List<long>();
+            StringBuilder parameterNames = new StringBuilder();
+            List<string> parameterValues = new List<string>();
+            foreach(RunData.RunParameter parameter in parameters)
+            {
+                parameterIds.Add(parameter.parameterId);
+                parameterNames.Append(parameter.parameterName).Append("; ");
+                parameterValues.Add(parameter.commandLineArguments);
+            }
+            parameterNames.Remove(parameterNames.Length - 2, 2);
+            string commandLineArguments = String.Format(runData.commandLineArguments, parameterValues.ToArray());
             for (int i = 0; i < NumberOfRuns; i++)
             {
-                Dictionary<long, double> result = executeSingleRun(parameter);
+                Dictionary<long, double> result = executeSingleRun(commandLineArguments, parameterNames.ToString());
                 if (result != null)
                 {
                     results.Add(result);
@@ -74,7 +92,7 @@ namespace Benchroom.Executor
             }
             if (results.Count > 0)
             {
-                run.parameterId = parameter.parameterId;
+                run.parameterIds = parameterIds;
                 run.runId = runData.runId;
                 run.systemParameters = systemParameters;
                 run.results = new List<Run.RunResult>();
@@ -94,9 +112,9 @@ namespace Benchroom.Executor
             }
         }
 
-        private Dictionary<long, double> executeSingleRun(RunData.RunParameter parameter)
+        private Dictionary<long, double> executeSingleRun(string commandLineArguments, string parameterNames)
         {
-            Process process = prepareProcess(parameter);
+            Process process = prepareProcess(commandLineArguments);
             Thread.Sleep(500);
             try
             {
@@ -105,24 +123,29 @@ namespace Benchroom.Executor
             catch (Exception ex)
             {
                 logger.Info("Can't run benchmark: " + ex);
+                writeToProtocol("Run with parameters \"" + parameterNames + "\" was unsuccessful due to exception\n");
                 return null;
             }
             TimeSpan elapsed = process.ExitTime - process.StartTime;
-            logger.Info("Running with parameter \"" + parameter.parameterName + "\" took " + elapsed.TotalSeconds + " seconds");
+            logger.Info("Running with parameters \"" + parameterNames + "\" took " + elapsed.TotalSeconds + " seconds");
             if (process.ExitCode != 0)
             {
                 logger.Warn("Exit code is " + process.ExitCode + ", result won't be saved");
+                writeToProtocol("Run with parameters \"" + parameterNames + "\" was unsuccessful, exit code is " + process.ExitCode + "\n");
                 return null;
             }
             Dictionary<long, double> results = new Dictionary<long, double>();
+            writeToProtocol("Run with parameters \"" + parameterNames + "\" was successfull\n");
             if (timeMonitor.HasValue)
             {
+                writeToProtocol("\tElapsed time: " + elapsed.TotalMilliseconds + " ms\n");
                 results.Add(timeMonitor.Value, elapsed.TotalMilliseconds);
             }
             if (utilizationMonitor.HasValue)
             {
-                results.Add(utilizationMonitor.Value, process.TotalProcessorTime.TotalMilliseconds / elapsed.TotalMilliseconds
-                    / SystemParameters.NumThreads);
+                double utilization = process.TotalProcessorTime.TotalMilliseconds / elapsed.TotalMilliseconds / SystemParameters.NumThreads;
+                writeToProtocol("\tCPU utilization: " + utilization + " %\n");
+                results.Add(utilizationMonitor.Value, utilization);
             }
             foreach (RunData.RunMonitor monitor in fileMonitors)
             {
@@ -132,12 +155,12 @@ namespace Benchroom.Executor
             return results;
         }
 
-        private Process prepareProcess(RunData.RunParameter parameter)
+        private Process prepareProcess(string commandLineArguments)
         {
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = directory + "\\software.exe";
-            startInfo.Arguments = runData.commandLineArguments.Replace("{}", parameter.commandLineArguments);
+            startInfo.Arguments = commandLineArguments;
             startInfo.WorkingDirectory = directory;
             startInfo.UseShellExecute = false;
             if (!PrintOutput)
@@ -212,6 +235,18 @@ namespace Benchroom.Executor
                     logger.Warn("Error while executing script: " + powerShell.Streams.Error[0].ToString());
                 }
             }
+        }
+
+        private void writeToProtocol(string data)
+        {
+            File.AppendAllText(protocolFile, data);
+        }
+
+        private void writeProtocolHeader()
+        {
+            writeToProtocol("Benchroom " + Assembly.GetExecutingAssembly().GetName().Version.ToString()
+                + "\nBenchmark \"" + runData.runName + "\"\nSystem parameters: "
+                + string.Join(";", systemParameters.Select(x => x.Key + "=" + x.Value).ToArray()) + "\n\n");
         }
     }
 }
