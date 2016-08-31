@@ -1,5 +1,4 @@
-# benchroom
+# Benchroom - software and hardware benchmarks
 
-Nothing interesting here so far, work is in progress.
-
-One day this readme will updated (hopefully).
+Nothing interesting here so far, work is in progress...
+	
