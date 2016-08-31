@@ -12,6 +12,8 @@ public abstract class AbstractFilter {
 
     private String fulltext;
 
+    private String orderBy;
+
     public int getPageSize() {
         return pageSize;
     }
@@ -34,6 +36,14 @@ public abstract class AbstractFilter {
 
     public void setFulltext(String fulltext) {
         this.fulltext = fulltext;
+    }
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
     }
 
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import sk.mimac.benchroom.api.dto.impl.*;
 import sk.mimac.benchroom.backend.persistence.entity.*;
 
@@ -113,7 +114,7 @@ public class ConvertUtils {
 
     public static BenchmarkRunSimpleDto convertToSimple(BenchmarkRun entity) {
         BenchmarkRunSimpleDto dto = new BenchmarkRunSimpleDto(entity.getId());
-        dto.setBenchmarkParameters(entity.getBenchmarkParameters().toString());
+        dto.setBenchmarkParameters(entity.getBenchmarkParameters().stream().map(parameter -> parameter.getName()).collect(Collectors.toList()).toString());
         dto.setSystemParameters(entity.getSystemParameters().toString());
         dto.setWhenStarted(entity.getWhenStarted());
         StringBuilder builder = new StringBuilder();

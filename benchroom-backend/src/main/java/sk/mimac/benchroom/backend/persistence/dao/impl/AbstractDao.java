@@ -60,6 +60,7 @@ public class AbstractDao<T extends EntityInterface> implements Dao<T> {
         Root<T> root = c.from(clazz);
         c.select(root);
         c.where(queryBuilder.where(root, cb));
+        c.orderBy(queryBuilder.orderBy(root, cb));
         TypedQuery<T> query = em.createQuery(c);
         query.setFirstResult(queryBuilder.getPageSize() * (queryBuilder.getPageNumber() - 1));
         query.setMaxResults(queryBuilder.getPageSize());

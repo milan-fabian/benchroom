@@ -11,7 +11,7 @@
 <table border="1" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
-            <th></th>
+            <th>Parameters</th>
                 <c:forEach items="${run.results}" var="result">
                 <th colspan="2">${result.monitorName}</th>
                 </c:forEach>
@@ -21,12 +21,18 @@
         <c:forEach items="${sameSystem}" var="run2">
             <tr>
                 <td>
+                    <c:set var="parametersName">
+                        <c:forEach items="${run2.benchmarkParameters}" var="parameter">
+                            ${parameter.name},
+                        </c:forEach>
+                    </c:set>
+
                     <c:choose>
                         <c:when test="${run2.id == run.id}">
-                            <b>${run2.benchmarkParameters[0].name}</b>
+                            <b>${parametersName}</b>
                         </c:when>
                         <c:otherwise>
-                            <a href="<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE%>?run=${run2.id}">${run2.benchmarkParameters[0].name}</a>
+                            <a href="<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE%>?run=${run2.id}">${parametersName}</a>
                         </c:otherwise>
                     </c:choose>
                 </td>
