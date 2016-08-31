@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Benchroom.Executor.Model
 {
-    class Run
+    class RunOutput
     {
         public string runId { get; set; }
         public List<long> parameterIds { get; set; }

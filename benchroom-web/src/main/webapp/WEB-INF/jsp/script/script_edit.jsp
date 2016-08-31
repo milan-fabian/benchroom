@@ -25,7 +25,7 @@
         </tr>
         <tr>
             <td>Script data:</td>
-            <td><form:textarea path="scriptData" cols="60"/></td>
+            <td><form:textarea path="scriptData" cols="80" rows="4"/></td>
             <td><form:errors path="scriptData"/></td>
         </tr>
     </table>

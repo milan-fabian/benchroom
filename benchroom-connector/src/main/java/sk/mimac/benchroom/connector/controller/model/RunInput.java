@@ -7,13 +7,14 @@ import sk.mimac.benchroom.api.enums.MonitorType;
  *
  * @author Milan Fabian
  */
-public class RunData {
+public class RunInput {
 
     private String runId;
     private String runName;
     private String sofwareSetup;
     private String sofwareCleanup;
     private String benchmarkSetup;
+    private String bencharkAfterEachRunScript;
     private String benchmarkCleanup;
     private String commandLineArguments;
     private List<List<RunParameter>> parameters;
@@ -67,6 +68,14 @@ public class RunData {
         this.benchmarkCleanup = benchmarkCleanup;
     }
 
+    public String getBencharkAfterEachRunScript() {
+        return bencharkAfterEachRunScript;
+    }
+
+    public void setBencharkAfterEachRunScript(String bencharkAfterEachRunScript) {
+        this.bencharkAfterEachRunScript = bencharkAfterEachRunScript;
+    }
+
     public List<List<RunParameter>> getParameters() {
         return parameters;
     }
@@ -96,6 +105,8 @@ public class RunData {
         private long parameterId;
         private String parameterName;
         private String commandLineArguments;
+        private String setupScript;
+        private String cleanupScript;
 
         public long getParameterId() {
             return parameterId;
@@ -119,6 +130,22 @@ public class RunData {
 
         public void setCommandLineArguments(String commandLineArguments) {
             this.commandLineArguments = commandLineArguments;
+        }
+
+        public String getCleanupScript() {
+            return cleanupScript;
+        }
+
+        public void setCleanupScript(String cleanupScript) {
+            this.cleanupScript = cleanupScript;
+        }
+
+        public String getSetupScript() {
+            return setupScript;
+        }
+
+        public void setSetupScript(String setupScript) {
+            this.setupScript = setupScript;
         }
     }
 

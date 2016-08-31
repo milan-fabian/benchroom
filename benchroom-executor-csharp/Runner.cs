@@ -16,7 +16,7 @@ namespace Benchroom.Executor
     {
         private static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private RunData runData;
+        private RunInput runData;
         private string directory;
         public string Server { private get; set; }
         public int NumberOfRuns { private get; set; }
@@ -25,24 +25,24 @@ namespace Benchroom.Executor
         private string protocolFile;
         private long? timeMonitor;
         private long? utilizationMonitor;
-        private List<RunData.RunMonitor> fileMonitors = new List<RunData.RunMonitor>();
+        private List<RunInput.RunMonitor> fileMonitors = new List<RunInput.RunMonitor>();
         private Dictionary<string, string> systemParameters = SystemParameters.getParameters();
 
-        public Runner(RunData runData, String directory)
+        public Runner(RunInput runData, String directory)
         {
             this.runData = runData;
             this.protocolFile = "benchroom_protocol-" + DateTime.Now.ToString().Replace(':', '.') + "-id" + runData.runId + ".txt";
             this.directory = directory;
             Directory.CreateDirectory(directory);
-            foreach (RunData.RunMonitor monitor in runData.monitors)
+            foreach (RunInput.RunMonitor monitor in runData.monitors)
             {
-                if (monitor.type.Equals(RunData.RunMonitor.RUN_TIME))
+                if (monitor.type.Equals(RunInput.RunMonitor.RUN_TIME))
                 {
                     timeMonitor = monitor.monitorId;
-                } else if (monitor.type.Equals(RunData.RunMonitor.FILE_SIZE))
+                } else if (monitor.type.Equals(RunInput.RunMonitor.FILE_SIZE))
                 {
                     fileMonitors.Add(monitor);
-                } else if(monitor.type.Equals(RunData.RunMonitor.CPU_UTILIZATION)) {
+                } else if(monitor.type.Equals(RunInput.RunMonitor.CPU_UTILIZATION)) {
                     utilizationMonitor = monitor.monitorId;
                 }
             }
@@ -54,27 +54,29 @@ namespace Benchroom.Executor
             writeProtocolHeader();
             setupSoftware();
             setupBenchmark();
+            parameterSetupScripts();
             int i = 1;
-            List<List<RunData.RunParameter>> combinations = ParameterCombinations.getCombinations(runData.parameters);
-            foreach (List<RunData.RunParameter> parameters in combinations)
+            List<List<RunInput.RunParameter>> combinations = ParameterCombinations.getCombinations(runData.parameters);
+            foreach (List<RunInput.RunParameter> parameters in combinations)
             {
                 logger.Info("Running with parameters " + i++ + " out of " + combinations.Count);
                 executeRun(parameters);
             }
+            parameterCleanupScripts();
             cleanupBenchmark();
             cleanupSoftware();
             logger.Info("Finished benchmarks for \"" + runData.runName + "\"");
         }
 
-        private void executeRun(List<RunData.RunParameter> parameters)
+        private void executeRun(List<RunInput.RunParameter> parameters)
         {
-            Run run = new Run();
+            RunOutput run = new RunOutput();
             run.whenStarted = DateTime.Now;
             List<Dictionary<long, double>> results = new List<Dictionary<long, double>>();
             List<long> parameterIds = new List<long>();
             StringBuilder parameterNames = new StringBuilder();
             List<string> parameterValues = new List<string>();
-            foreach(RunData.RunParameter parameter in parameters)
+            foreach(RunInput.RunParameter parameter in parameters)
             {
                 parameterIds.Add(parameter.parameterId);
                 parameterNames.Append(parameter.parameterName).Append("; ");
@@ -89,18 +91,19 @@ namespace Benchroom.Executor
                 {
                     results.Add(result);
                 }
+                afterEachRun();
             }
             if (results.Count > 0)
             {
                 run.parameterIds = parameterIds;
                 run.runId = runData.runId;
                 run.systemParameters = systemParameters;
-                run.results = new List<Run.RunResult>();
+                run.results = new List<RunOutput.RunResult>();
                 foreach (long monitorId in results[0].Keys)
                 {
                     double sum = 0;
                     results.ForEach(x => sum += x[monitorId]);
-                    run.results.Add(new Run.RunResult() { monitorId = monitorId, result = sum / results.Count });
+                    run.results.Add(new RunOutput.RunResult() { monitorId = monitorId, result = sum / results.Count });
                 }
                 if (!TestRun)
                 {
@@ -147,7 +150,7 @@ namespace Benchroom.Executor
                 writeToProtocol("\tCPU utilization: " + utilization + " %\n");
                 results.Add(utilizationMonitor.Value, utilization);
             }
-            foreach (RunData.RunMonitor monitor in fileMonitors)
+            foreach (RunInput.RunMonitor monitor in fileMonitors)
             {
                 long size = new FileInfo(directory + "\\" + monitor.action).Length;
                 results.Add(monitor.monitorId, size);
@@ -190,7 +193,7 @@ namespace Benchroom.Executor
 
         private void setupSoftware()
         {
-            if (runData.benchmarkSetup != "")
+            if (runData.sofwareSetup != null && runData.sofwareSetup != "")
             {
                 logger.Info("Executing setup software script");
                 runScript(runData.sofwareSetup);
@@ -199,7 +202,7 @@ namespace Benchroom.Executor
 
         private void setupBenchmark()
         {
-            if (runData.benchmarkSetup != "") {
+            if (runData.benchmarkSetup != null && runData.benchmarkSetup != "") {
                 logger.Info("Executing setup benchmark script");
                 runScript(runData.benchmarkSetup);
             }
@@ -207,7 +210,7 @@ namespace Benchroom.Executor
 
         private void cleanupSoftware()
         {
-            if (runData.benchmarkSetup != "")
+            if (runData.sofwareCleanup != null && runData.sofwareCleanup != "")
             {
                 logger.Info("Executing cleanup software script");
                 runScript(runData.sofwareCleanup);
@@ -216,10 +219,49 @@ namespace Benchroom.Executor
 
         private void cleanupBenchmark()
         {
-            if (runData.benchmarkSetup != "")
+            if (runData.benchmarkSetup != null && runData.benchmarkSetup != "")
             {
                 logger.Info("Executing cleanup benchmark script");
                 runScript(runData.benchmarkCleanup);
+            }
+        }
+
+        private void afterEachRun()
+        {
+            if (runData.bencharkAfterEachRunScript != null && runData.bencharkAfterEachRunScript != "")
+            {
+                logger.Info("Executing cleanup benchmark script");
+                runScript(runData.bencharkAfterEachRunScript);
+            }
+        }
+
+        private void parameterSetupScripts()
+        {
+            foreach (List<RunInput.RunParameter> parameterList in runData.parameters)
+            {
+                foreach(RunInput.RunParameter parameter in parameterList)
+                {
+                    if (parameter.setupScript != null && parameter.setupScript != "")
+                    {
+                        logger.Info("Executing setup script for parameter \"" + parameter.parameterName + "\"");
+                        runScript(parameter.setupScript);
+                    }
+                }
+            }
+        }
+
+        private void parameterCleanupScripts()
+        {
+            foreach (List<RunInput.RunParameter> parameterList in runData.parameters)
+            {
+                foreach (RunInput.RunParameter parameter in parameterList)
+                {
+                    if (parameter.cleanupScript != null && parameter.cleanupScript != "")
+                    {
+                        logger.Info("Executing cleanup script for parameter \"" + parameter.parameterName + "\"");
+                        runScript(parameter.cleanupScript);
+                    }
+                }
             }
         }
 

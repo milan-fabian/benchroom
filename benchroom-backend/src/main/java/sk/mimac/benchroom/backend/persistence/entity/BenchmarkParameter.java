@@ -57,6 +57,16 @@ public class BenchmarkParameter implements EntityInterface, Serializable {
     @Column(name = "command_line_arguments", unique = false, nullable = true)
     private String commandLineArguments;
 
+    @Lob
+    @Basic(optional = true)
+    @Column(name = "setup_script", unique = false, nullable = true)
+    private String setupScript;
+
+    @Lob
+    @Basic(optional = true)
+    @Column(name = "cleanup_script", unique = false, nullable = true)
+    private String cleanupScript;
+
     public BenchmarkParameter() {
     }
 
@@ -112,6 +122,22 @@ public class BenchmarkParameter implements EntityInterface, Serializable {
         this.priority = priority;
     }
 
+    public String getSetupScript() {
+        return setupScript;
+    }
+
+    public void setSetupScript(String setupScript) {
+        this.setupScript = setupScript;
+    }
+
+    public String getCleanupScript() {
+        return cleanupScript;
+    }
+
+    public void setCleanupScript(String cleanupScript) {
+        this.cleanupScript = cleanupScript;
+    }
+
     @Override
     public int hashCode() {
         return 7 + Objects.hashCode(this.id);
@@ -133,5 +159,5 @@ public class BenchmarkParameter implements EntityInterface, Serializable {
     public String toString() {
         return "BenchmarkParameter{" + "id=" + id + ", name=" + name + ", position=" + position + '}';
     }
-    
+
 }

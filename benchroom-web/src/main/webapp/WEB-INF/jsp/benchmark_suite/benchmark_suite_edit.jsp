@@ -19,18 +19,23 @@
             <td><form:errors path="name"/></td>
         </tr>
         <tr>
-            <td>Setup data:</td>
-            <td><form:textarea path="setupScript" cols="60"/></td>
+            <td>Setup script:</td>
+            <td><form:textarea path="setupScript" cols="80" rows="4"/></td>
             <td><form:errors path="setupScript"/></td>
         </tr>
         <tr>
-            <td>Cleanup data:</td>
-            <td><form:textarea path="cleanupScript" cols="60"/></td>
+            <td>After each run script:</td>
+            <td><form:textarea path="afterEachRunScript" cols="80" rows="4"/></td>
+            <td><form:errors path="afterEachRunScript"/></td>
+        </tr>
+        <tr>
+            <td>Cleanup script:</td>
+            <td><form:textarea path="cleanupScript" cols="80" rows="4"/></td>
             <td><form:errors path="cleanupScript"/></td>
         </tr>
         <tr>
             <td>Command line arguments:</td>
-            <td><form:textarea path="commandLineArguments" cols="60"/></td>
+            <td><form:textarea path="commandLineArguments" cols="80" rows="4"/></td>
             <td><form:errors path="commandLineArguments"/></td>
         </tr>
         <tr>

@@ -9,7 +9,7 @@ namespace Benchroom.Executor
 {
     class ParameterCombinations
     {
-        public static List<List<RunData.RunParameter>> getCombinations(List<List<RunData.RunParameter>> parameters)
+        public static List<List<RunInput.RunParameter>> getCombinations(List<List<RunInput.RunParameter>> parameters)
         {
             // keep track of the size of each inner String array
             int[] sizeArray = new int[parameters.Count];
@@ -29,14 +29,14 @@ namespace Benchroom.Executor
             }
 
             // Store the combinations in a List of String objects
-            List<List<RunData.RunParameter>> combinations = new List<List<RunData.RunParameter>>(totalCombinationCount);
+            List<List<RunInput.RunParameter>> combinations = new List<List<RunInput.RunParameter>>(totalCombinationCount);
 
             for (int countdown = totalCombinationCount; countdown > 0; --countdown)
             {
                 // Run through the inner arrays, grabbing the member from the index
                 // specified by the counterArray for each inner array, and build a
                 // combination string.
-                List<RunData.RunParameter> temp = new List<RunData.RunParameter>();
+                List<RunInput.RunParameter> temp = new List<RunInput.RunParameter>();
                 for (int i = 0; i < parameters.Count; ++i)
                 {
                     temp.Add(parameters[i][counterArray[i]]);

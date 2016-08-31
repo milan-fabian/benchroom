@@ -9,7 +9,7 @@ import sk.mimac.benchroom.api.system.SystemParameter;
  *
  * @author Milan Fabian
  */
-public class Run {
+public class RunOutput {
 
     private String runId;
     private List<Long> parameterIds;

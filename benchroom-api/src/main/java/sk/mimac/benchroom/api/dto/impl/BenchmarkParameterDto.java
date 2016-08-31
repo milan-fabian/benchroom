@@ -17,6 +17,10 @@ public class BenchmarkParameterDto implements Dto {
 
     private String commandLineArguments;
 
+    private String setupScript;
+
+    private String cleanupScript;
+
     private Long benchmarkSuiteId;
 
     private short position;
@@ -78,6 +82,22 @@ public class BenchmarkParameterDto implements Dto {
 
     public void setBenchmarkSuiteId(Long benchmarkSuiteId) {
         this.benchmarkSuiteId = benchmarkSuiteId;
+    }
+
+    public String getCleanupScript() {
+        return cleanupScript;
+    }
+
+    public void setCleanupScript(String cleanupScript) {
+        this.cleanupScript = cleanupScript;
+    }
+
+    public String getSetupScript() {
+        return setupScript;
+    }
+
+    public void setSetupScript(String setupScript) {
+        this.setupScript = setupScript;
     }
 
     @Override

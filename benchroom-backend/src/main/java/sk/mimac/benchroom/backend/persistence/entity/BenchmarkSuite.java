@@ -48,6 +48,11 @@ public class BenchmarkSuite implements EntityInterface, Serializable {
 
     @Lob
     @Basic(optional = true)
+    @Column(name = "after_each_run_script", unique = false, nullable = true)
+    private String afterEachRunScript;
+
+    @Lob
+    @Basic(optional = true)
     @Column(name = "command_line_arguments", unique = false, nullable = true)
     private String commandLineArguments;
 
@@ -116,6 +121,14 @@ public class BenchmarkSuite implements EntityInterface, Serializable {
 
     public void setParameterPositions(short parameterPositions) {
         this.parameterPositions = parameterPositions;
+    }
+
+    public String getAfterEachRunScript() {
+        return afterEachRunScript;
+    }
+
+    public void setAfterEachRunScript(String afterEachRunScript) {
+        this.afterEachRunScript = afterEachRunScript;
     }
 
     @Override

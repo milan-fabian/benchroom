@@ -52,6 +52,7 @@ public class ConvertUtils {
         dto.setCleanupScript(entity.getCleanupScript());
         dto.setCommandLineArguments(entity.getCommandLineArguments());
         dto.setParameterPositions(entity.getParameterPositions());
+        dto.setAfterEachRunScript(entity.getAfterEachRunScript());
         return dto;
     }
 
@@ -63,6 +64,7 @@ public class ConvertUtils {
         entity.setCleanupScript(dto.getCleanupScript());
         entity.setCommandLineArguments(dto.getCommandLineArguments());
         entity.setParameterPositions(dto.getParameterPositions());
+        entity.setAfterEachRunScript(dto.getAfterEachRunScript());
         return entity;
     }
 
@@ -73,6 +75,8 @@ public class ConvertUtils {
         entity.setPriority(dto.getPriority());
         entity.setPosition(dto.getPosition());
         entity.setBenchmarkSuite(new BenchmarkSuite(dto.getBenchmarkSuiteId()));
+        entity.setSetupScript(dto.getSetupScript());
+        entity.setCleanupScript(dto.getCleanupScript());
         return entity;
     }
 
@@ -83,6 +87,8 @@ public class ConvertUtils {
         dto.setPriority(entity.getPriority());
         dto.setPosition(entity.getPosition());
         dto.setBenchmarkSuiteId(entity.getBenchmarkSuite().getId());
+        dto.setSetupScript(entity.getSetupScript());
+        dto.setCleanupScript(entity.getCleanupScript());
         return dto;
     }
 

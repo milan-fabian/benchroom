@@ -23,6 +23,8 @@ public class BenchmarkSuiteDto implements Dto {
 
     private String cleanupScript;
 
+    private String afterEachRunScript;
+
     private String commandLineArguments;
 
     private short parameterPositions;
@@ -96,6 +98,14 @@ public class BenchmarkSuiteDto implements Dto {
 
     public void setParameterPositions(short parameterPositions) {
         this.parameterPositions = parameterPositions;
+    }
+
+    public String getAfterEachRunScript() {
+        return afterEachRunScript;
+    }
+
+    public void setAfterEachRunScript(String afterEachRunScript) {
+        this.afterEachRunScript = afterEachRunScript;
     }
 
     @Override

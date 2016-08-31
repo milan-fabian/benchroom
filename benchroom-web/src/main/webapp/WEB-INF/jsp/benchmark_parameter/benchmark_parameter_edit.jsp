@@ -20,18 +20,28 @@
         </tr>
         <tr>
             <td>Position:</td>
-            <td><form:input path="position" type="number"/></td>
+            <td><form:input path="position" type="number" min="0" max="${suite.parameterPositions - 1}"/></td>
             <td><form:errors path="position"/></td>
         </tr>
         <tr>
             <td>Priority:</td>
-            <td><form:input path="priority" type="number"/></td>
+            <td><form:input path="priority" type="number" min="1" max="255"/></td>
             <td><form:errors path="priority"/></td>
         </tr>
         <tr>
             <td>Command line arguments:</td>
-            <td><form:textarea path="commandLineArguments" cols="60"/></td>
+            <td><form:textarea path="commandLineArguments" cols="80" rows="4"/></td>
             <td><form:errors path="commandLineArguments"/></td>
+        </tr>
+        <tr>
+            <td>Setup script:</td>
+            <td><form:textarea path="setupScript" cols="80" rows="4"/></td>
+            <td><form:errors path="setupScript"/></td>
+        </tr>
+        <tr>
+            <td>Cleanup script:</td>
+            <td><form:textarea path="cleanupScript" cols="80" rows="4"/></td>
+            <td><form:errors path="cleanupScript"/></td>
         </tr>
     </table>
     <input type="submit" value="Save"/>

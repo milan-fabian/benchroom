@@ -71,6 +71,7 @@ public class BenchmarkController {
         filter.setPageNumber(1);
         filter.setPageSize(SEARCH_MAX_RESULTS);
         filter.setFulltext(fulltext);
+        filter.setSoftwareId(softwareId);
         List<ValueLabelWrapper> result = new ArrayList<>();
         for (SoftwareVersionDto version : softwareService.getVersionPage(filter).getElements()) {
             result.add(new ValueLabelWrapper(version.getId(), version.getName()));
@@ -85,6 +86,7 @@ public class BenchmarkController {
         filter.setPageNumber(1);
         filter.setPageSize(SEARCH_MAX_RESULTS);
         filter.setFulltext(fulltext);
+        filter.setSoftwareId(softwareId);
         List<ValueLabelWrapper> result = new ArrayList<>();
         for (BenchmarkSuiteDto suite : benchmarkSuiteService.getSuitePage(filter).getElements()) {
             result.add(new ValueLabelWrapper(suite.getId(), suite.getName()));

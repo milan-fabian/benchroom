@@ -17,7 +17,7 @@ namespace Benchroom.Executor
             if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
                 setupLogger();
-                RunData runData = Connector.getRunData(options.ServerUrl, options.BenchmarkId, options.minPriority);
+                RunInput runData = Connector.getRunData(options.ServerUrl, options.BenchmarkId, options.minPriority);
                 Runner runner = new Runner(runData, options.Directory) { Server = options.ServerUrl, NumberOfRuns = options.NumberOfRuns,
                                                                          PrintOutput = options.PrintOutput, TestRun = options.TestRun} ;
                 runner.runBenchmarks();

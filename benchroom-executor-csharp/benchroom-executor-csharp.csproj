@@ -84,11 +84,11 @@
     <Compile Include="Connector.cs" />
     <Compile Include="ParameterCombinations.cs" />
     <Compile Include="SystemParameters.cs" />
-    <Compile Include="Model\Run.cs" />
+    <Compile Include="Model\RunOutput.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\RunData.cs" />
+    <Compile Include="Model\RunInput.cs" />
     <Compile Include="Runner.cs" />
   </ItemGroup>
   <ItemGroup>
