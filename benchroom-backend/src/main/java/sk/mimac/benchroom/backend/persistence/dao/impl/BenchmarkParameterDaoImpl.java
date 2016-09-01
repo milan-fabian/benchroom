@@ -11,7 +11,7 @@ import sk.mimac.benchroom.backend.persistence.entity.BenchmarkParameter;
  * @author Milan Fabian
  */
 @Component
-public class BenchmarkParameterDaoImpl extends AbstractDao<BenchmarkParameter> implements BenchmarkParameterDao{
+public class BenchmarkParameterDaoImpl extends AbstractDao<BenchmarkParameter> implements BenchmarkParameterDao {
 
     public BenchmarkParameterDaoImpl() {
         super(BenchmarkParameter.class);
@@ -25,5 +25,12 @@ public class BenchmarkParameterDaoImpl extends AbstractDao<BenchmarkParameter> i
         query.setParameter("minPriority", minPriority);
         return query.getResultList();
     }
-    
+
+    @Override
+    public List<Long> countBySuitePositionPriority(long suiteId, short minPriority) {
+        TypedQuery<Long> query = em.createNamedQuery(BenchmarkParameter.COUNT_BY_SUITE_POSITION_PRIORITY, Long.class);
+        query.setParameter("suiteId", suiteId);
+        query.setParameter("minPriority", minPriority);
+        return query.getResultList();
+    }
 }

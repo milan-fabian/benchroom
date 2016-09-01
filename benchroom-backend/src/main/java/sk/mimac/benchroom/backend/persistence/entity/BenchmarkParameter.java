@@ -23,7 +23,9 @@ import javax.persistence.Table;
 @Entity
 @NamedQueries({
     @NamedQuery(name = BenchmarkParameter.GET_BY_SUITE_POSITION_PRIORITY, query = "SELECT p FROM BenchmarkParameter p "
-            + "WHERE p.benchmarkSuite.id = :suiteId AND p.position = :position AND p.priority >= :minPriority")
+            + "WHERE p.benchmarkSuite.id = :suiteId AND p.position = :position AND p.priority >= :minPriority"),
+    @NamedQuery(name = BenchmarkParameter.COUNT_BY_SUITE_POSITION_PRIORITY, query = "SELECT COUNT(p) FROM BenchmarkParameter p "
+            + "WHERE p.benchmarkSuite.id = :suiteId AND p.priority >= :minPriority GROUP BY p.position")
 })
 @Table(name = "benchmark_parameter", indexes = {
     @Index(name = "benchmark_parameter_suite_name", columnList = "benchmark_suite_id, name")
@@ -31,6 +33,7 @@ import javax.persistence.Table;
 public class BenchmarkParameter implements EntityInterface, Serializable {
 
     public static final String GET_BY_SUITE_POSITION_PRIORITY = "BenchmarkParameter.get_by_suite_position_priority";
+    public static final String COUNT_BY_SUITE_POSITION_PRIORITY = "BenchmarkParameter.count_by_suite_position_priority";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package sk.mimac.benchroom.web.controller;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 import sk.mimac.benchroom.api.filter.BenchmarkSuiteFilter;
 import sk.mimac.benchroom.api.filter.SoftwareFilter;
 import sk.mimac.benchroom.api.filter.SoftwareVersionFilter;
+import sk.mimac.benchroom.api.service.BenchmarkParameterService;
 import sk.mimac.benchroom.api.service.BenchmarkRunService;
 import sk.mimac.benchroom.api.service.BenchmarkSuiteService;
 import sk.mimac.benchroom.api.service.SoftwareService;
@@ -44,6 +46,9 @@ public class BenchmarkController {
 
     @Autowired
     private BenchmarkSuiteService benchmarkSuiteService;
+
+    @Autowired
+    private BenchmarkParameterService benchmarkParameterService;
 
     @Autowired
     private BenchmarkRunService benchmarkRunService;
@@ -98,6 +103,12 @@ public class BenchmarkController {
     }
 
     @ResponseBody
+    @RequestMapping(value = WebConstants.URL_BENCHMARK_COUNT_PARAMETERS, method = RequestMethod.GET)
+    public long getBenchmarkCountParameters(@RequestParam("suite") long suiteId, @RequestParam("minPriority") short minPriority) {
+        return benchmarkParameterService.getParametersCountForSuitePriority(suiteId, minPriority);
+    }
+
+    @ResponseBody
     @RequestMapping(value = WebConstants.URL_BENCHMARK_LIST, method = RequestMethod.POST)
     public PageWrapper getBenchmarkList(@RequestParam("suite") long suiteId, @RequestParam("version") long versionId, @Valid DataTablesInput input) {
         BenchmarkRunFilter filter = new BenchmarkRunFilter();
@@ -111,8 +122,11 @@ public class BenchmarkController {
     public ModelAndView getBenchmarkDetail(@RequestParam("run") long runId) {
         Map<String, Object> model = new HashMap<>();
         BenchmarkRunDto run = benchmarkRunService.getRunById(runId);
+        BenchmarkSuiteDto suite = benchmarkSuiteService.getSuiteById(run.getBenchmarkSuiteId());
+        Object[] params = run.getBenchmarkParameters().stream().map(x -> x.getCommandLineArguments()).toArray();
         model.put("run", run);
-        model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkSuiteId()));
+        model.put("suite", suite);
+        model.put("cmd", MessageFormat.format(suite.getCommandLineArguments(), params));
         return new ModelAndView("benchmark/benchmark_detail", model);
     }
 

@@ -11,4 +11,6 @@ public interface BenchmarkParameterDao extends Dao<BenchmarkParameter> {
 
     List<BenchmarkParameter> getBySuitePositionPriority(long suiteId, short position, short minPriority);
 
+    List<Long> countBySuitePositionPriority(long suiteId, short minPriority);
+
 }

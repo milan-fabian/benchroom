@@ -61,4 +61,13 @@ public class BenchmarkParameterServiceImpl implements BenchmarkParameterService 
         }
         return result;
     }
+
+    @Override
+    public long getParametersCountForSuitePriority(long suiteId, short minPriority) {
+        long result = 1;
+        for (long count : benchmarkParameterDao.countBySuitePositionPriority(suiteId, minPriority)) {
+            result *= count;
+        }
+        return result;
+    }
 }

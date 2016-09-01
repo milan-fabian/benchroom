@@ -81,9 +81,9 @@
             serverSide: true,
             columns: [
                 {title: "When run", data: "whenStarted", render: $.fn.dataTable.render.moment('X', 'DD MMM YYYY')},
-                {title: "Parameter", data: "benchmarkParameters"},
-                {title: "System", data: "systemParameters"},
-                {title: "Result", data: "results"},
+                {title: "Parameter", data: "benchmarkParameters", sortable: false},
+                {title: "System", data: "systemParameters", sortable: false},
+                {title: "Result", data: "results", sortable: false},
                 {sortable: false, render: function (data, type, row) {
                         return "<a href='javascript:void(0);' onclick='showDialog(\"Benchmark run\", \"<%=request.getContextPath()%><%=URL_BENCHMARK_DETAIL%>?run="
                                 + row.id + "\");'>Details</a> "
@@ -108,9 +108,14 @@
     }
 
     function generateRunLink() {
+        var suiteId = $("#suiteId").val();
+        var minPriority = $("#minPriority").val();
+        $("#runData").show();
         var link = window.location.href;
-        link = "Run executor with parameters: <code>--server=" + link.substring(0, link.lastIndexOf("/")) + " --id=" + $("#versionId").val() + "-" + $("#suiteId").val() + "</code>";
+        link = "Run executor with parameters: <code>--server=" + link.substring(0, link.lastIndexOf("/")) + " --id=" + $("#versionId").val()
+                + "-" + suiteId + " --priority=" + minPriority + "</code>";
         $("#runLink").html(link);
+        $("#parameterCobinations").load("<%=request.getContextPath()%><%=URL_BENCHMARK_COUNT_PARAMETERS%>?suite=" + suiteId + "&minPriority=" + minPriority);
     }
 </script>
 
@@ -134,7 +139,11 @@
 </form>
 
 <button id="runButton" onclick="generateRunLink();" disabled>I wanna run it, show me parameters!</button>
-<div id="runLink"></div>
+<div id="runData" style="display:none">
+    Min priority for parameters: <input type="number" min="1" max="255" value="100" id="minPriority" onchange="generateRunLink();" style="width: 50px;"/>
+    Number of parameter combinations: <span id="parameterCobinations"></span>
+    <div id="runLink"></div>
+</div>
 <br><br>
 <table id="run"></table>
 

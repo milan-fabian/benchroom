@@ -7,13 +7,13 @@
     <br>for suite <b><c:out value="${suite.name}"/></b>, which was run on ${run.whenStarted}.
 </p>
 
-<h4>Parameters:</h4>
+<div><b>Run with parameters:</b> ${cmd}</div>
 <table>
     <c:forEach items="${run.benchmarkParameters}" var="parameter">
         <tr>
             <td><c:out value="${parameter.name}"/></td>
-</tr>
-</c:forEach>
+        </tr>
+    </c:forEach>
 </table>
 
 <h4>Results:</h4>
@@ -22,8 +22,8 @@
         <tr>
             <td><c:out value="${result.monitorName}"/>:</td>
             <td><b:printRunResult runResult="${result}"/></td>
-</tr>
-</c:forEach>
+        </tr>
+    </c:forEach>
 </table>
 
 <h4>Parameters of the system where benchmark run:</h4>
