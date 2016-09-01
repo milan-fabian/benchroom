@@ -7,37 +7,43 @@
 </h2>
 
 <a href='javascript:void(0);' onclick='showDialog("Benchmark run", "<%=request.getContextPath()%><%=URL_BENCHMARK_DETAIL%>?run=${run.id}");'>Details</a>    
-
-<table border="1" cellspacing="0" class="compareTable">
-    <thead>
-        <tr>
-            <th></th>
-                <c:forEach items="${run.benchmarkParameters}" var="parameter">
+<br>
+<div style="display: inline-block;vertical-align: top">
+    <table border="1" cellspacing="0" class="compareTable">
+        <thead>
+            <tr>
                 <th></th>
-                </c:forEach>
-                <c:forEach items="${run.results}" var="result">
-                <th colspan="2">${result.monitorName}</th>
-                </c:forEach>
-        </tr>
-    </thead>
-    <tbody>
-        <c:forEach items="${sameSystem}" var="run2">
-            <tr <c:if test="${run2.id == run.id}">style="background-color:#eee"</c:if>>
-                <td>
-                    <c:if test="${run2.id != run.id}">
-                        <a href="<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE%>?run=${run2.id}">&#x2750;</a>
-                    </c:if>
-                </td>
-                <c:forEach items="${run2.benchmarkParameters}" var="parameter">
-                    <td <c:if test="${run.benchmarkParameters.contains(parameter)}">style="font-weight: bold;"</c:if>>${parameter.name}</td>
-                </c:forEach>
-                <c:forEach items="${run2.results}" var="result" varStatus="i">
-                    <td><b:printRunResult runResult="${result}"/></td>
-                    <td><b:formatPercent percentage="${result.result / run.results[i.index].result}"/></td>
-                </c:forEach>
+                    <c:forEach items="${run.benchmarkParameters}" var="parameter">
+                    <th></th>
+                    </c:forEach>
+                    <c:forEach items="${run.results}" var="result">
+                    <th colspan="2">${result.monitorName}</th>
+                    </c:forEach>
             </tr>
-        </c:forEach>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <c:forEach items="${sameSystem}" var="run2">
+                <tr <c:if test="${run2.id == run.id}">style="background-color:#eee"</c:if>>
+                        <td>
+                        <c:if test="${run2.id != run.id}">
+                            <a href="<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE%>?run=${run2.id}">&#x2750;</a>
+                        </c:if>
+                    </td>
+                    <c:forEach items="${run2.benchmarkParameters}" var="parameter">
+                        <td <c:if test="${run.benchmarkParameters.contains(parameter)}">style="font-weight: bold;"</c:if>>${parameter.name}</td>
+                    </c:forEach>
+                    <c:forEach items="${run2.results}" var="result" varStatus="i">
+                        <td><b:printRunResult runResult="${result}"/></td>
+                        <td><b:formatPercent percentage="${result.result / run.results[i.index].result}"/></td>
+                    </c:forEach>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
+</div>
 
+<div style="display: inline-block;vertical-align: top">
+    <object data="<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE_GRAPH%>?run=${run.id}&width=750&height=550" type="image/svg+xml" >
+    </object>
+</div>
 <%@ include file="/WEB-INF/jspf/footer.jspf"%>

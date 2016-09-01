@@ -133,11 +133,42 @@ public class BenchmarkController {
     @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE, method = RequestMethod.GET)
     public ModelAndView getBenchmarkCompare(@RequestParam("run") long runId) {
         Map<String, Object> model = new HashMap<>();
-        model.put("run", benchmarkRunService.getRunById(runId));
         BenchmarkRunDto run = benchmarkRunService.getRunById(runId);
         Collections.sort(run.getResults());
         model.put("run", run);
         model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkSuiteId()));
+        model.put("sameSystem", getSameSystemRuns(run));
+        return new ModelAndView("benchmark/benchmark_compare", model);
+    }
+
+    @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE_GRAPH, method = RequestMethod.GET)
+    public ModelAndView getBenchmarkCompareGraph(@RequestParam("run") long runId, @RequestParam("width") int width, @RequestParam("height") int height) {
+        Map<String, Object> model = new HashMap<>();
+        BenchmarkRunDto run = benchmarkRunService.getRunById(runId);
+        Collections.sort(run.getResults());
+        List<BenchmarkRunDto> sameSystemRuns = getSameSystemRuns(run);
+        model.put("run", run);
+        model.put("sameSystem", sameSystemRuns);
+        model.put("maxResults", getMaxResults(run, sameSystemRuns));
+        model.put("width", width);
+        model.put("height", height);
+        return new ModelAndView("benchmark/benchmark_compare_graph", model);
+    }
+
+    private double[] getMaxResults(BenchmarkRunDto run, List<BenchmarkRunDto> sameSystemRuns) {
+        double[] maxResults = new double[run.getResults().size()];
+        for (int i = 0; i < maxResults.length; i++) {
+            for (BenchmarkRunDto run2 : sameSystemRuns) {
+                double value = run2.getResults().get(i).getResult();
+                if (value > maxResults[i]) {
+                    maxResults[i] = value;
+                }
+            }
+        }
+        return maxResults;
+    }
+
+    private List<BenchmarkRunDto> getSameSystemRuns(BenchmarkRunDto run) {
         BenchmarkRunFilter sameSystemFilter = new BenchmarkRunFilter();
         sameSystemFilter.setBenchmarkSuiteId(run.getBenchmarkSuiteId());
         sameSystemFilter.setSoftwareVersionId(run.getSoftwareVersion().getId());
@@ -145,8 +176,6 @@ public class BenchmarkController {
         List<BenchmarkRunDto> sameSystemRuns = benchmarkRunService.getRunPage(sameSystemFilter).getElements();
         sameSystemRuns.forEach(x -> Collections.sort(x.getResults()));
         sameSystemRuns.forEach(x -> Collections.sort(x.getBenchmarkParameters()));
-        model.put("sameSystem", sameSystemRuns);
-        return new ModelAndView("benchmark/benchmark_compare", model);
+        return sameSystemRuns;
     }
-
 }

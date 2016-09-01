@@ -40,4 +40,5 @@ public class WebConstants {
     public static final String URL_BENCHMARK_COUNT_PARAMETERS = "/benchmark/count/parameters";
     public static final String URL_BENCHMARK_DETAIL = "/benchmark/detail";
     public static final String URL_BENCHMARK_COMPARE = "/benchmark/compare";
+    public static final String URL_BENCHMARK_COMPARE_GRAPH = "/benchmark/compare/graph";
 }
