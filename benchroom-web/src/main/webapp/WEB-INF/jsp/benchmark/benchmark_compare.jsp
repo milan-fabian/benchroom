@@ -8,7 +8,7 @@
 
 <a href='javascript:void(0);' onclick='showDialog("Benchmark run", "<%=request.getContextPath()%><%=URL_BENCHMARK_DETAIL%>?run=${run.id}");'>Details</a>    
 
-<table border="1" cellspacing="0" cellpadding="2">
+<table border="1" cellspacing="0" class="compareTable">
     <thead>
         <tr>
             <th></th>
@@ -22,7 +22,7 @@
     </thead>
     <tbody>
         <c:forEach items="${sameSystem}" var="run2">
-            <tr>
+            <tr <c:if test="${run2.id == run.id}">style="background-color:#eee"</c:if>>
                 <td>
                     <c:if test="${run2.id != run.id}">
                         <a href="<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE%>?run=${run2.id}">&#x2750;</a>

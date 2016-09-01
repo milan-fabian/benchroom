@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +28,7 @@ import sk.mimac.benchroom.api.service.SoftwareService;
 import sk.mimac.benchroom.web.PageWrapper;
 import sk.mimac.benchroom.web.ValueLabelWrapper;
 import sk.mimac.benchroom.web.WebConstants;
+import sk.mimac.benchroom.web.utils.FilterUtils;
 
 /**
  *
@@ -96,13 +99,11 @@ public class BenchmarkController {
 
     @ResponseBody
     @RequestMapping(value = WebConstants.URL_BENCHMARK_LIST, method = RequestMethod.POST)
-    public PageWrapper getBenchmarkList(@RequestParam("suite") long suiteId, @RequestParam("version") long versionId,
-            @RequestParam("length") int pageSize, @RequestParam("start") int start) {
+    public PageWrapper getBenchmarkList(@RequestParam("suite") long suiteId, @RequestParam("version") long versionId, @Valid DataTablesInput input) {
         BenchmarkRunFilter filter = new BenchmarkRunFilter();
         filter.setBenchmarkSuiteId(suiteId);
         filter.setSoftwareVersionId(versionId);
-        filter.setPageNumber((start / pageSize) + 1);
-        filter.setPageSize(pageSize);
+        FilterUtils.setDataTableToFilter(input, filter);
         return new PageWrapper(benchmarkRunService.getRunPageSimple(filter));
     }
 
@@ -129,6 +130,7 @@ public class BenchmarkController {
         sameSystemFilter.setParameters(run.getSystemParameters());
         List<BenchmarkRunDto> sameSystemRuns = benchmarkRunService.getRunPage(sameSystemFilter).getElements();
         sameSystemRuns.forEach(x -> Collections.sort(x.getResults()));
+        sameSystemRuns.forEach(x -> Collections.sort(x.getBenchmarkParameters()));
         model.put("sameSystem", sameSystemRuns);
         return new ModelAndView("benchmark/benchmark_compare", model);
     }

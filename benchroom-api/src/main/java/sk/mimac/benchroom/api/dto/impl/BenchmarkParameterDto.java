@@ -8,7 +8,7 @@ import sk.mimac.benchroom.api.dto.Dto;
  *
  * @author Milan Fabian
  */
-public class BenchmarkParameterDto implements Dto {
+public class BenchmarkParameterDto implements Dto, Comparable<BenchmarkParameterDto>{
 
     private Long id;
 
@@ -120,6 +120,11 @@ public class BenchmarkParameterDto implements Dto {
     @Override
     public String toString() {
         return "BenchmarkParameterDto{" + "id=" + id + ", name=" + name + ", benchmarkSuiteId=" + benchmarkSuiteId + '}';
+    }
+
+    @Override
+    public int compareTo(BenchmarkParameterDto o) {
+        return Short.compare(this.position, o.position);
     }
 
 }
