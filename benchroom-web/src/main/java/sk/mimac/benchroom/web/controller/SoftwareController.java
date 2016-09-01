@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +20,7 @@ import sk.mimac.benchroom.api.filter.SoftwareVersionFilter;
 import sk.mimac.benchroom.api.service.SoftwareService;
 import sk.mimac.benchroom.web.PageWrapper;
 import sk.mimac.benchroom.web.WebConstants;
+import sk.mimac.benchroom.web.utils.FilterUtils;
 
 /**
  *
@@ -97,21 +99,18 @@ public class SoftwareController {
 
     @ResponseBody
     @RequestMapping(value = WebConstants.URL_SOFTWARE_LIST, method = RequestMethod.GET)
-    public PageWrapper getSoftwareList(@RequestParam("length") int pageSize, @RequestParam("start") int start, @RequestParam("search[value]") String fulltext) {
+    public PageWrapper getSoftwareList(@Valid DataTablesInput input) {
         SoftwareFilter filter = new SoftwareFilter();
-        filter.setPageNumber((start / pageSize) + 1);
-        filter.setPageSize(pageSize);
-        filter.setFulltext(fulltext);
+        FilterUtils.setDataTableToFilter(input, filter);
         return new PageWrapper(softwareService.getSoftwarePage(filter));
     }
 
     @ResponseBody
     @RequestMapping(value = WebConstants.URL_SOFTWARE_VERSION_LIST, method = RequestMethod.GET)
-    public PageWrapper getSoftwareVersionList(@RequestParam("software") long softwareId, @RequestParam("length") int pageSize, @RequestParam("start") int start) {
+    public PageWrapper getSoftwareVersionList(@RequestParam("software") long softwareId, @Valid DataTablesInput input) {
         SoftwareVersionFilter filter = new SoftwareVersionFilter();
         filter.setSoftwareId(softwareId);
-        filter.setPageNumber((start / pageSize) + 1);
-        filter.setPageSize(pageSize);
+        FilterUtils.setDataTableToFilter(input, filter);
         return new PageWrapper(softwareService.getVersionPage(filter));
     }
 }

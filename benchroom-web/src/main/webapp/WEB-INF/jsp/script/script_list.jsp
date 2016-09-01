@@ -10,7 +10,7 @@
                         serverSide: true,
                         columns: [
                             {title: "Type", data: "type"},
-                            {title: "Platforms", data: "supportedPlatforms"},
+                            {title: "Platforms", data: "supportedPlatforms", sortable: false},
                             {sortable: false, render: function (data, type, row) {
                                     return "<a href='<%=request.getContextPath()%><%=URL_SCRIPT_EDIT%>?script=" + row.id + "&version=${version.id}'>Edit</a>";
                                 }

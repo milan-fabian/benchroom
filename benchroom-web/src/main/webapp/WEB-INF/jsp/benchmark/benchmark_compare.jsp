@@ -11,7 +11,10 @@
 <table border="1" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
-            <th>Parameters</th>
+            <th></th>
+                <c:forEach items="${run.benchmarkParameters}" var="parameter">
+                <th></th>
+                </c:forEach>
                 <c:forEach items="${run.results}" var="result">
                 <th colspan="2">${result.monitorName}</th>
                 </c:forEach>
@@ -21,21 +24,13 @@
         <c:forEach items="${sameSystem}" var="run2">
             <tr>
                 <td>
-                    <c:set var="parametersName">
-                        <c:forEach items="${run2.benchmarkParameters}" var="parameter">
-                            ${parameter.name},
-                        </c:forEach>
-                    </c:set>
-
-                    <c:choose>
-                        <c:when test="${run2.id == run.id}">
-                            <b>${parametersName}</b>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE%>?run=${run2.id}">${parametersName}</a>
-                        </c:otherwise>
-                    </c:choose>
+                    <c:if test="${run2.id != run.id}">
+                        <a href="<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE%>?run=${run2.id}">&#x2750;</a>
+                    </c:if>
                 </td>
+                <c:forEach items="${run2.benchmarkParameters}" var="parameter">
+                    <td <c:if test="${run.benchmarkParameters.contains(parameter)}">style="font-weight: bold;"</c:if>>${parameter.name}</td>
+                </c:forEach>
                 <c:forEach items="${run2.results}" var="result" varStatus="i">
                     <td><b:printRunResult runResult="${result}"/></td>
                     <td><b:formatPercent percentage="${result.result / run.results[i.index].result}"/></td>

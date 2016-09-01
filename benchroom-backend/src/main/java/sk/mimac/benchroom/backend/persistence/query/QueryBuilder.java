@@ -18,6 +18,7 @@ public abstract class QueryBuilder<T extends EntityInterface> {
     private final int pageSize;
     private final int pageNumber;
     private final String orderBy;
+    private final AbstractFilter.OrderDirection orderDir;
 
     public QueryBuilder(AbstractFilter filter) {
         this.pageSize = filter.getPageSize();
@@ -25,7 +26,12 @@ public abstract class QueryBuilder<T extends EntityInterface> {
         if (filter.getOrderBy() != null && !filter.getOrderBy().isEmpty()) {
             this.orderBy = filter.getOrderBy();
         } else {
-            this.orderBy = "name";
+            this.orderBy = "id";
+        }
+        if (filter.getOrderDir() != null) {
+            this.orderDir = filter.getOrderDir();
+        } else {
+            this.orderDir = AbstractFilter.OrderDirection.ASC;
         }
     }
 
@@ -34,7 +40,11 @@ public abstract class QueryBuilder<T extends EntityInterface> {
     }
 
     public Order orderBy(Root<T> root, CriteriaBuilder cb) {
-        return cb.asc(root.get(orderBy));
+        if (orderDir == AbstractFilter.OrderDirection.ASC) {
+            return cb.asc(root.get(orderBy));
+        } else {
+            return cb.desc(root.get(orderBy));
+        }
     }
 
     public abstract List<Predicate> getPredicates(Root<T> root, CriteriaBuilder cb);

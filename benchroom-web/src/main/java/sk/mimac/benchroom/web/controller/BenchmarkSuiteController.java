@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,6 +19,7 @@ import sk.mimac.benchroom.api.service.BenchmarkSuiteService;
 import sk.mimac.benchroom.api.service.SoftwareService;
 import sk.mimac.benchroom.web.PageWrapper;
 import sk.mimac.benchroom.web.WebConstants;
+import sk.mimac.benchroom.web.utils.FilterUtils;
 
 /**
  *
@@ -70,11 +72,10 @@ public class BenchmarkSuiteController {
 
     @ResponseBody
     @RequestMapping(value = WebConstants.URL_BENCHMARK_SUITE_LIST, method = RequestMethod.GET)
-    public PageWrapper getBenchmarkSuiteList(@RequestParam("software") long softwareId, @RequestParam("length") int pageSize, @RequestParam("start") int start) {
+    public PageWrapper getBenchmarkSuiteList(@RequestParam("software") long softwareId, @Valid DataTablesInput input) {
         BenchmarkSuiteFilter filter = new BenchmarkSuiteFilter();
         filter.setSoftwareId(softwareId);
-        filter.setPageNumber((start / pageSize) + 1);
-        filter.setPageSize(pageSize);
+        FilterUtils.setDataTableToFilter(input, filter);
         return new PageWrapper(benchmarkSuiteService.getSuitePage(filter));
     }
 }

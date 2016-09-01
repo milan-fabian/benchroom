@@ -14,6 +14,8 @@ public abstract class AbstractFilter {
 
     private String orderBy;
 
+    private OrderDirection orderDir;
+
     public int getPageSize() {
         return pageSize;
     }
@@ -46,4 +48,16 @@ public abstract class AbstractFilter {
         this.orderBy = orderBy;
     }
 
+    public OrderDirection getOrderDir() {
+        return orderDir;
+    }
+
+    public void setOrderDir(OrderDirection orderDir) {
+        this.orderDir = orderDir;
+    }
+
+    public enum OrderDirection {
+
+        ASC, DESC;
+    }
 }
