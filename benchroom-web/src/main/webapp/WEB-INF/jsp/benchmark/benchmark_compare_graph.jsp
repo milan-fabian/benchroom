@@ -5,7 +5,7 @@
 
 <c:set var="runSpacing" value="${height / sameSystem.size()}"/>
 <c:set var="resultSpacing" value="${height / (sameSystem.size() * (run.results.size() + 1))}"/>
-<c:set var="colors" value="${['#727272', '#f1595f', '#79c36a', '#599ad3', '#f9a65a', '#9e66ab', '#cd7058', '#d77fb3']}"/>
+<c:set var="colors" value="${['#f1595f', '#79c36a', '#599ad3', '#f9a65a', '#9e66ab', '#cd7058', '#727272', '#d77fb3']}"/>
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width}" height="${height}" onload="init(evt)">
     <script xlink:href="http://d3js.org/d3.v3.min.js"></script>

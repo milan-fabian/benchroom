@@ -1,5 +1,6 @@
 package sk.mimac.benchroom.api.service;
 
+import java.util.List;
 import java.util.Map;
 import sk.mimac.benchroom.api.dto.Page;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
@@ -19,4 +20,6 @@ public interface BenchmarkRunService {
     Page<BenchmarkRunSimpleDto> getRunPageSimple(BenchmarkRunFilter filter);
 
     Page<BenchmarkRunDto> getRunPage(BenchmarkRunFilter filter);
+    
+    List<BenchmarkRunDto> getRunsByIds(List<Long> ids);
 }

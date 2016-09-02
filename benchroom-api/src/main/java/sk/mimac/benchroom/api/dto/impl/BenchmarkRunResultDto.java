@@ -12,6 +12,8 @@ public class BenchmarkRunResultDto implements Dto, Comparable<BenchmarkRunResult
 
     private Long id;
 
+    private Long monitorId;
+
     private String monitorName;
 
     private MonitorType monitorType;
@@ -55,6 +57,14 @@ public class BenchmarkRunResultDto implements Dto, Comparable<BenchmarkRunResult
 
     public void setResult(double result) {
         this.result = result;
+    }
+
+    public Long getMonitorId() {
+        return monitorId;
+    }
+
+    public void setMonitorId(Long monitorId) {
+        this.monitorId = monitorId;
     }
 
     @Override

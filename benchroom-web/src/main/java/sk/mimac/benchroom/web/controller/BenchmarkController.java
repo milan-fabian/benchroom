@@ -142,24 +142,26 @@ public class BenchmarkController {
     }
 
     @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE_GRAPH, method = RequestMethod.GET)
-    public ModelAndView getBenchmarkCompareGraph(@RequestParam("run") long runId, @RequestParam("width") int width, @RequestParam("height") int height) {
+    public ModelAndView getBenchmarkCompareGraph(@RequestParam("runs") List<Long> runIds, @RequestParam("monitors") List<Long> monitorIds,
+            @RequestParam("width") int width, @RequestParam("height") int height) {
         Map<String, Object> model = new HashMap<>();
-        BenchmarkRunDto run = benchmarkRunService.getRunById(runId);
-        Collections.sort(run.getResults());
-        List<BenchmarkRunDto> sameSystemRuns = getSameSystemRuns(run);
-        model.put("run", run);
-        model.put("sameSystem", sameSystemRuns);
-        model.put("maxResults", getMaxResults(run, sameSystemRuns));
+        List<BenchmarkRunDto> runs = benchmarkRunService.getRunsByIds(runIds);
+        runs.forEach(x -> x.getResults().removeIf(r -> !monitorIds.contains(r.getMonitorId())));
+        runs.forEach(x -> Collections.sort(x.getResults()));
+        runs.forEach(x -> Collections.sort(x.getBenchmarkParameters()));
+        model.put("run", runs.get(0));
+        model.put("sameSystem", runs);
+        model.put("maxResults", getMaxResults(runs));
         model.put("width", width);
         model.put("height", height);
         return new ModelAndView("benchmark/benchmark_compare_graph", model);
     }
 
-    private double[] getMaxResults(BenchmarkRunDto run, List<BenchmarkRunDto> sameSystemRuns) {
-        double[] maxResults = new double[run.getResults().size()];
+    private double[] getMaxResults(List<BenchmarkRunDto> runs) {
+        double[] maxResults = new double[runs.get(0).getResults().size()];
         for (int i = 0; i < maxResults.length; i++) {
-            for (BenchmarkRunDto run2 : sameSystemRuns) {
-                double value = run2.getResults().get(i).getResult();
+            for (BenchmarkRunDto run : runs) {
+                double value = run.getResults().get(i).getResult();
                 if (value > maxResults[i]) {
                     maxResults[i] = value;
                 }

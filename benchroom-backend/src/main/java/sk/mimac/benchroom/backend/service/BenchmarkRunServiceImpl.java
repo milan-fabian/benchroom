@@ -74,4 +74,13 @@ public class BenchmarkRunServiceImpl implements BenchmarkRunService {
         return new Page(list, filter.getPageNumber(), filter.getPageSize(), count);
     }
 
+    @Override
+    public List<BenchmarkRunDto> getRunsByIds(List<Long> ids) {
+        List<BenchmarkRunDto> list = new ArrayList<>(ids.size());
+        for (BenchmarkRun run : benchmarkRunDao.getByIds(ids)) {
+            list.add(ConvertUtils.convert(run));
+        }
+        return list;
+    }
+
 }

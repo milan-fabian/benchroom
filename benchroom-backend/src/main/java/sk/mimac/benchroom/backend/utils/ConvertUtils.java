@@ -178,6 +178,7 @@ public class ConvertUtils {
     public static BenchmarkRunResultDto convert(BenchmarkRunResult entity) {
         BenchmarkRunResultDto dto = new BenchmarkRunResultDto(entity.getId());
         dto.setResult(entity.getResult());
+        dto.setMonitorId(entity.getMonitor().getId());
         dto.setMonitorName(entity.getMonitor().getName());
         dto.setMonitorType(entity.getMonitor().getType());
         return dto;

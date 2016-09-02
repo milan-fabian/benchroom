@@ -20,6 +20,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyEnumerated;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import sk.mimac.benchroom.api.system.SystemParameter;
@@ -29,9 +31,14 @@ import sk.mimac.benchroom.api.system.SystemParameter;
  * @author Milan Fabian
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = BenchmarkRun.GET_BY_IDS, query = "SELECT r FROM BenchmarkRun r WHERE r.id IN :ids")
+})
 @Table(name = "benchmark_run")
 public class BenchmarkRun implements EntityInterface, Serializable {
 
+    public static final String GET_BY_IDS = "BenchmarkRun.get_by_ids";
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
