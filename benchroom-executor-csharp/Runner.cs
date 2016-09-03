@@ -22,6 +22,7 @@ namespace Benchroom.Executor
         public int NumberOfRuns { private get; set; }
         public bool PrintOutput { private get; set; }
         public bool TestRun { private get; set; }
+        public int MaxDeviation { private get; set; }
         private string protocolFile;
         private long? timeMonitor;
         private long? utilizationMonitor;
@@ -102,8 +103,23 @@ namespace Benchroom.Executor
                 foreach (long monitorId in results[0].Keys)
                 {
                     double sum = 0;
-                    results.ForEach(x => sum += x[monitorId]);
-                    run.results.Add(new RunOutput.RunResult() { monitorId = monitorId, result = sum / results.Count });
+                    double sumSquared = 0;
+                    results.ForEach(x => {
+                        double value = x[monitorId];
+                        sum += value;
+                        sumSquared += value * value;
+                        });
+                    double average = sum / results.Count;
+                    if (results.Count > 1)
+                    {
+                        double deviation = Math.Sqrt((sumSquared / results.Count) - (average * average)) / average;
+                        if (deviation * 100 > MaxDeviation)
+                        {
+                            logger.Warn(String.Format("Deviation of results is too big ({0:N2} %), not sending results", deviation * 100));
+                            return;
+                        }
+                    }
+                    run.results.Add(new RunOutput.RunResult() { monitorId = monitorId, result = average });
                 }
                 if (!TestRun)
                 {
@@ -118,7 +134,7 @@ namespace Benchroom.Executor
         private Dictionary<long, double> executeSingleRun(string commandLineArguments, string parameterNames)
         {
             Process process = prepareProcess(commandLineArguments);
-            Thread.Sleep(500);
+            Thread.Sleep(400);
             try
             {
                 runProcess(process);

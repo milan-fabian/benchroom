@@ -54,13 +54,17 @@ public class Controller {
     private ScriptService scriptService;
 
     @RequestMapping(value = ConnectorConstants.URL_BENCHMARK_DATA, method = RequestMethod.GET)
-    public RunInput getBenchmarkData(@RequestParam("id") String dataId, @RequestParam("platform") Platform platform, @RequestParam("minPriority") short minPriority) {
+    public RunInput getBenchmarkData(@RequestParam("id") String dataId, @RequestParam("platform") Platform platform, @RequestParam("minPriority") short minPriority,
+            @RequestParam(name = "choosenParameters", required = false) List<Long> choosenParameters) {
         String[] parts = dataId.split("-");
         SoftwareVersionDto version = softwareService.getVersionById(Long.parseLong(parts[0]));
         BenchmarkSuiteDto suite = benchmarkSuiteService.getSuiteById(Long.parseLong(parts[1]));
         List<List<RunInput.RunParameter>> runParameters = new ArrayList<>(suite.getParameterPositions());
         for (short i = 0; i < suite.getParameterPositions(); i++) {
             List<BenchmarkParameterDto> parameters = benchmarkParameterService.getParametersForSuitePositionPriority(suite.getId(), i, minPriority);
+            if (choosenParameters != null) {
+                parameters.removeIf(x -> !choosenParameters.contains(x.getId()));
+            }
             runParameters.add(convertRunParameters(parameters));
         }
         List<BenchmarkMonitorDto> monitors = benchmarkMonitorService.getMonitorsForSuite(suite.getId());
@@ -79,7 +83,7 @@ public class Controller {
         dto.setSystemParameters(run.getSystemParameters());
         dto.setWhenStarted(run.getWhenStarted());
         dto.setBenchmarkSuiteId(Long.parseLong(ids[1]));
-        
+
         Map<Long, Double> results = new HashMap<>();
         for (RunOutput.RunResult runResult : run.getResults()) {
             results.put(runResult.getMonitorId(), runResult.getResult());

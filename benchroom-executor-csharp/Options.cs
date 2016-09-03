@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using CommandLine.Text;
+using System.Collections.Generic;
 
 namespace Benchroom.Executor
 {
@@ -24,7 +25,15 @@ namespace Benchroom.Executor
         public bool TestRun { get; set; }
 
         [Option('p', "priority", Required = true, HelpText = "Minimal priority for parameters")]
-        public short minPriority { get; set; }
+        public short MinPriority { get; set; }
+
+        [Option('a', "deviation", Required = false, DefaultValue = 2,
+            HelpText = "Maximal allowed deviation between results if running each combination more than once")]
+        public int MaxDeviation { get; set; }
+
+        [OptionList('c', "parameters", Required = false, Separator = ',', DefaultValue = null,
+            HelpText = "Run just choosen parameters (enter parameter ids")]
+        public IList<string> ChoosenParameters { get; set; }
 
         [HelpOption]
         public string GetUsage()

@@ -2,7 +2,9 @@
 using log4net;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Text;
 
 namespace Benchroom.Executor
 {
@@ -13,13 +15,22 @@ namespace Benchroom.Executor
         private const string URL_BENCHMARK_DATA = "/connector/benchmark_data";
         private const string URL_BENCHMARK_RESULT = "/connector/benchmark_result";
 
-        public static RunInput getRunData(String server, String id, short minPriority)
+        public static RunInput getRunData(String server, String id, short minPriority, IList<string> choosenParameters)
         {
             using (WebClient webClient = new WebClient())
             {
-                String url = server + URL_BENCHMARK_DATA + "?id=" + id + "&platform=WINDOWS_X86_64&minPriority=" + minPriority;
-                logger.Info("Getting data to run from \"" + url + "\"");
-                String data = webClient.DownloadString(url);
+                StringBuilder url = new StringBuilder();
+                url.Append(server).Append(URL_BENCHMARK_DATA).Append("?id=").Append(id)
+                    .Append("&platform=WINDOWS_X86_64&minPriority=").Append(minPriority);
+                if (choosenParameters != null)
+                {
+                    foreach (String param in choosenParameters)
+                    {
+                        url.Append("&choosenParameters=").Append(param);
+                    }
+                }
+                logger.Info("Getting data to run from \"" + url.ToString() + "\"");
+                String data = webClient.DownloadString(url.ToString());
                 return JsonConvert.DeserializeObject<RunInput>(data);
             }
         }

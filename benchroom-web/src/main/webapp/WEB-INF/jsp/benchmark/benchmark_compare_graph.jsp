@@ -2,8 +2,9 @@
 <%@page contentType="image/svg+xml" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tld/benchroom.tld" prefix="b"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<c:set var="runSpacing" value="${height / sameSystem.size()}"/>
+<fmt:formatNumber  var="runSpacing" value="${height / sameSystem.size()}" maxFractionDigits="0"/>
 <c:set var="resultSpacing" value="${height / (sameSystem.size() * (run.results.size() + 1))}"/>
 <c:set var="colors" value="${['#f1595f', '#79c36a', '#599ad3', '#f9a65a', '#9e66ab', '#cd7058', '#727272', '#d77fb3']}"/>
 
@@ -27,9 +28,12 @@
                         line.pop();
                         tspan.text(line.join(" "));
                         line = [word];
-                        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * 1.1 + "em");
+                        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * 14 + "px");
                     }
                 }
+                var newY = +y + ${runSpacing / 2} - ((lineNumber * 14) / 2);
+                text.attr("y", newY);
+                tspan.attr("y", newY);
             });
         }
 
@@ -54,7 +58,7 @@
     <line x1="200" y1="0" x2="200" y2="${height}" style="stroke:black;stroke-width:2"/>
     <c:forEach items="${sameSystem}" var="run2" varStatus="i">
 
-        <text class="yAxis" x="0" y="${i.index * runSpacing + 15}" width="200" height="${runSpacing - 4}" dy="0">
+        <text class="yAxis" x="0" y="${i.index * runSpacing + 5}" width="200" height="${runSpacing - 4}" dy="0">
             <c:forEach items="${run2.benchmarkParameters}" var="parameter">
                 ${parameter.name}, 
             </c:forEach>
