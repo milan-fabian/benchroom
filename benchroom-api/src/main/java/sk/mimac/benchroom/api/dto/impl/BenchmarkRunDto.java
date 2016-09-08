@@ -2,10 +2,8 @@ package sk.mimac.benchroom.api.dto.impl;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import sk.mimac.benchroom.api.dto.Dto;
-import sk.mimac.benchroom.api.system.SystemParameter;
 
 /**
  *
@@ -21,7 +19,7 @@ public class BenchmarkRunDto implements Dto {
 
     private ZonedDateTime whenStarted;
 
-    private Map<SystemParameter, String> systemParameters;
+    private SystemInfoDto systemInfo;
 
     private List<BenchmarkRunResultDto> results;
 
@@ -74,12 +72,12 @@ public class BenchmarkRunDto implements Dto {
         this.whenStarted = whenStarted;
     }
 
-    public Map<SystemParameter, String> getSystemParameters() {
-        return systemParameters;
+    public SystemInfoDto getSystemInfo() {
+        return systemInfo;
     }
 
-    public void setSystemParameters(Map<SystemParameter, String> systemParameters) {
-        this.systemParameters = systemParameters;
+    public void setSystemInfo(SystemInfoDto systemInfo) {
+        this.systemInfo = systemInfo;
     }
 
     public List<BenchmarkRunResultDto> getResults() {

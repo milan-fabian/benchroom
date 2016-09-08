@@ -16,6 +16,7 @@ import sk.mimac.benchroom.api.dto.impl.BenchmarkParameterDto;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkSuiteDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareVersionDto;
+import sk.mimac.benchroom.api.dto.impl.SystemInfoDto;
 import sk.mimac.benchroom.api.enums.Platform;
 import sk.mimac.benchroom.api.enums.ScriptType;
 import sk.mimac.benchroom.api.service.BenchmarkMonitorService;
@@ -24,6 +25,7 @@ import sk.mimac.benchroom.api.service.BenchmarkRunService;
 import sk.mimac.benchroom.api.service.BenchmarkSuiteService;
 import sk.mimac.benchroom.api.service.ScriptService;
 import sk.mimac.benchroom.api.service.SoftwareService;
+import sk.mimac.benchroom.api.service.SystemInfoService;
 import sk.mimac.benchroom.connector.ConnectorConstants;
 import sk.mimac.benchroom.connector.controller.model.RunInput;
 import sk.mimac.benchroom.connector.controller.model.RunOutput;
@@ -53,6 +55,9 @@ public class Controller {
     @Autowired
     private ScriptService scriptService;
 
+    @Autowired
+    private SystemInfoService systemInfoService;
+
     @RequestMapping(value = ConnectorConstants.URL_BENCHMARK_DATA, method = RequestMethod.GET)
     public RunInput getBenchmarkData(@RequestParam("id") String dataId, @RequestParam("platform") Platform platform, @RequestParam("minPriority") short minPriority,
             @RequestParam(name = "choosenParameters", required = false) List<Long> choosenParameters) {
@@ -80,7 +85,7 @@ public class Controller {
         BenchmarkRunDto dto = new BenchmarkRunDto();
         dto.setSoftwareVersion(new SoftwareVersionDto(Long.parseLong(ids[0])));
         dto.setBenchmarkParameters(run.getParameterIds().stream().map(id -> new BenchmarkParameterDto(id)).collect(Collectors.toList()));
-        dto.setSystemParameters(run.getSystemParameters());
+        dto.setSystemInfo(new SystemInfoDto(systemInfoService.getOrCreateInfo(run.getSystemParameters())));
         dto.setWhenStarted(run.getWhenStarted());
         dto.setBenchmarkSuiteId(Long.parseLong(ids[1]));
 
@@ -90,7 +95,7 @@ public class Controller {
         }
         benchmarkRunService.insertRun(dto, results);
     }
-
+    
     private RunInput getRunData(SoftwareVersionDto version, BenchmarkSuiteDto suite, String dataId, String setupScript,
             String cleanupScript, List<List<RunInput.RunParameter>> parameters, List<RunInput.RunMonitor> monitors) {
         RunInput runData = new RunInput();

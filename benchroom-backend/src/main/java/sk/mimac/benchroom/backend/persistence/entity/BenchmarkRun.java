@@ -2,15 +2,12 @@ package sk.mimac.benchroom.backend.persistence.entity;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,13 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.MapKeyEnumerated;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import sk.mimac.benchroom.api.system.SystemParameter;
 
 /**
  *
@@ -38,7 +32,7 @@ import sk.mimac.benchroom.api.system.SystemParameter;
 public class BenchmarkRun implements EntityInterface, Serializable {
 
     public static final String GET_BY_IDS = "BenchmarkRun.get_by_ids";
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -63,12 +57,9 @@ public class BenchmarkRun implements EntityInterface, Serializable {
     @Column(name = "when_started", unique = false, nullable = false)
     private ZonedDateTime whenStarted;
 
-    @ElementCollection
-    @JoinTable(name = "system_parameters", joinColumns = @JoinColumn(name = "benchmark_run"))
-    @MapKeyColumn(name = "system_key")
-    @MapKeyEnumerated(EnumType.STRING)
-    @Column(name = "system_value")
-    private Map<SystemParameter, String> systemParameters;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "system_info", nullable = false, updatable = false)
+    private SystemInfo systemInfo;
 
     @OneToMany(mappedBy = "run", cascade = {CascadeType.ALL})
     private Set<BenchmarkRunResult> results;
@@ -113,12 +104,12 @@ public class BenchmarkRun implements EntityInterface, Serializable {
         this.benchmarkParameters = benchmarkParameters;
     }
 
-    public Map<SystemParameter, String> getSystemParameters() {
-        return systemParameters;
+    public SystemInfo getSystemInfo() {
+        return systemInfo;
     }
 
-    public void setSystemParameters(Map<SystemParameter, String> systemParameters) {
-        this.systemParameters = systemParameters;
+    public void setSystemInfo(SystemInfo systemInfo) {
+        this.systemInfo = systemInfo;
     }
 
     public Set<BenchmarkRunResult> getResults() {

@@ -28,7 +28,7 @@
 
 <h4>Parameters of the system where benchmark run:</h4>
 <table>
-    <c:forEach items="${run.systemParameters}" var="parameter">
+    <c:forEach items="${run.systemInfo.parameters}" var="parameter">
         <tr>
             <td>${parameter.key}:</td>
             <td>${parameter.value}</td>

@@ -174,7 +174,7 @@ public class BenchmarkController {
         BenchmarkRunFilter sameSystemFilter = new BenchmarkRunFilter();
         sameSystemFilter.setBenchmarkSuiteId(run.getBenchmarkSuiteId());
         sameSystemFilter.setSoftwareVersionId(run.getSoftwareVersion().getId());
-        sameSystemFilter.setParameters(run.getSystemParameters());
+        sameSystemFilter.setSystemInfoId(run.getSystemInfo().getId());
         List<BenchmarkRunDto> sameSystemRuns = benchmarkRunService.getRunPage(sameSystemFilter).getElements();
         sameSystemRuns.forEach(x -> Collections.sort(x.getResults()));
         sameSystemRuns.forEach(x -> Collections.sort(x.getBenchmarkParameters()));

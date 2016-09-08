@@ -13,7 +13,7 @@ public class BenchmarkRunFilter extends AbstractFilter {
     private Long softwareId;
     private Long benchmarkSuiteId;
     private Long benchmarkParameterId;
-    private Map<SystemParameter, String> parameters;
+    private Long systemInfoId;
 
     public Long getSoftwareVersionId() {
         return softwareVersionId;
@@ -47,12 +47,12 @@ public class BenchmarkRunFilter extends AbstractFilter {
         this.benchmarkParameterId = benchmarkParameterId;
     }
 
-    public Map<SystemParameter, String> getParameters() {
-        return parameters;
+    public Long getSystemInfoId() {
+        return systemInfoId;
     }
 
-    public void setParameters(Map<SystemParameter, String> parameters) {
-        this.parameters = parameters;
+    public void setSystemInfoId(Long systemInfoId) {
+        this.systemInfoId = systemInfoId;
     }
 
 }

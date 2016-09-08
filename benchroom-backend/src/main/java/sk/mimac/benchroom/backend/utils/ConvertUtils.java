@@ -95,7 +95,7 @@ public class ConvertUtils {
 
     public static BenchmarkRunDto convert(BenchmarkRun entity) {
         BenchmarkRunDto dto = new BenchmarkRunDto(entity.getId());
-        dto.setSystemParameters(new HashMap<>(entity.getSystemParameters()));
+        dto.setSystemInfo(convert(entity.getSystemInfo()));
         dto.setSoftwareVersion(convert(entity.getSoftwareVersion()));
         dto.setWhenStarted(entity.getWhenStarted());
         dto.setBenchmarkSuiteId(entity.getBenchmarkSuite().getId());
@@ -115,7 +115,7 @@ public class ConvertUtils {
     public static BenchmarkRunSimpleDto convertToSimple(BenchmarkRun entity) {
         BenchmarkRunSimpleDto dto = new BenchmarkRunSimpleDto(entity.getId());
         dto.setBenchmarkParameters(entity.getBenchmarkParameters().stream().map(parameter -> parameter.getName()).collect(Collectors.toList()).toString());
-        dto.setSystemParameters(entity.getSystemParameters().toString());
+        dto.setSystemParameters(entity.getSystemInfo().getParameters().toString());
         dto.setWhenStarted(entity.getWhenStarted());
         StringBuilder builder = new StringBuilder();
         for (BenchmarkRunResult result : entity.getResults()) {
@@ -132,7 +132,7 @@ public class ConvertUtils {
             parameters.add(new BenchmarkParameter(parameter.getId()));
         }
         entity.setBenchmarkParameters(parameters);
-        entity.setSystemParameters(dto.getSystemParameters());
+        entity.setSystemInfo(new SystemInfo(dto.getSystemInfo().getId()));
         entity.setSoftwareVersion(new SoftwareVersion(dto.getSoftwareVersion().getId()));
         entity.setWhenStarted(dto.getWhenStarted());
         entity.setBenchmarkSuite(new BenchmarkSuite(dto.getBenchmarkSuiteId()));
@@ -182,5 +182,17 @@ public class ConvertUtils {
         dto.setMonitorName(entity.getMonitor().getName());
         dto.setMonitorType(entity.getMonitor().getType());
         return dto;
+    }
+
+    public static SystemInfoDto convert(SystemInfo entity) {
+        SystemInfoDto dto = new SystemInfoDto(entity.getId());
+        dto.setParameters(new HashMap<>(entity.getParameters()));
+        return dto;
+    }
+
+    public static SystemInfo convert(SystemInfoDto dto) {
+        SystemInfo entity = new SystemInfo(dto.getId());
+        entity.setParameters(new HashMap<>(dto.getParameters()));
+        return entity;
     }
 }
