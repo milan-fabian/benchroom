@@ -29,7 +29,7 @@ namespace Benchroom.Executor.Model
         {
             public const string RUN_TIME = "RUN_TIME";
             public const string FILE_SIZE = "FILE_SIZE";
-            public const string CPU_UTILIZATION = "CPU_UTILIZATION";
+            public const string CPU_TIME = "CPU_TIME";
 
             public long monitorId { get; set; }
             public string type { get; set; }

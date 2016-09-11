@@ -25,7 +25,7 @@ namespace Benchroom.Executor
         public int MaxDeviation { private get; set; }
         private string protocolFile;
         private long? timeMonitor;
-        private long? utilizationMonitor;
+        private long? cpuTimeMonitor;
         private List<RunInput.RunMonitor> fileMonitors = new List<RunInput.RunMonitor>();
         private Dictionary<string, string> systemParameters = SystemParameters.getParameters();
 
@@ -43,8 +43,8 @@ namespace Benchroom.Executor
                 } else if (monitor.type.Equals(RunInput.RunMonitor.FILE_SIZE))
                 {
                     fileMonitors.Add(monitor);
-                } else if(monitor.type.Equals(RunInput.RunMonitor.CPU_UTILIZATION)) {
-                    utilizationMonitor = monitor.monitorId;
+                } else if(monitor.type.Equals(RunInput.RunMonitor.CPU_TIME)) {
+                    cpuTimeMonitor = monitor.monitorId;
                 }
             }
         }
@@ -85,6 +85,7 @@ namespace Benchroom.Executor
             }
             parameterNames.Remove(parameterNames.Length - 2, 2);
             string commandLineArguments = String.Format(runData.commandLineArguments, parameterValues.ToArray());
+            writeToProtocol("Running with parameters \"" + parameterNames + "\", command line is: \"" + commandLineArguments + "\"\n");
             for (int i = 0; i < NumberOfRuns; i++)
             {
                 Dictionary<long, double> result = executeSingleRun(commandLineArguments, parameterNames.ToString());
@@ -160,11 +161,11 @@ namespace Benchroom.Executor
                 writeToProtocol("\tElapsed time: " + elapsed.TotalMilliseconds + " ms\n");
                 results.Add(timeMonitor.Value, elapsed.TotalMilliseconds);
             }
-            if (utilizationMonitor.HasValue)
+            if (cpuTimeMonitor.HasValue)
             {
-                double utilization = process.TotalProcessorTime.TotalMilliseconds / elapsed.TotalMilliseconds / SystemParameters.NumThreads;
-                writeToProtocol("\tCPU utilization: " + utilization + " %\n");
-                results.Add(utilizationMonitor.Value, utilization);
+                double cpuTime = process.TotalProcessorTime.TotalMilliseconds;
+                writeToProtocol("\tCPU time: " + cpuTime + " %\n");
+                results.Add(cpuTimeMonitor.Value, cpuTime);
             }
             foreach (RunInput.RunMonitor monitor in fileMonitors)
             {

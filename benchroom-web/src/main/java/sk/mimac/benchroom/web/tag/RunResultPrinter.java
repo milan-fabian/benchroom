@@ -27,6 +27,7 @@ public class RunResultPrinter extends SimpleTagSupport {
         double value = runResult.getResult();
         switch (runResult.getMonitorType()) {
             case RUN_TIME:
+            case CPU_TIME:
                 if (value < 2 * 1000) {
                     return String.format("%d ms", (long) value);
                 } else {
@@ -40,8 +41,6 @@ public class RunResultPrinter extends SimpleTagSupport {
                 } else if (value < 2l * 1024 * 1024 * 1024) {
                     return String.format("%.2f MB", ((long) value) / 1024d / 1024);
                 }
-            case CPU_UTILIZATION:
-                return String.format("%.1f %%", value * 100);
         }
         return Double.toString(value);
     }

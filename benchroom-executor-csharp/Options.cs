@@ -32,7 +32,7 @@ namespace Benchroom.Executor
         public int MaxDeviation { get; set; }
 
         [OptionList('c', "parameters", Required = false, Separator = ',', DefaultValue = null,
-            HelpText = "Run just choosen parameters (enter parameter ids")]
+            HelpText = "Run just choosen parameters (enter parameter ids)")]
         public IList<string> ChoosenParameters { get; set; }
 
         [HelpOption]

@@ -1,4 +1,3 @@
 # Benchroom - software and hardware benchmarks
 
-Nothing interesting here so far, work is in progress...
-	
+In pre-alpha state, work is in progress. Meanwhile, feel free to check <http://benchroom-benchmarks.blogspot.com>

@@ -20,6 +20,10 @@ Available command line arguments:
  -t, --test        (Default: False) Don't send results to server
 
  -p, --priority    Required. Minimal priority for parameters
+ 
+ -a, --deviation     (Default: 2) Maximal allowed deviation between results if running each combination more than once
+
+  -c, --parameters    (Default: ) Run just choosen parameters (enter parameter ids)
 
  --help            Display this help screen.
 ```

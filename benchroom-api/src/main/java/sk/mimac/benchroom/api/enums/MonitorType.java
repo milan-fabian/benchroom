@@ -8,5 +8,5 @@ public enum MonitorType {
 
     RUN_TIME,
     FILE_SIZE,
-    CPU_UTILIZATION;
+    CPU_TIME;
 }
