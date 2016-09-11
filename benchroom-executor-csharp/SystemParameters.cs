@@ -23,35 +23,41 @@ namespace Benchroom.Executor
         /* SYSTEM */
         private const string SYSTEM_NAME = "SYSTEM_NAME";
 
-        public static int NumThreads { get; private set; }
+        private static readonly Object LOCK = new object();
+        private static Dictionary<string, string> parameters;
 
         public static Dictionary<string, string> getParameters()
         {
-            Dictionary<string, string> result = new Dictionary<string, string>();
-
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from Win32_Processor"))
+            lock (LOCK)
             {
-                foreach (ManagementObject mo in searcher.Get())
+                if (parameters == null)
                 {
-                    result.Add(CPU_MANUFACTURER, mo["Manufacturer"].ToString());
-                    result.Add(CPU_FAMILY, mo["Description"].ToString());
-                    result.Add(CPU_NAME, mo["Name"].ToString());
-                    result.Add(CPU_NUM_CORES, mo["NumberOfCores"].ToString());
-                    result.Add(CPU_NUM_THREADS, mo["NumberOfLogicalProcessors"].ToString());
-                    NumThreads = (int) (uint) mo["NumberOfLogicalProcessors"];
-                    result.Add(CPU_MAX_FREQUENCY, mo["MaxClockSpeed"].ToString());
-                    break;
+                    parameters = new Dictionary<string, string>();
+
+                    using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from Win32_Processor"))
+                    {
+                        foreach (ManagementObject mo in searcher.Get())
+                        {
+                            parameters.Add(CPU_MANUFACTURER, mo["Manufacturer"].ToString());
+                            parameters.Add(CPU_FAMILY, mo["Description"].ToString());
+                            parameters.Add(CPU_NAME, mo["Name"].ToString());
+                            parameters.Add(CPU_NUM_CORES, mo["NumberOfCores"].ToString());
+                            parameters.Add(CPU_NUM_THREADS, mo["NumberOfLogicalProcessors"].ToString());
+                            parameters.Add(CPU_MAX_FREQUENCY, mo["MaxClockSpeed"].ToString());
+                            break;
+                        }
+                    }
+                    Microsoft.VisualBasic.Devices.ComputerInfo info = new Microsoft.VisualBasic.Devices.ComputerInfo();
+                    parameters.Add(RAM_SIZE, new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory.ToString());
+
+                    parameters.Add(OS_NAME, "Windows");
+                    parameters.Add(OS_VERSION, getOSVersion());
+                    parameters.Add(OS_KERNEL_VERSION, Environment.OSVersion.Version.Build.ToString());
+
+                    parameters.Add(SYSTEM_NAME, System.Environment.MachineName);
                 }
+                return parameters;
             }
-            Microsoft.VisualBasic.Devices.ComputerInfo info = new Microsoft.VisualBasic.Devices.ComputerInfo();
-            result.Add(RAM_SIZE, new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory.ToString());
-
-            result.Add(OS_NAME, "Windows");
-            result.Add(OS_VERSION, getOSVersion());
-            result.Add(OS_KERNEL_VERSION, Environment.OSVersion.Version.Build.ToString());
-
-            result.Add(SYSTEM_NAME, System.Environment.MachineName);
-            return result;
         }
 
         private static string getFromManagement(string name, string property)

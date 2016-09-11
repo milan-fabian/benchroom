@@ -19,6 +19,7 @@ import sk.mimac.benchroom.api.dto.impl.SoftwareVersionDto;
 import sk.mimac.benchroom.api.dto.impl.SystemInfoDto;
 import sk.mimac.benchroom.api.enums.Platform;
 import sk.mimac.benchroom.api.enums.ScriptType;
+import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 import sk.mimac.benchroom.api.service.BenchmarkMonitorService;
 import sk.mimac.benchroom.api.service.BenchmarkParameterService;
 import sk.mimac.benchroom.api.service.BenchmarkRunService;
@@ -26,6 +27,7 @@ import sk.mimac.benchroom.api.service.BenchmarkSuiteService;
 import sk.mimac.benchroom.api.service.ScriptService;
 import sk.mimac.benchroom.api.service.SoftwareService;
 import sk.mimac.benchroom.api.service.SystemInfoService;
+import sk.mimac.benchroom.api.system.SystemParameter;
 import sk.mimac.benchroom.connector.ConnectorConstants;
 import sk.mimac.benchroom.connector.controller.model.RunInput;
 import sk.mimac.benchroom.connector.controller.model.RunOutput;
@@ -95,7 +97,34 @@ public class Controller {
         }
         benchmarkRunService.insertRun(dto, results);
     }
-    
+
+    @RequestMapping(value = ConnectorConstants.URL_RUNNED_COMBINATIONS, method = RequestMethod.POST)
+    public List<long[]> postRunnedCombinations(@RequestParam("id") String dataId, @RequestParam("platform") Platform platform, @RequestParam("minPriority") short minPriority,
+            @RequestParam(name = "choosenParameters", required = false) List<Long> choosenParameters,
+            @RequestBody Map<SystemParameter, String> systemParameters) {
+        Long systemInfoId = systemInfoService.getInfoIdByParameters(systemParameters);
+        if (systemInfoId == null) {
+            return new ArrayList<>();
+        }
+        String[] parts = dataId.split("-");
+        BenchmarkSuiteDto suite = benchmarkSuiteService.getSuiteById(Long.parseLong(parts[1]));
+        BenchmarkRunFilter runFilter = new BenchmarkRunFilter();
+        runFilter.setSystemInfoId(systemInfoId);
+        runFilter.setSoftwareVersionId(Long.parseLong(parts[0]));
+        runFilter.setBenchmarkSuiteId(suite.getId());
+        runFilter.setPageSize(Integer.MAX_VALUE);
+        List<BenchmarkRunDto> runs = benchmarkRunService.getRunPage(runFilter).getElements();
+        List<long[]> result = new ArrayList<>(runs.size());
+        for (BenchmarkRunDto run : runs) {
+            long[] temp = new long[suite.getParameterPositions()];
+            for (BenchmarkParameterDto param : run.getBenchmarkParameters()) {
+                temp[param.getPosition()] = param.getId();
+            }
+            result.add(temp);
+        }
+        return result;
+    }
+
     private RunInput getRunData(SoftwareVersionDto version, BenchmarkSuiteDto suite, String dataId, String setupScript,
             String cleanupScript, List<List<RunInput.RunParameter>> parameters, List<RunInput.RunMonitor> monitors) {
         RunInput runData = new RunInput();

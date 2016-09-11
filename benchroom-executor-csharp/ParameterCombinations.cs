@@ -62,5 +62,21 @@ namespace Benchroom.Executor
             }
             return combinations;
         }
+
+        internal static void filter(List<List<RunInput.RunParameter>> combinations, long[][] runnedCombinations)
+        {
+            combinations.RemoveAll(item =>
+            {
+                long[] ids = item.Select(x => x.parameterId).ToArray();
+                foreach(long[] runned in runnedCombinations)
+                {
+                    if (ids.SequenceEqual(runned))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
     }
 }

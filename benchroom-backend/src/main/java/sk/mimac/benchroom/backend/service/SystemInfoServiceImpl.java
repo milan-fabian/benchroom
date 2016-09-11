@@ -24,12 +24,6 @@ public class SystemInfoServiceImpl implements SystemInfoService {
 
     @Override
     @Transactional(readOnly = false)
-    public long insertInfo(SystemInfoDto systemInfo) {
-        return systemInfoDao.insert(ConvertUtils.convert(systemInfo));
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public long getOrCreateInfo(Map<SystemParameter, String> parameters) {
         Long id = systemInfoDao.getWithSameParameters(parameters);
         if (id == null) {
@@ -39,6 +33,12 @@ public class SystemInfoServiceImpl implements SystemInfoService {
         } else {
             return id;
         }
+    }
+
+    @Override
+    @Transactional(readOnly = false) // Has to be readOnly=false because of creating temporary table
+    public Long getInfoIdByParameters(Map<SystemParameter, String> parameters) {
+        return systemInfoDao.getWithSameParameters(parameters);
     }
 
 }

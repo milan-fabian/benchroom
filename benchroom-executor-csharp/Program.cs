@@ -20,7 +20,12 @@ namespace Benchroom.Executor
                 RunInput runData = Connector.getRunData(options.ServerUrl, options.BenchmarkId, options.MinPriority, options.ChoosenParameters);
                 Runner runner = new Runner(runData, options.Directory) { Server = options.ServerUrl, NumberOfRuns = options.NumberOfRuns,
                                                                          PrintOutput = options.PrintOutput, TestRun = options.TestRun,
-                                                                         MaxDeviation = options.MaxDeviation} ;
+                                                                         MaxDeviation = options.MaxDeviation};
+                if (options.AlsoRunned)
+                {
+                    runner.RunnedCombinations = Connector.getRunnedCombinations(options.ServerUrl, options.BenchmarkId, 
+                                                                        options.MinPriority, options.ChoosenParameters);
+                }
                 runner.runBenchmarks();
             }
         }

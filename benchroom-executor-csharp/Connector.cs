@@ -3,6 +3,7 @@ using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net;
 using System.Text;
 
@@ -13,6 +14,7 @@ namespace Benchroom.Executor
         private static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string URL_BENCHMARK_DATA = "/connector/benchmark_data";
+        private const string URL_RUNNED_COMBINATIONS = "/connector/runned_combinations";
         private const string URL_BENCHMARK_RESULT = "/connector/benchmark_result";
 
         public static RunInput getRunData(String server, String id, short minPriority, IList<string> choosenParameters)
@@ -32,6 +34,27 @@ namespace Benchroom.Executor
                 logger.Info("Getting data to run from \"" + url.ToString() + "\"");
                 String data = webClient.DownloadString(url.ToString());
                 return JsonConvert.DeserializeObject<RunInput>(data);
+            }
+        }
+
+        public static long[][] getRunnedCombinations(String server, String id, short minPriority, IList<string> choosenParameters)
+        {
+            using (WebClient webClient = new WebClient())
+            {
+                StringBuilder url = new StringBuilder();
+                url.Append(server).Append(URL_RUNNED_COMBINATIONS).Append("?id=").Append(id)
+                    .Append("&platform=WINDOWS_X86_64&minPriority=").Append(minPriority);
+                if (choosenParameters != null)
+                {
+                    foreach (String param in choosenParameters)
+                    {
+                        url.Append("&choosenParameters=").Append(param);
+                    }
+                }
+                logger.Info("Getting already runned parameter combinations from \"" + url + "\"");
+                webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
+                String data = webClient.UploadString(url.ToString(), JsonConvert.SerializeObject(SystemParameters.getParameters()));
+                return JsonConvert.DeserializeObject<long[][]>(data);
             }
         }
 

@@ -35,6 +35,10 @@ namespace Benchroom.Executor
             HelpText = "Run just choosen parameters (enter parameter ids)")]
         public IList<string> ChoosenParameters { get; set; }
 
+        [Option('r', "alsorun", Required = false, DefaultValue = false, 
+            HelpText = "Run also with parameter combination which were run before")]
+        public bool AlsoRun { get; set; }
+
         [HelpOption]
         public string GetUsage()
         {

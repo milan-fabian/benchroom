@@ -23,6 +23,7 @@ namespace Benchroom.Executor
         public bool PrintOutput { private get; set; }
         public bool TestRun { private get; set; }
         public int MaxDeviation { private get; set; }
+        public long[][] RunnedCombinations { private get; set; }
         private string protocolFile;
         private long? timeMonitor;
         private long? cpuTimeMonitor;
@@ -58,6 +59,10 @@ namespace Benchroom.Executor
             parameterSetupScripts();
             int i = 1;
             List<List<RunInput.RunParameter>> combinations = ParameterCombinations.getCombinations(runData.parameters);
+            if (RunnedCombinations != null)
+            {
+                ParameterCombinations.filter(combinations, RunnedCombinations);
+            }
             foreach (List<RunInput.RunParameter> parameters in combinations)
             {
                 logger.Info("Running with parameters " + i++ + " out of " + combinations.Count);
@@ -164,7 +169,7 @@ namespace Benchroom.Executor
             if (cpuTimeMonitor.HasValue)
             {
                 double cpuTime = process.TotalProcessorTime.TotalMilliseconds;
-                writeToProtocol("\tCPU time: " + cpuTime + " %\n");
+                writeToProtocol("\tCPU time: " + cpuTime + " ms\n");
                 results.Add(cpuTimeMonitor.Value, cpuTime);
             }
             foreach (RunInput.RunMonitor monitor in fileMonitors)
