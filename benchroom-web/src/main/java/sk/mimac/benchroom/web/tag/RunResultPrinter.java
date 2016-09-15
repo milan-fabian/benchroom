@@ -23,7 +23,7 @@ public class RunResultPrinter extends SimpleTagSupport {
         out.println(printResult(runResult));
     }
 
-    public String printResult(BenchmarkRunResultDto runResult) {
+    public static String printResult(BenchmarkRunResultDto runResult) {
         double value = runResult.getResult();
         switch (runResult.getMonitorType()) {
             case RUN_TIME:

@@ -7,6 +7,12 @@
         $("#graph").attr("data", "<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE_GRAPH%>?width=700&height=550&" + data);
     }
 
+    function excelExport() {
+        var iframe = $("<iframe style='display:none;'></iframe>").appendTo("body");
+        var data = $("#data").serialize();
+        iframe.attr("src", "<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE_EXCEL%>?" + data);
+    }
+
     $(function () {
         reloadGraph();
     });
@@ -18,6 +24,7 @@
 </h2>
 
 <a href='javascript:void(0);' onclick='showDialog("Benchmark run", "<%=request.getContextPath()%><%=URL_BENCHMARK_DETAIL%>?run=${run.id}");'>Details</a>    
+<a href='javascript:void(0);' onclick='excelExport();'>Export to excel</a>   
 <br>
 <div style="display: inline-block;vertical-align: top">
     <form id="data">

@@ -1,11 +1,14 @@
 package sk.mimac.benchroom.web.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -30,6 +33,7 @@ import sk.mimac.benchroom.api.service.SoftwareService;
 import sk.mimac.benchroom.web.PageWrapper;
 import sk.mimac.benchroom.web.ValueLabelWrapper;
 import sk.mimac.benchroom.web.WebConstants;
+import sk.mimac.benchroom.web.export.ExcelExporter;
 import sk.mimac.benchroom.web.utils.FilterUtils;
 
 /**
@@ -141,14 +145,30 @@ public class BenchmarkController {
         return new ModelAndView("benchmark/benchmark_compare", model);
     }
 
+    @ResponseBody
+    @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE_EXCEL, method = RequestMethod.GET)
+    public void getBenchmarkCompareExcel(HttpServletResponse response, @RequestParam("runs") List<Long> runIds) throws IOException {
+        List<BenchmarkRunDto> runs = benchmarkRunService.getRunsByIds(runIds);
+        runs.forEach(run -> Collections.sort(run.getResults()));
+        runs.forEach(run -> Collections.sort(run.getBenchmarkParameters()));
+        BenchmarkSuiteDto suite = benchmarkSuiteService.getSuiteById(runs.get(0).getBenchmarkSuiteId());
+        ExcelExporter excelExporter = new ExcelExporter(runs, suite.getName());
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=Benchroom-results.xlsx");
+        try (OutputStream outputStream = response.getOutputStream()) {
+            excelExporter.export(outputStream);
+            outputStream.flush();
+        }
+    }
+
     @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE_GRAPH, method = RequestMethod.GET)
     public ModelAndView getBenchmarkCompareGraph(@RequestParam("runs") List<Long> runIds, @RequestParam("monitors") List<Long> monitorIds,
             @RequestParam("width") int width, @RequestParam("height") int height) {
         Map<String, Object> model = new HashMap<>();
         List<BenchmarkRunDto> runs = benchmarkRunService.getRunsByIds(runIds);
-        runs.forEach(x -> x.getResults().removeIf(r -> !monitorIds.contains(r.getMonitorId())));
-        runs.forEach(x -> Collections.sort(x.getResults()));
-        runs.forEach(x -> Collections.sort(x.getBenchmarkParameters()));
+        runs.forEach(run -> run.getResults().removeIf(r -> !monitorIds.contains(r.getMonitorId())));
+        runs.forEach(run -> Collections.sort(run.getResults()));
+        runs.forEach(run -> Collections.sort(run.getBenchmarkParameters()));
         model.put("run", runs.get(0));
         model.put("sameSystem", runs);
         model.put("maxResults", getMaxResults(runs));
