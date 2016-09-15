@@ -3,8 +3,54 @@
 
 <script>
     function reloadGraph() {
-        var data = $("#data").serialize();
-        $("#graph").attr("data", "<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE_GRAPH%>?width=700&height=550&" + data);
+        var formData = $("#data").serialize();
+        $.get("<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE_GRAPH%>?" + formData, function (data) {
+            showGraph(data);
+        });
+    }
+
+    function showGraph(data) {
+        var monitors = $("input[name=monitors]:checked");
+        console.log(monitors);
+        var ctx = document.getElementById("chart");
+        new Chart(ctx, {
+            type: 'bubble',
+            data: {
+                datasets: [
+                    {
+                        data: data,
+                        backgroundColor: "#0000FF",
+                        hoverBackgroundColor: "#0000FF"
+                    }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: $("label[for=" + monitors[0].id + "]").html()
+                            }
+                        }],
+                    yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: $("label[for=" + monitors[1].id + "]").html()
+                            }
+                        }]
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var dataPoint = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                            return dataPoint.title;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     function excelExport() {
@@ -13,9 +59,7 @@
         iframe.attr("src", "<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE_EXCEL%>?" + data);
     }
 
-    $(function () {
-        reloadGraph();
-    });
+
 </script>
 
 <h2>
@@ -28,9 +72,14 @@
 <br>
 <form>
     <input type="hidden" name="run" value="${run.id}"/>
+    <c:set var="previousParam" value="${parameters[0]}"/>
     <c:forEach items="${parameters}" var="parameter">
+        <c:if test="${parameter.position != previousParam.position}">
+            <br>
+        </c:if>
         <input type="checkbox" name="parameters" value="${parameter.id}" id="param-${parameter.id}" <c:if test="${choosenParameters.contains(parameter.id)}">checked</c:if>>
         <label for="param-${parameter.id}">${parameter.name}</label>
+        <c:set var="previousParam" value="${parameter}"/>
     </c:forEach>
     <input type="submit" value="Show"/>
 </form>
@@ -46,8 +95,8 @@
                         </c:forEach>
                         <c:forEach items="${run.results}" var="result">
                         <th colspan="2">
-                            ${result.monitorName}
-                            <input type="checkbox" name="monitors" value="${result.monitorId}" checked onchange="reloadGraph();"/>
+                            <label for="monitor-${result.monitorId}">${result.monitorName}</label>
+                            <input type="checkbox" name="monitors" value="${result.monitorId}" checked onchange="reloadGraph();" id="monitor-${result.monitorId}"/>
                         </th>
                     </c:forEach>
                 </tr>
@@ -75,8 +124,5 @@
     </form>
 </div>
 
-<div style="display: inline-block;vertical-align: top">
-    <object id="graph" type="image/svg+xml" >
-    </object>
-</div>
+<canvas id="chart" width="400" height="180" style="margin: 10px; max-width: 95%"></canvas>
 <%@ include file="/WEB-INF/jspf/footer.jspf"%>

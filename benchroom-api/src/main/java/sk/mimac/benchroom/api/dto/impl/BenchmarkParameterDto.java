@@ -124,7 +124,11 @@ public class BenchmarkParameterDto implements Dto, Comparable<BenchmarkParameter
 
     @Override
     public int compareTo(BenchmarkParameterDto o) {
-        return Short.compare(this.position, o.position);
+        int result = Short.compare(this.position, o.position);
+        if (result == 0) {
+            result = this.name.compareTo(o.name);
+        }
+        return result;
     }
 
 }

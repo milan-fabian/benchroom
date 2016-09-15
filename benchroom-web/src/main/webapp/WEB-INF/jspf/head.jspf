@@ -10,6 +10,7 @@
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.12/dataRender/datetime.js"></script>
     <script type="text/javascript" src="//code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.bundle.min.js"></script>
     <script src="<%=request.getContextPath()%>/resources/js/script.js"></script>
     <title>Benchroom</title>
 </head>

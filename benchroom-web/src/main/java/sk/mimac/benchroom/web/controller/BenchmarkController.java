@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkSuiteDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareVersionDto;
+import sk.mimac.benchroom.api.enums.MonitorType;
 import sk.mimac.benchroom.api.filter.BenchmarkParameterFilter;
 import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 import sk.mimac.benchroom.api.filter.BenchmarkSuiteFilter;
@@ -38,6 +40,7 @@ import sk.mimac.benchroom.web.PageWrapper;
 import sk.mimac.benchroom.web.ValueLabelWrapper;
 import sk.mimac.benchroom.web.WebConstants;
 import sk.mimac.benchroom.web.export.ExcelExporter;
+import sk.mimac.benchroom.web.model.XYGraphModel;
 import sk.mimac.benchroom.web.utils.FilterUtils;
 
 /**
@@ -147,7 +150,7 @@ public class BenchmarkController {
         model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkSuiteId()));
         List<BenchmarkRunDto> runs = getSameSystemRuns(run, parameterIds);
         model.put("sameSystem", runs);
-        
+
         if (parameterIds == null) {
             parameterIds = runs.stream().map(r -> r.getBenchmarkParameters()).flatMap(List::stream).map(p -> p.getId()).distinct().collect(Collectors.toList());
         }
@@ -172,40 +175,29 @@ public class BenchmarkController {
         }
     }
 
+    @ResponseBody
     @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE_GRAPH, method = RequestMethod.GET)
-    public ModelAndView getBenchmarkCompareGraph(@RequestParam("runs") List<Long> runIds, @RequestParam("monitors") List<Long> monitorIds,
-            @RequestParam("width") int width, @RequestParam("height") int height) {
-        Map<String, Object> model = new HashMap<>();
+    public List<XYGraphModel> getBenchmarkCompareGraph(@RequestParam("runs") List<Long> runIds, @RequestParam("monitors") List<Long> monitorIds) {
         List<BenchmarkRunDto> runs = benchmarkRunService.getRunsByIds(runIds);
         runs.forEach(run -> run.getResults().removeIf(r -> !monitorIds.contains(r.getMonitorId())));
         runs.forEach(run -> Collections.sort(run.getResults()));
         runs.forEach(run -> Collections.sort(run.getBenchmarkParameters()));
-        model.put("run", runs.get(0));
-        model.put("sameSystem", runs);
-        model.put("maxResults", getMaxResults(runs));
-        model.put("width", width);
-        model.put("height", height);
-        return new ModelAndView("benchmark/benchmark_compare_graph", model);
+
+        double maxX = runs.stream().map(run -> run.getResults().get(0).getResult()).max(Double::compare).get();
+        double maxY = runs.stream().map(run -> run.getResults().get(1).getResult()).max(Double::compare).get();
+        long divisorX = getDivisorForResult(maxX, runs.get(0).getResults().get(0).getMonitorType());
+        long divisorY = getDivisorForResult(maxY, runs.get(1).getResults().get(0).getMonitorType());
+
+        return runs.stream().map(run -> new XYGraphModel(run, divisorX, divisorY)).collect(Collectors.toList());
     }
 
-    private double[] getMaxResults(List<BenchmarkRunDto> runs) {
-        double[] maxResults = new double[runs.get(0).getResults().size()];
-        for (int i = 0; i < maxResults.length; i++) {
-            for (BenchmarkRunDto run : runs) {
-                double value = run.getResults().get(i).getResult();
-                if (value > maxResults[i]) {
-                    maxResults[i] = value;
-                }
-            }
-        }
-        return maxResults;
-    }
-    
     private List<BenchmarkParameterDto> getAllParametersForSuite(long suiteId) {
         BenchmarkParameterFilter filter = new BenchmarkParameterFilter();
         filter.setPageSize(Integer.MAX_VALUE);
         filter.setSuiteId(suiteId);
-        return benchmarkParameterService.getParameterPage(filter).getElements();
+        List<BenchmarkParameterDto> parameters = benchmarkParameterService.getParameterPage(filter).getElements();
+        Collections.sort(parameters);
+        return parameters;
     }
 
     private List<BenchmarkRunDto> getSameSystemRuns(BenchmarkRunDto run, List<Long> parameterIds) {
@@ -217,6 +209,38 @@ public class BenchmarkController {
         List<BenchmarkRunDto> sameSystemRuns = benchmarkRunService.getRunPage(sameSystemFilter).getElements();
         sameSystemRuns.forEach(x -> Collections.sort(x.getResults()));
         sameSystemRuns.forEach(x -> Collections.sort(x.getBenchmarkParameters()));
+        Collections.sort(sameSystemRuns, (BenchmarkRunDto o1, BenchmarkRunDto o2) -> {
+            int result = 0;
+            int size = o1.getBenchmarkParameters().size();
+            for (int i = 0; i < size; i++) {
+                result = o1.getBenchmarkParameters().get(i).compareTo(o2.getBenchmarkParameters().get(i));
+                if (result != 0) {
+                    return result;
+                }
+            }
+            return result;
+        });
         return sameSystemRuns;
+    }
+
+    private long getDivisorForResult(double maxValue, MonitorType monitorType) {
+        switch (monitorType) {
+            case CPU_TIME:
+            case RUN_TIME:
+                if (maxValue > 4 * 60) {
+                    return 60;
+                }
+                break;
+            case FILE_SIZE:
+                if (maxValue > 4l * 1024l * 1024l * 1024l) {
+                    return 1024l * 1024l * 1024l;
+                } else if (maxValue > 4l * 1024l * 1024l) {
+                    return 1024l * 1024l;
+                } else if (maxValue > 4l * 1024l) {
+                    return 1024l;
+                }
+                break;
+        }
+        return 1;
     }
 }
