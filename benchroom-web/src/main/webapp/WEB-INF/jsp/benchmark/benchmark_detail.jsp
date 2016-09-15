@@ -31,7 +31,7 @@
     <c:forEach items="${run.systemInfo.parameters}" var="parameter">
         <tr>
             <td>${parameter.key}:</td>
-            <td>${parameter.value}</td>
+            <td><b:printSystemParameter entry="${parameter}"/></td>
         </tr>
     </c:forEach>
 </table>

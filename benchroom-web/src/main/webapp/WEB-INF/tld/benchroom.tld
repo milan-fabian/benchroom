@@ -15,6 +15,17 @@
         </attribute>
     </tag>
     <tag>
+        <name>printSystemParameter</name>
+        <tag-class>sk.mimac.benchroom.web.tag.SystemParameterPrinter</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>entry</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Map.Entry</type>
+        </attribute>
+    </tag>
+    <tag>
         <name>formatPercent</name>
         <tag-class>sk.mimac.benchroom.web.tag.PercentageFormatter</tag-class>
         <body-content>empty</body-content>

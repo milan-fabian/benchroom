@@ -13,6 +13,6 @@
         <div class="menu">
             Menu:
             <a href="<%=request.getContextPath()%><%=URL_SOFTWARE%>">Software list</a> 
-            <a href="<%=request.getContextPath()%><%=URL_BENCHMARK%>">Benchmarks</a>
+            <a href="<%=request.getContextPath()%><%=URL_BENCHMARK%>">Benchmark results</a>
         </div>
         <div class="main">
