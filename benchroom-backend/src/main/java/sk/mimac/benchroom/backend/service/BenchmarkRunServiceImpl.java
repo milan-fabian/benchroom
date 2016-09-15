@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 import sk.mimac.benchroom.api.service.BenchmarkRunService;
 import sk.mimac.benchroom.backend.persistence.dao.BenchmarkRunDao;
 import sk.mimac.benchroom.backend.persistence.entity.BenchmarkMonitor;
+import sk.mimac.benchroom.backend.persistence.entity.BenchmarkParameter;
 import sk.mimac.benchroom.backend.persistence.entity.BenchmarkRun;
 import sk.mimac.benchroom.backend.persistence.entity.BenchmarkRunResult;
 import sk.mimac.benchroom.backend.persistence.query.BenchmarkRunQueryBuilder;
@@ -69,7 +72,9 @@ public class BenchmarkRunServiceImpl implements BenchmarkRunService {
         long count = benchmarkRunDao.countForFilter(queryBuilder);
         List<BenchmarkRunDto> list = new ArrayList<>();
         for (BenchmarkRun run : benchmarkRunDao.getForFilter(queryBuilder)) {
-            list.add(ConvertUtils.convert(run));
+            if (filter.getBenchmarkParameterIds() == null || checkParams(run.getBenchmarkParameters(), filter)) {
+                list.add(ConvertUtils.convert(run));
+            }
         }
         return new Page(list, filter.getPageNumber(), filter.getPageSize(), count);
     }
@@ -83,4 +88,12 @@ public class BenchmarkRunServiceImpl implements BenchmarkRunService {
         return list;
     }
 
+    private boolean checkParams(Set<BenchmarkParameter> params, BenchmarkRunFilter filter) {
+        for (BenchmarkParameter param : params) {
+            if (!filter.getBenchmarkParameterIds().contains(param.getId())) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

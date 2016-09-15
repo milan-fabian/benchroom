@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import sk.mimac.benchroom.api.dto.impl.BenchmarkParameterDto;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkSuiteDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareDto;
 import sk.mimac.benchroom.api.dto.impl.SoftwareVersionDto;
+import sk.mimac.benchroom.api.filter.BenchmarkParameterFilter;
 import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 import sk.mimac.benchroom.api.filter.BenchmarkSuiteFilter;
 import sk.mimac.benchroom.api.filter.SoftwareFilter;
@@ -135,13 +139,20 @@ public class BenchmarkController {
     }
 
     @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE, method = RequestMethod.GET)
-    public ModelAndView getBenchmarkCompare(@RequestParam("run") long runId) {
+    public ModelAndView getBenchmarkCompare(@RequestParam("run") long runId, @RequestParam(name = "parameters", required = false) List<Long> parameterIds) {
         Map<String, Object> model = new HashMap<>();
         BenchmarkRunDto run = benchmarkRunService.getRunById(runId);
         Collections.sort(run.getResults());
         model.put("run", run);
         model.put("suite", benchmarkSuiteService.getSuiteById(run.getBenchmarkSuiteId()));
-        model.put("sameSystem", getSameSystemRuns(run));
+        List<BenchmarkRunDto> runs = getSameSystemRuns(run, parameterIds);
+        model.put("sameSystem", runs);
+        
+        if (parameterIds == null) {
+            parameterIds = runs.stream().map(r -> r.getBenchmarkParameters()).flatMap(List::stream).map(p -> p.getId()).distinct().collect(Collectors.toList());
+        }
+        model.put("choosenParameters", parameterIds);
+        model.put("parameters", getAllParametersForSuite(run.getBenchmarkSuiteId()));
         return new ModelAndView("benchmark/benchmark_compare", model);
     }
 
@@ -189,10 +200,18 @@ public class BenchmarkController {
         }
         return maxResults;
     }
+    
+    private List<BenchmarkParameterDto> getAllParametersForSuite(long suiteId) {
+        BenchmarkParameterFilter filter = new BenchmarkParameterFilter();
+        filter.setPageSize(Integer.MAX_VALUE);
+        filter.setSuiteId(suiteId);
+        return benchmarkParameterService.getParameterPage(filter).getElements();
+    }
 
-    private List<BenchmarkRunDto> getSameSystemRuns(BenchmarkRunDto run) {
+    private List<BenchmarkRunDto> getSameSystemRuns(BenchmarkRunDto run, List<Long> parameterIds) {
         BenchmarkRunFilter sameSystemFilter = new BenchmarkRunFilter();
         sameSystemFilter.setBenchmarkSuiteId(run.getBenchmarkSuiteId());
+        sameSystemFilter.setBenchmarkParameterIds(parameterIds);
         sameSystemFilter.setSoftwareVersionId(run.getSoftwareVersion().getId());
         sameSystemFilter.setSystemInfoId(run.getSystemInfo().getId());
         List<BenchmarkRunDto> sameSystemRuns = benchmarkRunService.getRunPage(sameSystemFilter).getElements();

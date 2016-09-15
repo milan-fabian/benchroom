@@ -26,6 +26,15 @@
 <a href='javascript:void(0);' onclick='showDialog("Benchmark run", "<%=request.getContextPath()%><%=URL_BENCHMARK_DETAIL%>?run=${run.id}");'>Details</a>    
 <a href='javascript:void(0);' onclick='excelExport();'>Export to excel</a>   
 <br>
+<form>
+    <input type="hidden" name="run" value="${run.id}"/>
+    <c:forEach items="${parameters}" var="parameter">
+        <input type="checkbox" name="parameters" value="${parameter.id}" id="param-${parameter.id}" <c:if test="${choosenParameters.contains(parameter.id)}">checked</c:if>>
+        <label for="param-${parameter.id}">${parameter.name}</label>
+    </c:forEach>
+    <input type="submit" value="Show"/>
+</form>
+<br>
 <div style="display: inline-block;vertical-align: top">
     <form id="data">
         <table border="1" cellspacing="0" class="compareTable">

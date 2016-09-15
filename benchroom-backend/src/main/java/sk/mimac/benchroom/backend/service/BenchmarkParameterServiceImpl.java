@@ -46,7 +46,7 @@ public class BenchmarkParameterServiceImpl implements BenchmarkParameterService 
     public Page<BenchmarkParameterDto> getParameterPage(BenchmarkParameterFilter filter) {
         BenchmarkParameterQueryBuilder queryBuilder = new BenchmarkParameterQueryBuilder(filter);
         long count = benchmarkParameterDao.countForFilter(queryBuilder);
-        List<BenchmarkParameterDto> list = new ArrayList<>(filter.getPageSize());
+        List<BenchmarkParameterDto> list = new ArrayList<>();
         for (BenchmarkParameter parameter : benchmarkParameterDao.getForFilter(queryBuilder)) {
             list.add(ConvertUtils.convert(parameter));
         }

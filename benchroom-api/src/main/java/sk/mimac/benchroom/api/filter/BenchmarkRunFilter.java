@@ -1,7 +1,6 @@
 package sk.mimac.benchroom.api.filter;
 
-import java.util.Map;
-import sk.mimac.benchroom.api.system.SystemParameter;
+import java.util.List;
 
 /**
  *
@@ -12,7 +11,7 @@ public class BenchmarkRunFilter extends AbstractFilter {
     private Long softwareVersionId;
     private Long softwareId;
     private Long benchmarkSuiteId;
-    private Long benchmarkParameterId;
+    private List<Long> benchmarkParameterIds;
     private Long systemInfoId;
 
     public Long getSoftwareVersionId() {
@@ -39,12 +38,12 @@ public class BenchmarkRunFilter extends AbstractFilter {
         this.benchmarkSuiteId = benchmarkSuiteId;
     }
 
-    public Long getBenchmarkParameterId() {
-        return benchmarkParameterId;
+    public List<Long> getBenchmarkParameterIds() {
+        return benchmarkParameterIds;
     }
 
-    public void setBenchmarkParameterId(Long benchmarkParameterId) {
-        this.benchmarkParameterId = benchmarkParameterId;
+    public void setBenchmarkParameterIds(List<Long> benchmarkParameterIds) {
+        this.benchmarkParameterIds = benchmarkParameterIds;
     }
 
     public Long getSystemInfoId() {

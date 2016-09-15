@@ -7,6 +7,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import sk.mimac.benchroom.api.filter.BenchmarkRunFilter;
 import sk.mimac.benchroom.backend.persistence.entity.BenchmarkRun;
+import sk.mimac.benchroom.backend.persistence.entity.BenchmarkRun_;
+import sk.mimac.benchroom.backend.persistence.entity.BenchmarkSuite_;
+import sk.mimac.benchroom.backend.persistence.entity.SoftwareVersion_;
+import sk.mimac.benchroom.backend.persistence.entity.Software_;
+import sk.mimac.benchroom.backend.persistence.entity.SystemInfo_;
 
 /**
  *
@@ -25,21 +30,17 @@ public class BenchmarkRunQueryBuilder extends QueryBuilder<BenchmarkRun> {
     public List<Predicate> getPredicates(Root<BenchmarkRun> root, CriteriaBuilder cb) {
         List<Predicate> list = new ArrayList<>();
         if (filter.getSoftwareVersionId() != null) {
-            list.add(cb.equal(root.get("softwareVersion").get("id"), filter.getSoftwareVersionId()));
+            list.add(cb.equal(root.get(BenchmarkRun_.softwareVersion).get(SoftwareVersion_.id), filter.getSoftwareVersionId()));
         }
         if (filter.getSoftwareId() != null) {
-            list.add(cb.equal(root.get("softwareVersion").get("software").get("id"), filter.getSoftwareId()));
-        }
-        if (filter.getBenchmarkParameterId() != null) {
-            list.add(cb.equal(root.get("benchmarkParameter").get("id"), filter.getBenchmarkParameterId()));
+            list.add(cb.equal(root.get(BenchmarkRun_.softwareVersion).get(SoftwareVersion_.software).get(Software_.id), filter.getSoftwareId()));
         }
         if (filter.getBenchmarkSuiteId() != null) {
-            list.add(cb.equal(root.get("benchmarkSuite").get("id"), filter.getBenchmarkSuiteId()));
+            list.add(cb.equal(root.get(BenchmarkRun_.benchmarkSuite).get(BenchmarkSuite_.id), filter.getBenchmarkSuiteId()));
         }
-        if (filter.getSystemInfoId()!= null) {
-            list.add(cb.equal(root.get("systemInfo").get("id"), filter.getSystemInfoId()));
+        if (filter.getSystemInfoId() != null) {
+            list.add(cb.equal(root.get(BenchmarkRun_.systemInfo).get(SystemInfo_.id), filter.getSystemInfoId()));
         }
         return list;
     }
-
 }
