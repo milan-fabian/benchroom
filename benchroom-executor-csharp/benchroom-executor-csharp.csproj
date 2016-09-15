@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Connector.cs" />
     <Compile Include="ParameterCombinations.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SystemParameters.cs" />
     <Compile Include="Model\RunOutput.cs" />
     <Compile Include="Options.cs" />

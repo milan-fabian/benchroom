@@ -17,12 +17,9 @@ namespace Benchroom.Executor
         private static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private RunInput runData;
-        private string directory;
-        public string Server { private get; set; }
         public int NumberOfRuns { private get; set; }
         public bool PrintOutput { private get; set; }
         public bool TestRun { private get; set; }
-        public int MaxDeviation { private get; set; }
         public long[][] RunnedCombinations { private get; set; }
         private string protocolFile;
         private long? timeMonitor;
@@ -30,12 +27,11 @@ namespace Benchroom.Executor
         private List<RunInput.RunMonitor> fileMonitors = new List<RunInput.RunMonitor>();
         private Dictionary<string, string> systemParameters = SystemParameters.getParameters();
 
-        public Runner(RunInput runData, String directory)
+        public Runner(RunInput runData)
         {
             this.runData = runData;
             this.protocolFile = "benchroom_protocol-" + DateTime.Now.ToString().Replace(':', '.') + "-id" + runData.runId + ".txt";
-            this.directory = directory;
-            Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(Settings.Directory);
             foreach (RunInput.RunMonitor monitor in runData.monitors)
             {
                 if (monitor.type.Equals(RunInput.RunMonitor.RUN_TIME))
@@ -119,7 +115,7 @@ namespace Benchroom.Executor
                     if (results.Count > 1)
                     {
                         double deviation = Math.Sqrt((sumSquared / results.Count) - (average * average)) / average;
-                        if (deviation * 100 > MaxDeviation)
+                        if (deviation * 100 > Settings.MaxDeviation)
                         {
                             logger.Warn(String.Format("Deviation of results is too big ({0:N2} %), not sending results", deviation * 100));
                             return;
@@ -129,7 +125,7 @@ namespace Benchroom.Executor
                 }
                 if (!TestRun)
                 {
-                    Connector.sendRun(Server, run);
+                    Connector.sendRun(run);
                 } else
                 {
                     logger.Warn("Test run, not sending results to server");
@@ -174,7 +170,7 @@ namespace Benchroom.Executor
             }
             foreach (RunInput.RunMonitor monitor in fileMonitors)
             {
-                long size = new FileInfo(directory + "\\" + monitor.action).Length;
+                long size = new FileInfo(Settings.Directory + "\\" + monitor.action).Length;
                 results.Add(monitor.monitorId, size);
             }
             return results;
@@ -184,9 +180,9 @@ namespace Benchroom.Executor
         {
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = directory + "\\software.exe";
+            startInfo.FileName = Settings.Directory + "\\software.exe";
             startInfo.Arguments = commandLineArguments;
-            startInfo.WorkingDirectory = directory;
+            startInfo.WorkingDirectory = Settings.Directory;
             startInfo.UseShellExecute = false;
             if (!PrintOutput)
             {
@@ -291,7 +287,7 @@ namespace Benchroom.Executor
         {
             using (PowerShell powerShell = PowerShell.Create())
             {
-                powerShell.AddScript("cd " + directory);
+                powerShell.AddScript("cd " + Settings.Directory);
                 powerShell.AddScript(script);
                 powerShell.Invoke();
                 if (powerShell.Streams.Error.Count > 0)

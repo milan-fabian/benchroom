@@ -112,8 +112,7 @@
         var minPriority = $("#minPriority").val();
         $("#runData").show();
         var link = window.location.href;
-        link = "Run executor with parameters: <code>--server=" + link.substring(0, link.lastIndexOf("/")) + " --id=" + $("#versionId").val()
-                + "-" + suiteId + " --priority=" + minPriority + "</code>";
+        link = "Run executor with parameters: <code>--id=" + $("#versionId").val() + "-" + suiteId + " --priority=" + minPriority + "</code>";
         $("#runLink").html(link);
         $("#parameterCobinations").load("<%=request.getContextPath()%><%=URL_BENCHMARK_COUNT_PARAMETERS%>?suite=" + suiteId + "&minPriority=" + minPriority);
     }

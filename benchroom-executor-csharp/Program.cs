@@ -13,17 +13,17 @@ namespace Benchroom.Executor
 
         static void Main(string[] args)
         {
+            Settings.Load();
             Options options = new Options();
             if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
                 setupLogger();
-                RunInput runData = Connector.getRunData(options.ServerUrl, options.BenchmarkId, options.MinPriority, options.ChoosenParameters);
-                Runner runner = new Runner(runData, options.Directory) { Server = options.ServerUrl, NumberOfRuns = options.NumberOfRuns,
-                                                                         PrintOutput = options.PrintOutput, TestRun = options.TestRun,
-                                                                         MaxDeviation = options.MaxDeviation};
-                if (options.AlsoRunned)
+                RunInput runData = Connector.getRunData(options.BenchmarkId, options.MinPriority, options.ChoosenParameters);
+                Runner runner = new Runner(runData) { NumberOfRuns = options.NumberOfRuns, PrintOutput = options.PrintOutput,
+                                                        TestRun = options.TestRun};
+                if (!options.AlsoRun)
                 {
-                    runner.RunnedCombinations = Connector.getRunnedCombinations(options.ServerUrl, options.BenchmarkId, 
+                    runner.RunnedCombinations = Connector.getRunnedCombinations(options.BenchmarkId, 
                                                                         options.MinPriority, options.ChoosenParameters);
                 }
                 runner.runBenchmarks();

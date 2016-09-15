@@ -17,12 +17,12 @@ namespace Benchroom.Executor
         private const string URL_RUNNED_COMBINATIONS = "/connector/runned_combinations";
         private const string URL_BENCHMARK_RESULT = "/connector/benchmark_result";
 
-        public static RunInput getRunData(String server, String id, short minPriority, IList<string> choosenParameters)
+        public static RunInput getRunData(String id, short minPriority, IList<string> choosenParameters)
         {
             using (WebClient webClient = new WebClient())
             {
                 StringBuilder url = new StringBuilder();
-                url.Append(server).Append(URL_BENCHMARK_DATA).Append("?id=").Append(id)
+                url.Append(Settings.ServerUrl).Append(URL_BENCHMARK_DATA).Append("?id=").Append(id)
                     .Append("&platform=WINDOWS_X86_64&minPriority=").Append(minPriority);
                 if (choosenParameters != null)
                 {
@@ -37,12 +37,12 @@ namespace Benchroom.Executor
             }
         }
 
-        public static long[][] getRunnedCombinations(String server, String id, short minPriority, IList<string> choosenParameters)
+        public static long[][] getRunnedCombinations(String id, short minPriority, IList<string> choosenParameters)
         {
             using (WebClient webClient = new WebClient())
             {
                 StringBuilder url = new StringBuilder();
-                url.Append(server).Append(URL_RUNNED_COMBINATIONS).Append("?id=").Append(id)
+                url.Append(Settings.ServerUrl).Append(URL_RUNNED_COMBINATIONS).Append("?id=").Append(id)
                     .Append("&platform=WINDOWS_X86_64&minPriority=").Append(minPriority);
                 if (choosenParameters != null)
                 {
@@ -58,12 +58,12 @@ namespace Benchroom.Executor
             }
         }
 
-        public static void sendRun(String server, RunOutput run)
+        public static void sendRun(RunOutput run)
         {
             try {
                 using (WebClient webClient = new WebClient())
                 {
-                    String url = server + URL_BENCHMARK_RESULT;
+                    String url = Settings.ServerUrl + URL_BENCHMARK_RESULT;
                     webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
                     webClient.UploadString(url, JsonConvert.SerializeObject(run));
                     logger.Info("Data for run send to server");
