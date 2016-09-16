@@ -80,7 +80,7 @@
             dataSrc: "tableData",
             serverSide: true,
             columns: [
-                {title: "When run", data: "whenStarted", render: $.fn.dataTable.render.moment('X', 'DD MMM YYYY')},
+                {title: "When run", data: "whenStarted", render: $.fn.dataTable.render.moment('X', 'DD MMM YYYY, HH:mm')},
                 {title: "Parameter", data: "benchmarkParameters", sortable: false},
                 {title: "System", data: "systemParameters", sortable: false},
                 {title: "Result", data: "results", sortable: false},

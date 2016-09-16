@@ -1,6 +1,7 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tld/benchroom.tld" prefix="b"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <p>
     Benchmark run of software <b><c:out value="${run.softwareVersion.softwareName}" /></b> (version <c:out value="${run.softwareVersion.name}"/>)
@@ -30,7 +31,7 @@
 <table>
     <c:forEach items="${run.systemInfo.parameters}" var="parameter">
         <tr>
-            <td>${parameter.key}:</td>
+            <td><spring:message code="system.parameter.${parameter.key}"/>:</td>
             <td><b:printSystemParameter entry="${parameter}"/></td>
         </tr>
     </c:forEach>
