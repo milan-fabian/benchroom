@@ -38,6 +38,7 @@ import sk.mimac.benchroom.web.PageWrapper;
 import sk.mimac.benchroom.web.ValueLabelWrapper;
 import sk.mimac.benchroom.web.WebConstants;
 import sk.mimac.benchroom.web.export.ExcelExporter;
+import sk.mimac.benchroom.web.model.BarGraphModel;
 import sk.mimac.benchroom.web.model.XYGraphModel;
 import sk.mimac.benchroom.web.utils.FilterUtils;
 
@@ -175,18 +176,27 @@ public class BenchmarkController {
 
     @ResponseBody
     @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE_GRAPH, method = RequestMethod.GET)
-    public List<XYGraphModel> getBenchmarkCompareGraph(@RequestParam("runs") List<Long> runIds, @RequestParam("monitors") List<Long> monitorIds) {
+    public Object getBenchmarkCompareGraph(@RequestParam("runs") List<Long> runIds, @RequestParam("monitors") List<Long> monitorIds) {
         List<BenchmarkRunDto> runs = benchmarkRunService.getRunsByIds(runIds);
         runs.forEach(run -> run.getResults().removeIf(r -> !monitorIds.contains(r.getMonitorId())));
-        runs.forEach(run -> Collections.sort(run.getResults()));
         runs.forEach(run -> Collections.sort(run.getBenchmarkParameters()));
+        BenchmarkRunDto firstRun = runs.get(0);
+        
+        if (monitorIds.size() == 2) {
+            runs.forEach(run -> Collections.sort(run.getResults()));
+            double maxX = runs.stream().map(run -> run.getResults().get(0).getResult()).max(Double::compare).get();
+            double maxY = runs.stream().map(run -> run.getResults().get(1).getResult()).max(Double::compare).get();
+            long divisorX = getDivisorForResult(maxX, firstRun.getResults().get(0).getMonitorType());
+            long divisorY = getDivisorForResult(maxY, firstRun.getResults().get(1).getMonitorType());
 
-        double maxX = runs.stream().map(run -> run.getResults().get(0).getResult()).max(Double::compare).get();
-        double maxY = runs.stream().map(run -> run.getResults().get(1).getResult()).max(Double::compare).get();
-        long divisorX = getDivisorForResult(maxX, runs.get(0).getResults().get(0).getMonitorType());
-        long divisorY = getDivisorForResult(maxY, runs.get(1).getResults().get(0).getMonitorType());
-
-        return runs.stream().map(run -> new XYGraphModel(run, divisorX, divisorY)).collect(Collectors.toList());
+            return runs.stream().map(run -> new XYGraphModel(run, divisorX, divisorY)).collect(Collectors.toList());
+        } else {
+            double max = runs.stream().map(run -> run.getResults().get(0).getResult()).max(Double::compare).get();
+            long divisor = getDivisorForResult(max, firstRun.getResults().get(0).getMonitorType());
+            BarGraphModel graphModel = new BarGraphModel();
+            runs.forEach(run -> graphModel.add(run, divisor));
+            return graphModel;
+        }
     }
 
     private List<BenchmarkParameterDto> getAllParametersForSuite(long suiteId) {
@@ -225,16 +235,16 @@ public class BenchmarkController {
         switch (monitorType) {
             case CPU_TIME:
             case RUN_TIME:
-                if (maxValue > 4 * 60) {
+                if (maxValue > 5 * 60) {
                     return 60;
                 }
                 break;
             case FILE_SIZE:
-                if (maxValue > 4l * 1024l * 1024l * 1024l) {
+                if (maxValue > 5l * 1024l * 1024l * 1024l) {
                     return 1024l * 1024l * 1024l;
-                } else if (maxValue > 4l * 1024l * 1024l) {
+                } else if (maxValue > 5l * 1024l * 1024l) {
                     return 1024l * 1024l;
-                } else if (maxValue > 4l * 1024l) {
+                } else if (maxValue > 5l * 1024l) {
                     return 1024l;
                 }
                 break;

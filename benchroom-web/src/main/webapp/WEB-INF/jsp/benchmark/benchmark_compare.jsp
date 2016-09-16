@@ -3,54 +3,81 @@
 
 <script>
     function reloadGraph() {
-        var formData = $("#data").serialize();
-        $.get("<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE_GRAPH%>?" + formData, function (data) {
-            showGraph(data);
-        });
+        var count = $("input[name=monitors]:checked").length;
+        if (count === 1 || count === 2) {
+            var formData = $("#data").serialize();
+            $.get("<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE_GRAPH%>?" + formData, function (data) {
+                showGraph(data, count);
+            });
+        }
     }
-
-    function showGraph(data) {
+    
+    var chart;
+    function showGraph(data, count) {
         var monitors = $("input[name=monitors]:checked");
-        console.log(monitors);
         var ctx = document.getElementById("chart");
-        new Chart(ctx, {
-            type: 'bubble',
-            data: {
-                datasets: [
-                    {
-                        data: data,
-                        backgroundColor: "#0000FF",
-                        hoverBackgroundColor: "#0000FF"
-                    }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: $("label[for=" + monitors[0].id + "]").html()
-                            }
-                        }],
-                    yAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: $("label[for=" + monitors[1].id + "]").html()
-                            }
+        if (chart) {
+            chart.destroy();
+        }
+        if (count === 2) {
+            chart = new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                            data: data,
+                            backgroundColor: "#0000FF",
+                            hoverBackgroundColor: "#0000FF"
                         }]
                 },
-                legend: {
-                    display: false
-                },
-                tooltips: {
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            var dataPoint = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                            return dataPoint.title;
+                options: {
+                    scales: {
+                        xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: $("label[for=" + monitors[0].id + "]").html()
+                                }
+                            }],
+                        yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: $("label[for=" + monitors[1].id + "]").html()
+                                }
+                            }]
+                    },
+                    legend: {display: false},
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                var dataPoint = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                return dataPoint.title;
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            chart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                            label: $("label[for=" + monitors[0].id + "]").html(),
+                            backgroundColor: "rgba(54, 162, 235, 0.9)",
+                            data: data.values
+                        }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                                ticks: {beginAtZero: true}
+                            }],
+                        yAxes: [{
+                                ticks: {beginAtZero: true}
+                            }]
+                    }
+                }
+            });
+        }
     }
 
     function excelExport() {
@@ -68,7 +95,7 @@
 </h2>
 
 <a href='javascript:void(0);' onclick='showDialog("Benchmark run", "<%=request.getContextPath()%><%=URL_BENCHMARK_DETAIL%>?run=${run.id}");'>Details</a>    
-<a href='javascript:void(0);' onclick='excelExport();'>Export to excel</a>   
+<a href='javascript:void(0);' onclick='excelExport();'>Export to Excel</a>   
 <br>
 <form>
     <input type="hidden" name="run" value="${run.id}"/>
