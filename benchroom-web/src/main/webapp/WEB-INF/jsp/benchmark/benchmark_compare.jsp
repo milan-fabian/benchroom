@@ -20,14 +20,11 @@
             chart.destroy();
         }
         if (count === 2) {
+            Chart.defaults.global.elements.point.backgroundColor = "#0000FF";
             chart = new Chart(ctx, {
                 type: 'bubble',
                 data: {
-                    datasets: [{
-                            data: data,
-                            backgroundColor: "#0000FF",
-                            hoverBackgroundColor: "#0000FF"
-                        }]
+                    datasets: data
                 },
                 options: {
                     scales: {

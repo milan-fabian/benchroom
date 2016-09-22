@@ -30,8 +30,10 @@ public class RunResultPrinter extends SimpleTagSupport {
             case CPU_TIME:
                 if (value < 2 * 1000) {
                     return String.format("%d ms", (long) value);
-                } else {
+                } else if (value < 2 * 60 * 1000) {
                     return String.format("%.2f s", (value / 1000));
+                } else {
+                    return String.format("%.2f min", (value / 1000 / 60));
                 }
             case FILE_SIZE:
                 if (value < 2l * 1024) {

@@ -104,24 +104,12 @@ namespace Benchroom.Executor
                 run.results = new List<RunOutput.RunResult>();
                 foreach (long monitorId in results[0].Keys)
                 {
-                    double sum = 0;
-                    double sumSquared = 0;
-                    results.ForEach(x => {
-                        double value = x[monitorId];
-                        sum += value;
-                        sumSquared += value * value;
-                        });
-                    double average = sum / results.Count;
-                    if (results.Count > 1)
+                    double? average = checkDeviation(results, monitorId);
+                    if (!average.HasValue)
                     {
-                        double deviation = Math.Sqrt((sumSquared / results.Count) - (average * average)) / average;
-                        if (deviation * 100 > Settings.MaxDeviation)
-                        {
-                            logger.Warn(String.Format("Deviation of results is too big ({0:N2} %), not sending results", deviation * 100));
-                            return;
-                        }
+                        return;
                     }
-                    run.results.Add(new RunOutput.RunResult() { monitorId = monitorId, result = average });
+                    run.results.Add(new RunOutput.RunResult() { monitorId = monitorId, result = average.Value });
                 }
                 if (!TestRun)
                 {
@@ -131,6 +119,28 @@ namespace Benchroom.Executor
                     logger.Warn("Test run, not sending results to server");
                 }
             }
+        }
+
+        private double? checkDeviation(List<Dictionary<long, double>> results, long monitorId) 
+        {
+            double sum = 0;
+            double sumSquared = 0;
+            results.ForEach(result => {
+                double value = result[monitorId];
+                sum += value;
+                sumSquared += value * value;
+            });
+            double average = sum / results.Count;
+            if (results.Count > 1)
+            {
+                double deviation = Math.Sqrt((sumSquared / results.Count) - (average * average)) / average;
+                if (deviation * 100 > Settings.MaxDeviation)
+                {
+                    logger.Warn(String.Format("Deviation of results is too big ({0:N2} %), not sending results", deviation * 100));
+                    return null;
+                }
+            }
+            return average;
         }
 
         private Dictionary<long, double> executeSingleRun(string commandLineArguments, string parameterNames)

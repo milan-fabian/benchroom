@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -181,7 +182,7 @@ public class BenchmarkController {
         runs.forEach(run -> run.getResults().removeIf(r -> !monitorIds.contains(r.getMonitorId())));
         runs.forEach(run -> Collections.sort(run.getBenchmarkParameters()));
         BenchmarkRunDto firstRun = runs.get(0);
-        
+
         if (monitorIds.size() == 2) {
             runs.forEach(run -> Collections.sort(run.getResults()));
             double maxX = runs.stream().map(run -> run.getResults().get(0).getResult()).max(Double::compare).get();
@@ -189,7 +190,9 @@ public class BenchmarkController {
             long divisorX = getDivisorForResult(maxX, firstRun.getResults().get(0).getMonitorType());
             long divisorY = getDivisorForResult(maxY, firstRun.getResults().get(1).getMonitorType());
 
-            return runs.stream().map(run -> new XYGraphModel(run, divisorX, divisorY)).collect(Collectors.toList());
+            XYGraphModel graphModel = new XYGraphModel("Result");
+            runs.forEach(run -> graphModel.addPoint(run, divisorX, divisorY));
+            return Arrays.asList(graphModel);
         } else {
             double max = runs.stream().map(run -> run.getResults().get(0).getResult()).max(Double::compare).get();
             long divisor = getDivisorForResult(max, firstRun.getResults().get(0).getMonitorType());
@@ -235,8 +238,10 @@ public class BenchmarkController {
         switch (monitorType) {
             case CPU_TIME:
             case RUN_TIME:
-                if (maxValue > 5 * 60) {
-                    return 60;
+                if (maxValue > 5 * 60 * 1000) {
+                    return 60 * 1000;
+                } else if (maxValue > 5 * 1000) {
+                    return 1000;
                 }
                 break;
             case FILE_SIZE:
