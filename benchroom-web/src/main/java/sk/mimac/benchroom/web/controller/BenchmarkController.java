@@ -177,7 +177,8 @@ public class BenchmarkController {
 
     @ResponseBody
     @RequestMapping(value = WebConstants.URL_BENCHMARK_COMPARE_GRAPH, method = RequestMethod.GET)
-    public Object getBenchmarkCompareGraph(@RequestParam("runs") List<Long> runIds, @RequestParam("monitors") List<Long> monitorIds) {
+    public Object getBenchmarkCompareGraph(@RequestParam("runs") List<Long> runIds, @RequestParam("monitors") List<Long> monitorIds,
+            @RequestParam(name = "groupBy", required = false) Integer groupByPosition) {
         List<BenchmarkRunDto> runs = benchmarkRunService.getRunsByIds(runIds);
         runs.forEach(run -> run.getResults().removeIf(r -> !monitorIds.contains(r.getMonitorId())));
         runs.forEach(run -> Collections.sort(run.getBenchmarkParameters()));
@@ -190,9 +191,23 @@ public class BenchmarkController {
             long divisorX = getDivisorForResult(maxX, firstRun.getResults().get(0).getMonitorType());
             long divisorY = getDivisorForResult(maxY, firstRun.getResults().get(1).getMonitorType());
 
-            XYGraphModel graphModel = new XYGraphModel("Result");
-            runs.forEach(run -> graphModel.addPoint(run, divisorX, divisorY));
-            return Arrays.asList(graphModel);
+            if (groupByPosition == null) {
+                XYGraphModel graphModel = new XYGraphModel("Result", XYGraphModel.COLORS[0]);
+                runs.forEach(run -> graphModel.addPoint(run, divisorX, divisorY));
+                return Arrays.asList(graphModel);
+            } else {
+                Map<Long, XYGraphModel> graphModels = new HashMap<>();
+                runs.forEach(run -> {
+                    BenchmarkParameterDto param = run.getBenchmarkParameters().stream().filter(p -> p.getPosition() == groupByPosition).findAny().get();
+                    XYGraphModel graphModel = graphModels.get(param.getId());
+                    if (graphModel == null) {
+                        graphModel = new XYGraphModel(param.getName(), XYGraphModel.COLORS[graphModels.size()]);
+                    }
+                    graphModels.put(param.getId(), graphModel);
+                    graphModel.addPoint(run, divisorX, divisorY);
+                });
+                return graphModels.values();
+            }
         } else {
             double max = runs.stream().map(run -> run.getResults().get(0).getResult()).max(Double::compare).get();
             long divisor = getDivisorForResult(max, firstRun.getResults().get(0).getMonitorType());

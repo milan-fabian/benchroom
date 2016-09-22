@@ -12,11 +12,15 @@ import sk.mimac.benchroom.web.tag.RunResultPrinter;
  */
 public class XYGraphModel {
 
+    public static final String[] COLORS = new String[]{"#0000FF", "#00FF00", "#FF0000", "#AA00AA", "#AAAA", "#00AAAA", "#888888", "#99DD99", "#DD9999", "#9999DD"};
+
     private final String label;
+    private final String backgroundColor;
     private final List<GraphPoint> data = new ArrayList<>();
 
-    public XYGraphModel(String label) {
+    public XYGraphModel(String label, String backgroundColor) {
         this.label = label;
+        this.backgroundColor = backgroundColor;
     }
 
     public void addPoint(BenchmarkRunDto run, long divisorX, long divisorY) {
@@ -40,6 +44,10 @@ public class XYGraphModel {
 
     public List<GraphPoint> getData() {
         return data;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
     }
 
     public class GraphPoint {

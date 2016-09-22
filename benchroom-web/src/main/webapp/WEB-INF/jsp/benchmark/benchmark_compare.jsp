@@ -11,7 +11,7 @@
             });
         }
     }
-    
+
     var chart;
     function showGraph(data, count) {
         var monitors = $("input[name=monitors]:checked");
@@ -20,13 +20,13 @@
             chart.destroy();
         }
         if (count === 2) {
-            Chart.defaults.global.elements.point.backgroundColor = "#0000FF";
             chart = new Chart(ctx, {
                 type: 'bubble',
                 data: {
                     datasets: data
                 },
                 options: {
+                    animation: false,
                     scales: {
                         xAxes: [{
                                 scaleLabel: {
@@ -41,7 +41,6 @@
                                 }
                             }]
                     },
-                    legend: {display: false},
                     tooltips: {
                         callbacks: {
                             label: function (tooltipItem, data) {
@@ -64,6 +63,7 @@
                         }]
                 },
                 options: {
+                    animation: false,
                     scales: {
                         xAxes: [{
                                 ticks: {beginAtZero: true}
@@ -145,6 +145,12 @@
                 </c:forEach>
             </tbody>
         </table>
+        <br>
+        <div>Group on graph by parameter position:
+            <c:forEach begin="0" end="${suite.parameterPositions - 1}" step="1" varStatus="i">
+                <input type="radio" name="groupBy" value="${i.index}" id="groupBy-${i.index}"/><label for="groupBy-${i.index}">${i.index}</label>
+            </c:forEach>
+        </div>
     </form>
 </div>
 
