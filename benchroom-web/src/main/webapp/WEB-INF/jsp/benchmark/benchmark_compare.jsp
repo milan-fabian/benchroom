@@ -83,7 +83,6 @@
         iframe.attr("src", "<%=request.getContextPath()%><%=URL_BENCHMARK_COMPARE_EXCEL%>?" + data);
     }
 
-
 </script>
 
 <h2>
@@ -148,7 +147,8 @@
         <br>
         <div>Group on graph by parameter position:
             <c:forEach begin="0" end="${suite.parameterPositions - 1}" step="1" varStatus="i">
-                <input type="radio" name="groupBy" value="${i.index}" id="groupBy-${i.index}"/><label for="groupBy-${i.index}">${i.index}</label>
+                <input type="radio" name="groupBy" value="${i.index}" id="groupBy-${i.index}" onchange="reloadGraph();"/>
+                <label for="groupBy-${i.index}">${i.index}</label>
             </c:forEach>
         </div>
     </form>

@@ -228,6 +228,7 @@ public class BenchmarkController {
 
     private List<BenchmarkRunDto> getSameSystemRuns(BenchmarkRunDto run, List<Long> parameterIds) {
         BenchmarkRunFilter sameSystemFilter = new BenchmarkRunFilter();
+        sameSystemFilter.setPageSize(Integer.MAX_VALUE);
         sameSystemFilter.setBenchmarkSuiteId(run.getBenchmarkSuiteId());
         sameSystemFilter.setBenchmarkParameterIds(parameterIds);
         sameSystemFilter.setSoftwareVersionId(run.getSoftwareVersion().getId());
