@@ -20,7 +20,13 @@
         </tr>
         <tr>
             <td>Position:</td>
-            <td><form:input path="position" type="number" min="0" max="${suite.parameterPositions - 1}"/></td>
+            <td>
+                <form:select path="position">
+                    <c:forEach items="${suite.parameterNames}" var="parameterName" varStatus="i">
+                        <form:option value="${i.index}" label="${parameterName}"/>
+                    </c:forEach>
+                </form:select>
+            </td>
             <td><form:errors path="position"/></td>
         </tr>
         <tr>

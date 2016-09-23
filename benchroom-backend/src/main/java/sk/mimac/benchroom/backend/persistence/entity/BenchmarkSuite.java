@@ -1,10 +1,14 @@
 package sk.mimac.benchroom.backend.persistence.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Basic;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.IndexColumn;
 
 /**
  *
@@ -56,9 +61,11 @@ public class BenchmarkSuite implements EntityInterface, Serializable {
     @Column(name = "command_line_arguments", unique = false, nullable = true)
     private String commandLineArguments;
 
-    @Basic(optional = false)
-    @Column(name = "parameter_positions", unique = false, nullable = false)
-    private short parameterPositions;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "benchmark_suite_parameter_name", joinColumns = @JoinColumn(name = "suite_id"))
+    @IndexColumn(name = "position", nullable = false, base = 0)
+    @Column(name = "parameter_name")
+    private List<String> parameterNames;
 
     public BenchmarkSuite() {
     }
@@ -115,12 +122,12 @@ public class BenchmarkSuite implements EntityInterface, Serializable {
         this.commandLineArguments = commandLineArguments;
     }
 
-    public short getParameterPositions() {
-        return parameterPositions;
+    public List<String> getParameterNames() {
+        return parameterNames;
     }
 
-    public void setParameterPositions(short parameterPositions) {
-        this.parameterPositions = parameterPositions;
+    public void setParameterNames(List<String> parameterNames) {
+        this.parameterNames = parameterNames;
     }
 
     public String getAfterEachRunScript() {

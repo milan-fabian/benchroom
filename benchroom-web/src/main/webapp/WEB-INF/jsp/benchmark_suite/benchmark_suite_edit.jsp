@@ -38,11 +38,13 @@
             <td><form:textarea path="commandLineArguments" cols="80" rows="4"/></td>
             <td><form:errors path="commandLineArguments"/></td>
         </tr>
-        <tr>
-            <td>Number of parameter positions:</td>
-            <td><form:input path="parameterPositions" type="number"/></td>
-            <td><form:errors path="parameterPositions"/></td>
-        </tr>
+        <c:forEach begin="0" end="${suite.parameterNames.size()}" varStatus="i">
+            <tr>
+                <td>Parameter name:</td>
+                <td><form:input path="parameterNames[${i.index}]"/></td>
+                <td><form:errors path="parameterNames[${i.index}]"/></td>
+            </tr>
+        </c:forEach>
     </table>
     <input type="submit" value="Save"/>
 </form:form>

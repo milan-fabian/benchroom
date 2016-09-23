@@ -66,8 +66,9 @@ public class Controller {
         String[] parts = dataId.split("-");
         SoftwareVersionDto version = softwareService.getVersionById(Long.parseLong(parts[0]));
         BenchmarkSuiteDto suite = benchmarkSuiteService.getSuiteById(Long.parseLong(parts[1]));
-        List<List<RunInput.RunParameter>> runParameters = new ArrayList<>(suite.getParameterPositions());
-        for (short i = 0; i < suite.getParameterPositions(); i++) {
+        int parameterPositions = suite.getParameterNames().size();
+        List<List<RunInput.RunParameter>> runParameters = new ArrayList<>(parameterPositions);
+        for (short i = 0; i < parameterPositions; i++) {
             List<BenchmarkParameterDto> parameters = benchmarkParameterService.getParametersForSuitePositionPriority(suite.getId(), i, minPriority);
             if (choosenParameters != null) {
                 parameters.removeIf(x -> !choosenParameters.contains(x.getId()));
@@ -116,7 +117,7 @@ public class Controller {
         List<BenchmarkRunDto> runs = benchmarkRunService.getRunPage(runFilter).getElements();
         List<long[]> result = new ArrayList<>(runs.size());
         for (BenchmarkRunDto run : runs) {
-            long[] temp = new long[suite.getParameterPositions()];
+            long[] temp = new long[suite.getParameterNames().size()];
             for (BenchmarkParameterDto param : run.getBenchmarkParameters()) {
                 temp[param.getPosition()] = param.getId();
             }

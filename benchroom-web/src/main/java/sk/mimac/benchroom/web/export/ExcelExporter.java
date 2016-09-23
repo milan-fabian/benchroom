@@ -9,8 +9,10 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import sk.mimac.benchroom.api.dto.impl.BenchmarkRunDto;
+import sk.mimac.benchroom.api.dto.impl.BenchmarkSuiteDto;
 import sk.mimac.benchroom.web.tag.RunResultPrinter;
 
 /**
@@ -20,14 +22,16 @@ import sk.mimac.benchroom.web.tag.RunResultPrinter;
 public class ExcelExporter {
 
     private final String sheetName;
+    private final BenchmarkSuiteDto suite;
     private final List<BenchmarkRunDto> runs;
     private final int parameterCount;
     private final int monitorCount;
 
-    public ExcelExporter(List<BenchmarkRunDto> runs, String sheetName) {
+    public ExcelExporter(List<BenchmarkRunDto> runs, BenchmarkSuiteDto suite, String sheetName) {
         this.runs = runs;
         this.sheetName = sheetName;
-        parameterCount = runs.get(0).getBenchmarkParameters().size();
+        this.suite = suite;
+        parameterCount = suite.getParameterNames().size();
         monitorCount = runs.get(0).getResults().size();
     }
 
@@ -37,6 +41,7 @@ public class ExcelExporter {
         createHeader(sheet, runs.get(0), createHeaderCellStyle(workbook));
         addData(sheet);
         autoSizeColumns(sheet);
+        sheet.setAutoFilter(new CellRangeAddress(0, runs.size(), 0, parameterCount + monitorCount - 1));
         workbook.write(outputStream);
     }
 
@@ -56,6 +61,11 @@ public class ExcelExporter {
 
     private void createHeader(Sheet sheet, BenchmarkRunDto run, CellStyle cellStyle) {
         Row header = sheet.createRow(0);
+        for (int i = 0; i < parameterCount; i++) {
+            Cell cell = header.createCell(i);
+            cell.setCellStyle(cellStyle);
+            cell.setCellValue(suite.getParameterNames().get(i));
+        }
         for (int i = 0; i < monitorCount; i++) {
             Cell cell = header.createCell(i + parameterCount);
             cell.setCellStyle(cellStyle);

@@ -113,8 +113,8 @@
             <thead>
                 <tr>
                     <th></th>
-                        <c:forEach items="${run.benchmarkParameters}" var="parameter">
-                        <th></th>
+                        <c:forEach items="${suite.parameterNames}" var="parameterName">
+                        <th><c:out value="${parameterName}"/></th>
                         </c:forEach>
                         <c:forEach items="${run.results}" var="result">
                         <th colspan="2">
@@ -146,9 +146,9 @@
         </table>
         <br>
         <div>Group on graph by parameter position:
-            <c:forEach begin="0" end="${suite.parameterPositions - 1}" step="1" varStatus="i">
+            <c:forEach items="${suite.parameterNames}" var="parameterName" varStatus="i">
                 <input type="radio" name="groupBy" value="${i.index}" id="groupBy-${i.index}" onchange="reloadGraph();"/>
-                <label for="groupBy-${i.index}">${i.index}</label>
+                <label for="groupBy-${i.index}"><c:out value="${parameterName}"/></label>
             </c:forEach>
         </div>
     </form>

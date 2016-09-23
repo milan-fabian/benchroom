@@ -166,7 +166,7 @@ public class BenchmarkController {
         runs.forEach(run -> Collections.sort(run.getResults()));
         runs.forEach(run -> Collections.sort(run.getBenchmarkParameters()));
         BenchmarkSuiteDto suite = benchmarkSuiteService.getSuiteById(runs.get(0).getBenchmarkSuiteId());
-        ExcelExporter excelExporter = new ExcelExporter(runs, suite.getName());
+        ExcelExporter excelExporter = new ExcelExporter(runs, suite, suite.getName());
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=Benchroom-results.xlsx");
         try (OutputStream outputStream = response.getOutputStream()) {

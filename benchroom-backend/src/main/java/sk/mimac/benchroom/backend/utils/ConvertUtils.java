@@ -53,7 +53,7 @@ public class ConvertUtils {
         dto.setSetupScript(entity.getSetupScript());
         dto.setCleanupScript(entity.getCleanupScript());
         dto.setCommandLineArguments(entity.getCommandLineArguments());
-        dto.setParameterPositions(entity.getParameterPositions());
+        dto.setParameterNames(new ArrayList<>(entity.getParameterNames()));
         dto.setAfterEachRunScript(entity.getAfterEachRunScript());
         return dto;
     }
@@ -65,7 +65,7 @@ public class ConvertUtils {
         entity.setSetupScript(dto.getSetupScript());
         entity.setCleanupScript(dto.getCleanupScript());
         entity.setCommandLineArguments(dto.getCommandLineArguments());
-        entity.setParameterPositions(dto.getParameterPositions());
+        entity.setParameterNames(new ArrayList<>(dto.getParameterNames()));
         entity.setAfterEachRunScript(dto.getAfterEachRunScript());
         return entity;
     }

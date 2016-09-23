@@ -1,5 +1,6 @@
 package sk.mimac.benchroom.api.dto.impl;
 
+import java.util.List;
 import java.util.Objects;
 import org.hibernate.validator.constraints.NotBlank;
 import sk.mimac.benchroom.api.dto.Dto;
@@ -27,7 +28,7 @@ public class BenchmarkSuiteDto implements Dto {
 
     private String commandLineArguments;
 
-    private short parameterPositions;
+    private List<String> parameterNames;
 
     public BenchmarkSuiteDto() {
     }
@@ -92,12 +93,12 @@ public class BenchmarkSuiteDto implements Dto {
         this.commandLineArguments = commandLineArguments;
     }
 
-    public short getParameterPositions() {
-        return parameterPositions;
+    public List<String> getParameterNames() {
+        return parameterNames;
     }
 
-    public void setParameterPositions(short parameterPositions) {
-        this.parameterPositions = parameterPositions;
+    public void setParameterNames(List<String> parameterNames) {
+        this.parameterNames = parameterNames;
     }
 
     public String getAfterEachRunScript() {
