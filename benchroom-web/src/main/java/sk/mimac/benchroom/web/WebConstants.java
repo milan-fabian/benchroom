@@ -42,4 +42,8 @@ public class WebConstants {
     public static final String URL_BENCHMARK_COMPARE = "/benchmark/compare";
     public static final String URL_BENCHMARK_COMPARE_EXCEL = "/benchmark/compare/excel";
     public static final String URL_BENCHMARK_COMPARE_GRAPH = "/benchmark/compare/graph";
+    /* STATISTIC */
+    public static final String URL_EXECUTOR = "/executor";
+    public static final String URL_EXECUTOR_DETAIL = "/executor/detail";
+    public static final String URL_EXECUTOR_ADD_JOB = "/executor/add_job";
 }

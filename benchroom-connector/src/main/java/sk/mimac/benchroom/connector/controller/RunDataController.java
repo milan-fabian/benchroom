@@ -37,7 +37,7 @@ import sk.mimac.benchroom.connector.controller.model.RunOutput;
  * @author Milan Fabian
  */
 @RestController
-public class Controller {
+public class RunDataController {
 
     @Autowired
     private SoftwareService softwareService;

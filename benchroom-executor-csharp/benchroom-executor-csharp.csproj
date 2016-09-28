@@ -87,8 +87,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connector.cs" />
+    <Compile Include="Model\RunJob.cs" />
     <Compile Include="ParameterCombinations.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Subscriber.cs" />
     <Compile Include="SystemParameters.cs" />
     <Compile Include="Model\RunOutput.cs" />
     <Compile Include="Options.cs" />

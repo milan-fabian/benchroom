@@ -14,19 +14,30 @@ namespace Benchroom.Executor
         static void Main(string[] args)
         {
             Settings.Load();
+            setupLogger();
             Options options = new Options();
             if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
-                setupLogger();
-                RunInput runData = Connector.getRunData(options.BenchmarkId, options.MinPriority, options.ChoosenParameters);
-                Runner runner = new Runner(runData) { NumberOfRuns = options.NumberOfRuns, PrintOutput = options.PrintOutput,
-                                                        TestRun = options.TestRun};
-                if (!options.AlsoRun)
+                if (options.Subscribe)
                 {
-                    runner.RunnedCombinations = Connector.getRunnedCombinations(options.BenchmarkId, 
-                                                                        options.MinPriority, options.ChoosenParameters);
+                    Subscriber.Subscribe();
                 }
-                runner.runBenchmarks();
+                else
+                {
+                    RunInput runData = Connector.getRunData(options.BenchmarkId, options.MinPriority, options.ChoosenParameters);
+                    Runner runner = new Runner(runData)
+                    {
+                        NumberOfRuns = options.NumberOfRuns,
+                        PrintOutput = options.PrintOutput,
+                        TestRun = options.TestRun
+                    };
+                    if (!options.AlsoRun)
+                    {
+                        runner.RunnedCombinations = Connector.getRunnedCombinations(options.BenchmarkId,
+                                                                            options.MinPriority, options.ChoosenParameters);
+                    }
+                    runner.runBenchmarks();
+                }
             }
         }
 

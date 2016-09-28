@@ -16,6 +16,8 @@ namespace Benchroom.Executor
         private const string URL_BENCHMARK_DATA = "/connector/benchmark_data";
         private const string URL_RUNNED_COMBINATIONS = "/connector/runned_combinations";
         private const string URL_BENCHMARK_RESULT = "/connector/benchmark_result";
+        private const string URL_SUBSCRIBE_CHECK = "/connector/subscribe/check";
+        private const string URL_SUBSCRIBE_CHANGE = "/connector/subscribe/change";
 
         public static RunInput getRunData(String id, short minPriority, IList<string> choosenParameters)
         {
@@ -71,6 +73,46 @@ namespace Benchroom.Executor
             } catch (Exception ex)
             {
                 logger.Warn("Can't send data to server: " + ex);
+            }
+        }
+
+        public static RunJob subscribeCheck()
+        {
+            try
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    String url = Settings.ServerUrl + URL_SUBSCRIBE_CHECK;
+
+                    logger.Info("Sending subscribe check to \"" + url + "\"");
+                    webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
+                    String data = webClient.UploadString(url.ToString(), JsonConvert.SerializeObject(SystemParameters.getParameters()));
+                    return JsonConvert.DeserializeObject<RunJob>(data);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn("Can't send subscribe to server: " + ex);
+                return null;
+            }
+        }
+
+        public static void subscribeChange(string runJobId, String status)
+        {
+            try
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    StringBuilder url = new StringBuilder();
+                    url.Append(Settings.ServerUrl).Append(URL_SUBSCRIBE_CHANGE).Append("?runJob=").Append(runJobId)
+                        .Append("&status=").Append(status);
+                    logger.Info("Sending subscribe change to \"" + url.ToString() + "\"");
+                    webClient.DownloadData(url.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn("Can't send subscribe to server: " + ex);
             }
         }
     }

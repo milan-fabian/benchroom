@@ -15,5 +15,6 @@
             Menu:
             <a href="<%=request.getContextPath()%><%=URL_SOFTWARE%>">Software list</a> 
             <a href="<%=request.getContextPath()%><%=URL_BENCHMARK%>">Benchmark results</a>
+            <a href="<%=request.getContextPath()%><%=URL_EXECUTOR%>">Executors</a>
         </div>
         <div class="main">

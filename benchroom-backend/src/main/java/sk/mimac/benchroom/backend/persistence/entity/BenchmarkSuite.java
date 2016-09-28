@@ -16,8 +16,8 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import org.hibernate.annotations.IndexColumn;
 
 /**
  *
@@ -63,7 +63,7 @@ public class BenchmarkSuite implements EntityInterface, Serializable {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "benchmark_suite_parameter_name", joinColumns = @JoinColumn(name = "suite_id"))
-    @IndexColumn(name = "position", nullable = false, base = 0)
+    @OrderColumn(name = "position", nullable = false)
     @Column(name = "parameter_name")
     private List<String> parameterNames;
 

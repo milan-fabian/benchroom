@@ -196,4 +196,30 @@ public class ConvertUtils {
         entity.setParameters(new HashMap<>(dto.getParameters()));
         return entity;
     }
+
+    public static ExecutorDto convert(Executor entity) {
+        ExecutorDto dto = new ExecutorDto(entity.getId());
+        dto.setSystemParameters(new HashMap<>(entity.getSystemInfo().getParameters()));
+        return dto;
+    }
+
+    public static BenchmarkRunJobDto convert(BenchmarkRunJob entity) {
+        BenchmarkRunJobDto dto = new BenchmarkRunJobDto(entity.getId());
+        dto.setBenchmarkSuiteId(entity.getBenchmarkSuite().getId());
+        dto.setSoftwareVersionId(entity.getSoftwareVersion().getId());
+        dto.setStatus(entity.getStatus());
+        dto.setMinPriority(entity.getMinPriority());
+        dto.setNumberOfRuns(entity.getNumberOfRuns());
+        return dto;
+    }
+
+    public static BenchmarkRunJob convert(BenchmarkRunJobDto dto) {
+        BenchmarkRunJob entity = new BenchmarkRunJob(dto.getId());
+        entity.setBenchmarkSuite(new BenchmarkSuite(dto.getBenchmarkSuiteId()));
+        entity.setSoftwareVersion(new SoftwareVersion(dto.getSoftwareVersionId()));
+        entity.setStatus(dto.getStatus());
+        entity.setMinPriority(dto.getMinPriority());
+        entity.setNumberOfRuns(dto.getNumberOfRuns());
+        return entity;
+    }
 }
