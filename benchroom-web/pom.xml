@@ -9,7 +9,6 @@
 
     <groupId>sk.mimac.benchroom</groupId>
     <artifactId>benchroom-web</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>benchroom-web</name>
@@ -18,7 +17,6 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
-        <spring.version>4.3.2.RELEASE</spring.version>
         <log4j.version>2.6.2</log4j.version>
     </properties>
     
